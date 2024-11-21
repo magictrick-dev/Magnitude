@@ -1,5 +1,6 @@
 #ifndef MAGNITUDE_PLATFORM_WINDOW_H
 #define MAGNITUDE_PLATFORM_WINDOW_H
+#include <memory>
 #include <string>
 #include <definitions.hpp>
 
@@ -16,6 +17,15 @@
 // You don't need to trigger anything special for any platform, given the platform
 // has a window implementation; just call Window::create() to get back a window
 // suitable for the platform you're running on.
+//
+// The Window interface gives you access to the pixels within the window for
+// modification. This is for testing, experimentation, and even for a little bit
+// of fun. Per-pixel manipulation is slow, especially if you intend to write a lot
+// of pixels to the window. Instead, you should provide a bitmap buffer of all your
+// changes so that you make a single call. Writing to memory is *significantly* faster
+// than per-pixel addressing. The OS doesn't care if you write one pixel, or all the
+// pixels. Therefore, it's way more efficient to feed it a complete bitmap image.
+// Either way, power to you. Have fun.
 //
 
 class Window

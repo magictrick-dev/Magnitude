@@ -21,6 +21,8 @@ set(PLATFORM_FILES)
 if (WIN32)
     set(PLATFORM_FILES
         "source/platform/win32/window.cpp"
+        "source/platform/win32/win32window.hpp"
+        "source/platform/win32/win32window.cpp"
         "source/platform/win32/filesystem.cpp"
         "source/platform/win32/system.cpp"
 
