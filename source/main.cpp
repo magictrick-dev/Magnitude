@@ -68,11 +68,26 @@ main(i32 argc, cptr *argv)
 
     // Create the window.
     std::shared_ptr<Window> main_window = Window::create("Example Project", 600, 400);
+    main_window->show();
 
     while (!main_window->should_close())
     {
 
         main_window->poll_events();
+
+        if (main_window->did_size_change())
+        {
+            i32 new_width = main_window->get_width();
+            i32 new_height = main_window->get_height();
+            std::cout << "The currently active window's size change to: "
+                << new_width << ", " << new_height << "." << std::endl;
+        }
+
+        if (main_window->did_focus_change())
+        {
+            bool focused = main_window->is_focused();
+            std::cout << "The window's focus changed: " << focused << "." << std::endl;
+        }
 
         main_window->swap_frames();
 
