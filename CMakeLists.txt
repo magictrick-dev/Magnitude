@@ -23,6 +23,9 @@ if (WIN32)
         "source/platform/win32/window.cpp"
         "source/platform/win32/filesystem.cpp"
         "source/platform/win32/system.cpp"
+
+        "vendor/imgui/backends/imgui_impl_opengl3.cpp"
+        "vendor/imgui/backends/imgui_impl_win32.cpp"
     )
 endif (WIN32)
 
@@ -44,6 +47,23 @@ add_executable(Magnitude
     "source/platform/filesystem.hpp"
     "source/platform/system.hpp"
 
+    "vendor/stb/stb_image.h"
+    "vendor/glad/glad.c"
+    "vendor/glad/glad.h"
+    "vendor/glad/glad_wgl.c"
+    "vendor/glad/glad_wgl.h"
+    "vendor/glad/khrplatform.h"
+    "vendor/imgui/imgui.h"
+    "vendor/imgui/imgui.cpp"
+    "vendor/imgui/imgui_demo.cpp"
+    "vendor/imgui/imgui_draw.cpp"
+    "vendor/imgui/imgui_internal.h"
+    "vendor/imgui/imgui_tables.cpp"
+    "vendor/imgui/imgui_widgets.cpp"
+    "vendor/imgui/imstb_rectpack.h"
+    "vendor/imgui/imstb_textedit.h"
+    "vendor/imgui/imstb_truetype.h"
+
     ${PLATFORM_FILES}
 )
 
@@ -53,9 +73,10 @@ add_executable(Magnitude
 # relative pathing.
 #
 
-target_include_directories(Magnitude PUBLIC "source")
+find_package(OpenGL REQUIRED)
+target_include_directories(Magnitude PUBLIC "source" "vendor")
 set_property(TARGET Magnitude PROPERTY CXX_STANDARD 20)
 
 if (WIN32)
-    TARGET_LINK_LIBRARIES(Magnitude Shlwapi.lib)
+    TARGET_LINK_LIBRARIES(Magnitude Shlwapi.lib winmm.lib Xinput.lib Xaudio2.lib)
 endif(WIN32)
