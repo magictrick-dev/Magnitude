@@ -70,6 +70,14 @@ class BitmapImageWrapper
         i32                 get_width() const;
         i32                 get_height() const;
 
+        void                resize(i32 width, i32 height);
+        
+        void                set_pixel(i32 x, i32 y, pcolor pixel);
+        pcolor              get_pixel(i32 x, i32 y) const;
+
+        u32*                get_data() const;
+        bitmap_image        get_image_format() const;
+
     protected:
         bitmap_image        image;
         u32 *data;
