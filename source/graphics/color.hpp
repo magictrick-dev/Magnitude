@@ -62,7 +62,6 @@ class RGBAColor
     public:
         RGBAColor       clamp() const;
         RGBAColor       clamp(r32 lower_bound, r32 upper_bound) const;
-        RGBAColor       normalize() const;
 
         packed_color    pack_to_bgra() const;
         packed_color    pack_to_abgr() const;

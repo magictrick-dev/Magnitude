@@ -89,16 +89,20 @@ main(i32 argc, cptr *argv)
             render_bitmap.resize(main_window->get_width(), main_window->get_height());
         }
 
-        // Lets render to the window.
+        // Render to the window.
         for (i32 y = 0; y < main_window->get_height(); ++y)
         {
 
             for (i32 x = 0; x < main_window->get_width(); ++x)
             {
 
-                RGBAColor assignment_color(x, y, 0.0f, 1.0f);
-                RGBAColor normalized_color = assignment_color.normalize();
-                packed_color output_color = normalized_color.pack_to_bgra();
+                r32 red     = (r32)x / main_window->get_width();
+                r32 green   = (r32)y / main_window->get_height();
+                r32 blue    = 0.0f;
+                r32 alpha   = 1.0f;
+
+                RGBAColor assignment_color(red, green, blue, alpha);
+                packed_color output_color = assignment_color.pack_to_bgra();
                 render_bitmap.set_pixel(x, y, output_color);
 
             }
