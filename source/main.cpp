@@ -26,6 +26,7 @@
 #include <utilities/cli.hpp>
 #include <graphics/color.hpp>
 #include <graphics/bitmap.hpp>
+#include <glad/glad.h>
 
 i32
 main(i32 argc, cptr *argv)
@@ -66,16 +67,28 @@ main(i32 argc, cptr *argv)
 
     // --- Runtime Configuration & Main Loop ----------------------------------- 
     //
-    // Launch the window, perform the operation(s).
+    // Launch the window, perform the operation(s). We construct a window, then
+    // establish an OpenGL context. This ensures that everything is properly set
+    // up for hardware rendering and DearImGUI.
     //
 
     // Create the window and attempt to establish an OpenGL render context.
     std::shared_ptr<Window> main_window = Window::create("Example Project", 1280, 720);
     OpenGLRenderContext::create(main_window);
+    glEnable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+
+    // Preset values, swap frame afterwards to show it.
+    glViewport(0, 0, main_window->get_width(), main_window->get_height());
+    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    main_window->swap_frames();
     main_window->show();
 
     // Create a bitmap that we will draw to. (It's optimal.)
-    BitmapImageWrapper render_bitmap(main_window->get_width(), main_window->get_height());
+    //BitmapImageWrapper render_bitmap(main_window->get_width(), main_window->get_height());
 
     while (!main_window->should_close())
     {
@@ -83,6 +96,7 @@ main(i32 argc, cptr *argv)
         // Poll the window events.
         main_window->poll_events();
 
+        /*
         // If the window size changed, we need to resize our render bitmap.
         if (main_window->did_size_change())
         {
@@ -112,6 +126,12 @@ main(i32 argc, cptr *argv)
         // Take our bitmap and render it to the window.
         bitmap_image image_format = render_bitmap.get_image_format();
         main_window->set_bitmap(0, 0, &image_format.info_header, render_bitmap.get_data());
+        */
+
+        glViewport(0, 0, main_window->get_width(), main_window->get_height());
+        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_DEPTH_BUFFER_BIT);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
         // Swap the frames.
         main_window->swap_frames();

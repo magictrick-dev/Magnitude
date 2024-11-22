@@ -89,5 +89,11 @@ target_include_directories(Magnitude PUBLIC "source" "vendor")
 set_property(TARGET Magnitude PROPERTY CXX_STANDARD 20)
 
 if (WIN32)
-    TARGET_LINK_LIBRARIES(Magnitude Shlwapi.lib winmm.lib Xinput.lib Xaudio2.lib)
+    TARGET_LINK_LIBRARIES(Magnitude 
+        opengl32.lib 
+        Shlwapi.lib 
+        winmm.lib 
+        Xinput.lib 
+        Xaudio2.lib
+    )
 endif(WIN32)
