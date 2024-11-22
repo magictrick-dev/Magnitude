@@ -1,7 +1,8 @@
+#include <platform/win32/win32window.hpp>
+#include <glad/glad.h>
 #include <iostream>
 #include <windows.h>
 #include <wingdi.h>
-#include <platform/win32/win32window.hpp>
 
 Win32Window::
 Win32Window(std::string title, i32 width, i32 height)

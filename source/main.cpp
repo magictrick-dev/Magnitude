@@ -21,6 +21,7 @@
 #include <iostream>
 #include <definitions.hpp>
 #include <platform/window.hpp>
+#include <platform/opengl.hpp>
 #include <utilities/path.hpp>
 #include <utilities/cli.hpp>
 #include <graphics/color.hpp>
@@ -68,8 +69,9 @@ main(i32 argc, cptr *argv)
     // Launch the window, perform the operation(s).
     //
 
-    // Create the window.
+    // Create the window and attempt to establish an OpenGL render context.
     std::shared_ptr<Window> main_window = Window::create("Example Project", 1280, 720);
+    OpenGLRenderContext::create(main_window);
     main_window->show();
 
     // Create a bitmap that we will draw to. (It's optimal.)
