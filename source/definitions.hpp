@@ -1,5 +1,7 @@
 #ifndef MAGNITUDE_DEFINITIONS_H 
 #define MAGNITUDE_DEFINITIONS_H 
+#include <cmath>
+#include <cstring>
 #include <cstdint>
 #include <cassert>
 
