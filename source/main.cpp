@@ -23,6 +23,8 @@
 #include <platform/window.hpp>
 #include <utilities/path.hpp>
 #include <utilities/cli.hpp>
+#include <graphics/color.hpp>
+#include <graphics/bitmap.hpp>
 
 i32
 main(i32 argc, cptr *argv)
@@ -70,25 +72,42 @@ main(i32 argc, cptr *argv)
     std::shared_ptr<Window> main_window = Window::create("Example Project", 1280, 720);
     main_window->show();
 
+    // Create a bitmap that we will draw to. (It's optimal.)
+    BitmapImageWrapper render_bitmap(main_window->get_width(), main_window->get_height());
+
     while (!main_window->should_close())
     {
 
+        // Poll the window events.
         main_window->poll_events();
 
+        // If the window size changed, we need to resize our render bitmap.
         if (main_window->did_size_change())
         {
-            i32 new_width = main_window->get_width();
-            i32 new_height = main_window->get_height();
-            std::cout << "The currently active window's size change to: "
-                << new_width << ", " << new_height << "." << std::endl;
+            render_bitmap.resize(main_window->get_width(), main_window->get_height());
         }
 
-        if (main_window->did_focus_change())
+        // Lets render to the window.
+        for (i32 y = 0; y < main_window->get_height(); ++y)
         {
-            bool focused = main_window->is_focused();
-            std::cout << "The window's focus changed: " << focused << "." << std::endl;
+
+            for (i32 x = 0; x < main_window->get_width(); ++x)
+            {
+
+                RGBAColor assignment_color(x, y, 0.0f, 1.0f);
+                RGBAColor normalized_color = assignment_color.normalize();
+                packed_color output_color = normalized_color.pack_to_bgra();
+                render_bitmap.set_pixel(x, y, output_color);
+
+            }
+
         }
 
+        // Take our bitmap and render it to the window.
+        bitmap_image image_format = render_bitmap.get_image_format();
+        main_window->set_bitmap(0, 0, &image_format.info_header, render_bitmap.get_data());
+
+        // Swap the frames.
         main_window->swap_frames();
 
     }

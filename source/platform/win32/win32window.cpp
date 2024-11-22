@@ -1,3 +1,4 @@
+#include <iostream>
 #include <windows.h>
 #include <wingdi.h>
 #include <platform/win32/win32window.hpp>
@@ -257,7 +258,17 @@ set_size(i32 width, i32 height)
 }
 
 void Win32Window::
-set_pixel(i32 x, i32 y, pcolor what)
+set_bitmap(i32 x, i32 y, bitmap_info_header *info, u32 *data)
+{
+
+    i32 result = StretchDIBits(this->device_context, x, y, this->width, this->height,
+            0, 0, info->width, info->height, data,
+            (BITMAPINFO*)info, DIB_RGB_COLORS, SRCCOPY);
+
+}
+
+void Win32Window::
+set_pixel(i32 x, i32 y, packed_color what)
 {
 
     if (x < 0.0f || x >= this->width || y < 0.0f || y >= this->height) return;
@@ -266,17 +277,16 @@ set_pixel(i32 x, i32 y, pcolor what)
 
 }
 
-pcolor Win32Window::
+packed_color Win32Window::
 get_pixel(i32 x, i32 y)
 {
 
-    pcolor result = {0};
+    packed_color result = {0};
     if (x < 0.0f || x >= this->width || y < 0.0f || y >= this->height) return result;
     result.pack = (u32)GetPixel(this->device_context, x, y);
     return result;
 
 }
-
 
 LRESULT CALLBACK Win32Window::
 window_procedure(HWND window, UINT message, WPARAM w_param, LPARAM l_param)

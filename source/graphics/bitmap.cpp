@@ -4,11 +4,8 @@ BitmapImageWrapper::
 BitmapImageWrapper(i32 width, i32 height)
 {
 
-    // Ensure that the dimensions are actually sane.
-    MAG_ASSERT(width > 0 && height > 0);
-
     // Calculate the sizes.
-    u64 pixel_buffer_size = width * height * sizeof(pcolor);
+    u64 pixel_buffer_size = width * height * sizeof(packed_color);
     u64 total_size = sizeof(bitmap_image) + pixel_buffer_size;
 
     // Describe the file header.
@@ -29,14 +26,10 @@ BitmapImageWrapper(i32 width, i32 height)
     this->image.info_header.y_ppm           = 0;
     this->image.info_header.clear_used      = 0;
     this->image.info_header.clear_important = 0;
-    this->image.info_header.mask_red        = 0x000000FF;
-    this->image.info_header.mask_green      = 0x0000FF00;
-    this->image.info_header.mask_blue       = 0x00FF0000;
-    this->image.info_header.mask_alpha      = 0xFF000000;
 
     // Allocate the buffer and then clear it out.
     this->data = (u32*)MAG_MEMORY_ALLOC(this->image.info_header.image_size);
-    memset(this->data, 0x00, width*height*sizeof(pcolor));
+    memset(this->data, 0x00, width*height*sizeof(packed_color));
 
 }
 
@@ -82,9 +75,7 @@ resize(i32 width, i32 height)
     //              multiple methods of resizing, such as truncation, stretching,
     //              or interpolating... perhaps when I have the passion for it.
 
-    MAG_ASSERT(width > 0 && height > 0);
-
-    u64 pixel_buffer_size = width * height * sizeof(pcolor);
+    u64 pixel_buffer_size = width * height * sizeof(packed_color);
     u64 total_size = sizeof(bitmap_image) + pixel_buffer_size;
 
     if (this->data != nullptr) MAG_MEMORY_FREE(this->data);
@@ -94,12 +85,12 @@ resize(i32 width, i32 height)
     this->image.info_header.image_size      = pixel_buffer_size;
 
     this->data = (u32*)MAG_MEMORY_ALLOC(this->image.info_header.image_size);
-    memset(this->data, 0x00, width*height*sizeof(pcolor));
+    memset(this->data, 0x00, width*height*sizeof(packed_color));
 
 }
 
 void BitmapImageWrapper::
-set_pixel(i32 x, i32 y, pcolor pixel)
+set_pixel(i32 x, i32 y, packed_color pixel)
 {
 
     if (x < 0 && x >= this->image.info_header.width &&
@@ -110,11 +101,11 @@ set_pixel(i32 x, i32 y, pcolor pixel)
 
 }
 
-pcolor BitmapImageWrapper::
+packed_color BitmapImageWrapper::
 get_pixel(i32 x, i32 y) const
 {
 
-    pcolor result = {0};
+    packed_color result = {0};
     if (x < 0 && x >= this->image.info_header.width &&
         y < 0 && y >= this->image.info_header.height) return result;
 

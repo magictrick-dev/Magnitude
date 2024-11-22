@@ -15,6 +15,7 @@
 // so a provided API called BitmapImageWrapper is provided for you.
 //
 
+#pragma pack(push, 1)
 struct bitmap_file_header
 {
     u16     magic_constant; // 'BM'
@@ -27,22 +28,19 @@ struct bitmap_info_header
 {
 
     u32     structure_size;
-    u16     width;
-    u16     height;
-    u8      planes;
-    u8      bitcount;
+    i32     width;
+    i32     height;
+    u16     planes;
+    u16     bitcount;
     u32     compression;
     u32     image_size;
-    u16     x_ppm;
-    u16     y_ppm;
+    i32     x_ppm;
+    i32     y_ppm;
     u32     clear_used;
     u32     clear_important;
-    u32     mask_red;
-    u32     mask_green;
-    u32     mask_blue;
-    u32     mask_alpha;
 
 };
+#pragma pack(pop)
 
 struct bitmap_image
 {
@@ -72,8 +70,8 @@ class BitmapImageWrapper
 
         void                resize(i32 width, i32 height);
         
-        void                set_pixel(i32 x, i32 y, pcolor pixel);
-        pcolor              get_pixel(i32 x, i32 y) const;
+        void                set_pixel(i32 x, i32 y, packed_color pixel);
+        packed_color        get_pixel(i32 x, i32 y) const;
 
         u32*                get_data() const;
         bitmap_image        get_image_format() const;
