@@ -67,7 +67,7 @@ main(i32 argc, cptr *argv)
     //
 
     // Create the window.
-    std::shared_ptr<Window> main_window = Window::create("Example Project", 600, 400);
+    std::shared_ptr<Window> main_window = Window::create("Example Project", 1280, 720);
     main_window->show();
 
     while (!main_window->should_close())

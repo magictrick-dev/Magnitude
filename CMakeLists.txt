@@ -40,6 +40,11 @@ add_executable(Magnitude
     "source/main.cpp"
     "source/definitions.hpp"
 
+    "source/graphics/color.hpp"
+    "source/graphics/color.cpp"
+    "source/graphics/bitmap.hpp"
+    "source/graphics/bitmap.cpp"
+
     "source/utilities/path.hpp"
     "source/utilities/path.cpp"
     "source/utilities/cli.hpp"

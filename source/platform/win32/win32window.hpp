@@ -38,6 +38,9 @@ class Win32Window : public Window
         virtual bool            did_size_change()   const override;
         virtual bool            did_focus_change()  const override;
 
+        virtual void            set_pixel(i32 x, i32 y, pcolor what);
+        virtual pcolor          get_pixel(i32 x, i32 y);
+
     public:
         static LRESULT CALLBACK window_procedure(HWND window, UINT message, WPARAM w, LPARAM l);
 

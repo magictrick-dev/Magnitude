@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <wingdi.h>
 #include <platform/win32/win32window.hpp>
 
 Win32Window::
@@ -254,6 +255,28 @@ set_size(i32 width, i32 height)
         window_width, window_height, SWP_NOMOVE);
 
 }
+
+void Win32Window::
+set_pixel(i32 x, i32 y, pcolor what)
+{
+
+    if (x < 0.0f || x >= this->width || y < 0.0f || y >= this->height) return;
+    SetPixel(this->device_context, x, y, (DWORD)what.pack);
+    return;
+
+}
+
+pcolor Win32Window::
+get_pixel(i32 x, i32 y)
+{
+
+    pcolor result = {0};
+    if (x < 0.0f || x >= this->width || y < 0.0f || y >= this->height) return result;
+    result.pack = (u32)GetPixel(this->device_context, x, y);
+    return result;
+
+}
+
 
 LRESULT CALLBACK Win32Window::
 window_procedure(HWND window, UINT message, WPARAM w_param, LPARAM l_param)

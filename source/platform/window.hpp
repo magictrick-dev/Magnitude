@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 #include <definitions.hpp>
+#include <graphics/color.hpp>
 
 #define MAGWINDEF_WIDTH     1600
 #define MAGWINDEF_HEIGHT    900
@@ -56,6 +57,9 @@ class Window
 
         virtual bool            did_size_change()   const = 0;
         virtual bool            did_focus_change()  const = 0;
+
+        virtual void            set_pixel(i32 x, i32 y, pcolor what) = 0;
+        virtual pcolor          get_pixel(i32 x, i32 y) = 0;
 
 };
 
