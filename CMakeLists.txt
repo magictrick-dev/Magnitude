@@ -23,6 +23,9 @@ if (WIN32)
         "source/platform/win32/window.cpp"
         "source/platform/win32/win32window.hpp"
         "source/platform/win32/win32window.cpp"
+        "source/platform/win32/opengl.cpp"
+        "source/platform/win32/win32opengl.hpp"
+        "source/platform/win32/win32opengl.cpp"
         "source/platform/win32/filesystem.cpp"
         "source/platform/win32/system.cpp"
 
@@ -51,6 +54,7 @@ add_executable(Magnitude
     "source/utilities/cli.cpp"
 
     "source/platform/window.hpp"
+    "source/platform/opengl.hpp"
     "source/platform/filesystem.hpp"
     "source/platform/system.hpp"
 
@@ -85,5 +89,11 @@ target_include_directories(Magnitude PUBLIC "source" "vendor")
 set_property(TARGET Magnitude PROPERTY CXX_STANDARD 20)
 
 if (WIN32)
-    TARGET_LINK_LIBRARIES(Magnitude Shlwapi.lib winmm.lib Xinput.lib Xaudio2.lib)
+    TARGET_LINK_LIBRARIES(Magnitude 
+        opengl32.lib 
+        Shlwapi.lib 
+        winmm.lib 
+        Xinput.lib 
+        Xaudio2.lib
+    )
 endif(WIN32)

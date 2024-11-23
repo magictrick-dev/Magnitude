@@ -35,11 +35,33 @@ from source. This project currently only supports Windows and modern OpenGL (4.3
 
 ### Project Features
 
-- [ ] Window launching, OpenGL support.
-- [ ] Dear ImGUI support.
-- [ ] RDView parser, basics.
-- [ ] RDView parser, editor + compiler.
-- [ ] ASSIMP support for model loading.
+The following list of features outline what Magnitude supports/will support:
+
+- [X] Window System: Launching
+- [X] Window System: OpenGL Support
+- [ ] Window System: Non-blocking Fix
+- [X] Vendor: Dear ImGUI
+- [ ] Vendor: ASSIMP
+- [ ] Input System: Keyboard
+- [ ] Input System: Mouse
+- [ ] Input System: Controller
+- [ ] RDView Parser: Tokenizer
+- [ ] RDView Parser: Parser
+- [ ] RDView Parser: Dynamic Parsing
+- [ ] RDView Parser: Editor
+- [ ] Modeling: 2D Primitives
+- [ ] Modeling: 3D Primitives
+- [ ] Modeling: Object File Loading
+- [ ] Software Renderer: Line Drawing
+- [ ] Software Renderer: Attributed Points
+- [ ] Software Renderer: 3D Rendering
+- [ ] Software Renderer: Lighting
+- [ ] Software Renderer: Texturing
+- [ ] Software Renderer: Shader Loader System (Vert. & Frag.)
+- [ ] Hardware Renderer: 3D Rendering
+- [ ] Hardware Renderer: Lighting & Texturing
+- [ ] Behavioral: Renderer Swap from Software to Hardware, vice-versa.
+- [ ] OPTIONAL: Video Rendering, FFMPEG Support?
 
 Magnitude should eventually support all major hardware accelerations APIs which
 can be triggered and modified in the rdview language specification. Due to the design

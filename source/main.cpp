@@ -21,8 +21,13 @@
 #include <iostream>
 #include <definitions.hpp>
 #include <platform/window.hpp>
+#include <platform/opengl.hpp>
 #include <utilities/path.hpp>
 #include <utilities/cli.hpp>
+#include <graphics/color.hpp>
+#include <graphics/bitmap.hpp>
+#include <imgui/imgui.h>
+#include <glad/glad.h>
 
 i32
 main(i32 argc, cptr *argv)
@@ -63,32 +68,84 @@ main(i32 argc, cptr *argv)
 
     // --- Runtime Configuration & Main Loop ----------------------------------- 
     //
-    // Launch the window, perform the operation(s).
+    // Launch the window, perform the operation(s). We construct a window, then
+    // establish an OpenGL context. This ensures that everything is properly set
+    // up for hardware rendering and DearImGUI.
     //
 
-    // Create the window.
+    // Create the window and attempt to establish an OpenGL render context.
     std::shared_ptr<Window> main_window = Window::create("Example Project", 1280, 720);
+    OpenGLRenderContext::create_render_context(main_window);
+    glEnable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+
+    // Preset values, swap frame afterwards to show it.
+    glViewport(0, 0, main_window->get_width(), main_window->get_height());
+    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    main_window->swap_frames();
     main_window->show();
+
+    // Create a bitmap that we will draw to. (It's optimal.)
+    //BitmapImageWrapper render_bitmap(main_window->get_width(), main_window->get_height());
 
     while (!main_window->should_close())
     {
 
+        // Poll the window events.
         main_window->poll_events();
+        
 
+        /*
+        // If the window size changed, we need to resize our render bitmap.
         if (main_window->did_size_change())
         {
-            i32 new_width = main_window->get_width();
-            i32 new_height = main_window->get_height();
-            std::cout << "The currently active window's size change to: "
-                << new_width << ", " << new_height << "." << std::endl;
+            render_bitmap.resize(main_window->get_width(), main_window->get_height());
         }
 
-        if (main_window->did_focus_change())
+        // Render to the window.
+        for (i32 y = 0; y < main_window->get_height(); ++y)
         {
-            bool focused = main_window->is_focused();
-            std::cout << "The window's focus changed: " << focused << "." << std::endl;
+
+            for (i32 x = 0; x < main_window->get_width(); ++x)
+            {
+
+                r32 red     = (r32)x / main_window->get_width();
+                r32 green   = (r32)y / main_window->get_height();
+                r32 blue    = 0.0f;
+                r32 alpha   = 1.0f;
+
+                RGBAColor assignment_color(red, green, blue, alpha);
+                packed_color output_color = assignment_color.pack_to_bgra();
+                render_bitmap.set_pixel(x, y, output_color);
+
+            }
+
         }
 
+        // Take our bitmap and render it to the window.
+        bitmap_image image_format = render_bitmap.get_image_format();
+        main_window->set_bitmap(0, 0, &image_format.info_header, render_bitmap.get_data());
+        */
+
+        OpenGLRenderContext::get_render_context().begin_frame();
+        glViewport(0, 0, main_window->get_width(), main_window->get_height());
+        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_DEPTH_BUFFER_BIT);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+
+        // Show the Dear ImGUI demo window.
+        static bool show_demo = true;
+        if (show_demo)
+        {
+            ImGui::ShowDemoWindow(&show_demo);
+        }
+
+        OpenGLRenderContext::get_render_context().end_frame();
+
+        // Swap the frames.
         main_window->swap_frames();
 
     }

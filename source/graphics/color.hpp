@@ -1,4 +1,4 @@
-#ifndef MAGNTIUDE_GRAPHICS_COLOR_HPP
+#ifndef MAGNITUDE_GRAPHICS_COLOR_HPP
 #define MAGNITUDE_GRAPHICS_COLOR_HPP
 #include <definitions.hpp>
 
@@ -10,12 +10,12 @@
 // in the correct bit order.
 //
 
-union pcolor 
+union packed_color 
 {
 
     u32 pack;
 
-    struct component_abgr
+    struct
     {
         u8 alpha;
         u8 blue;
@@ -23,13 +23,29 @@ union pcolor
         u8 red;
     } component_abgr;
 
-    struct component_rgba
+    struct
     {
         u8 red;
         u8 green;
         u8 blue;
         u8 alpha;
     } component_rgba;
+
+    struct
+    {
+        u8 alpha;
+        u8 red;
+        u8 green;
+        u8 blue;
+    } component_argb;
+
+    struct
+    {
+        u8 blue;
+        u8 green;
+        u8 red;
+        u8 alpha;
+    } component_bgra;
     
 };
 
@@ -44,12 +60,13 @@ class RGBAColor
 {
 
     public:
-        RGBAColor   clamp() const;
-        RGBAColor   clamp(r32 lower_bound, r32 upper_bound) const;
-        RGBAColor   normalize() const;
+        RGBAColor       clamp() const;
+        RGBAColor       clamp(r32 lower_bound, r32 upper_bound) const;
 
-        pcolor      pack_to_abgr() const;
-        pcolor      pack_to_rgba() const;
+        packed_color    pack_to_bgra() const;
+        packed_color    pack_to_abgr() const;
+        packed_color    pack_to_argb() const;
+        packed_color    pack_to_rgba() const;
 
     public:
         r32 red;

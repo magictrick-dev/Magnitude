@@ -1,5 +1,8 @@
 #include <graphics/color.hpp>
 
+#define MAG_DEF_GAMMA 2.2f
+#define MAG_TRUNC_EPSILON 0.5f
+
 RGBAColor RGBAColor::
 clamp() const
 {
@@ -26,50 +29,90 @@ clamp(r32 lower_bound, r32 upper_bound) const
 
 }
 
-RGBAColor RGBAColor::
-normalize() const
-{
-
-    // TODO(Chris): SIMD could save us from this madness.
-    const r32 rsq = this->red       * this->red;
-    const r32 gsq = this->green     * this->green;
-    const r32 bsq = this->blue      * this->blue;
-    const r32 asq = this->alpha     * this->alpha;
-    const r32 sum = rsq + gsq + bsq + asq;
-    const r32 div = sqrtf(sum);
-
-    return { this->red / div, this->green / div, this->blue / div, this->alpha / div };
-
-}
-
-pcolor RGBAColor::
+packed_color RGBAColor::
 pack_to_abgr() const
 {
 
-    // TODO(Chris): We will want to epsilon shift and truncate at some point to
-    //              enforce a true range of values.
+    r32 result_red      = powf(this->red,   (1.0f / MAG_DEF_GAMMA)) * 255.0f;
+    r32 result_green    = powf(this->green, (1.0f / MAG_DEF_GAMMA)) * 255.0f;
+    r32 result_blue     = powf(this->blue,  (1.0f / MAG_DEF_GAMMA)) * 255.0f;
+    r32 result_alpha    = powf(this->alpha, (1.0f / MAG_DEF_GAMMA)) * 255.0f;
+    result_red         += MAG_TRUNC_EPSILON;
+    result_green       += MAG_TRUNC_EPSILON;
+    result_blue        += MAG_TRUNC_EPSILON;
+    result_alpha       += MAG_TRUNC_EPSILON;
 
-    pcolor result = {0};
-    result.component_abgr.red    = (u8)(this->red    * 255.0f);
-    result.component_abgr.green  = (u8)(this->green  * 255.0f);
-    result.component_abgr.blue   = (u8)(this->blue   * 255.0f);
-    result.component_abgr.alpha  = (u8)(this->alpha  * 255.0f);
+    packed_color result = {0};
+    result.component_abgr.red    = (u8)(result_red);
+    result.component_abgr.green  = (u8)(result_green);
+    result.component_abgr.blue   = (u8)(result_blue);
+    result.component_abgr.alpha  = (u8)(result_alpha);
     return result;
 
 }
 
-pcolor RGBAColor::
+packed_color RGBAColor::
+pack_to_bgra() const
+{
+
+    r32 result_red      = powf(this->red,   (1.0f / MAG_DEF_GAMMA)) * 255.0f;
+    r32 result_green    = powf(this->green, (1.0f / MAG_DEF_GAMMA)) * 255.0f;
+    r32 result_blue     = powf(this->blue,  (1.0f / MAG_DEF_GAMMA)) * 255.0f;
+    r32 result_alpha    = powf(this->alpha, (1.0f / MAG_DEF_GAMMA)) * 255.0f;
+    result_red         += MAG_TRUNC_EPSILON;
+    result_green       += MAG_TRUNC_EPSILON;
+    result_blue        += MAG_TRUNC_EPSILON;
+    result_alpha       += MAG_TRUNC_EPSILON;
+
+    packed_color result = {0};
+    result.component_bgra.red    = (u8)(result_red);
+    result.component_bgra.green  = (u8)(result_green);
+    result.component_bgra.blue   = (u8)(result_blue);
+    result.component_bgra.alpha  = (u8)(result_alpha);
+    return result;
+
+}
+
+packed_color RGBAColor::
 pack_to_rgba() const
 {
 
-    // TODO(Chris): We will want to epsilon shift and truncate at some point to
-    //              enforce a true range of values.
+    r32 result_red      = powf(this->red,   (1.0f / MAG_DEF_GAMMA)) * 255.0f;
+    r32 result_green    = powf(this->green, (1.0f / MAG_DEF_GAMMA)) * 255.0f;
+    r32 result_blue     = powf(this->blue,  (1.0f / MAG_DEF_GAMMA)) * 255.0f;
+    r32 result_alpha    = powf(this->alpha, (1.0f / MAG_DEF_GAMMA)) * 255.0f;
+    result_red         += MAG_TRUNC_EPSILON;
+    result_green       += MAG_TRUNC_EPSILON;
+    result_blue        += MAG_TRUNC_EPSILON;
+    result_alpha       += MAG_TRUNC_EPSILON;
 
-    pcolor result = {0};
-    result.component_rgba.red    = (u8)(this->red    * 255.0f);
-    result.component_rgba.green  = (u8)(this->green  * 255.0f);
-    result.component_rgba.blue   = (u8)(this->blue   * 255.0f);
-    result.component_rgba.alpha  = (u8)(this->alpha  * 255.0f);
+    packed_color result = {0};
+    result.component_rgba.red    = (u8)(result_red);
+    result.component_rgba.green  = (u8)(result_green);
+    result.component_rgba.blue   = (u8)(result_blue);
+    result.component_rgba.alpha  = (u8)(result_alpha);
+    return result;
+
+}
+
+packed_color RGBAColor::
+pack_to_argb() const
+{
+
+    r32 result_red      = powf(this->red,   (1.0f / MAG_DEF_GAMMA)) * 255.0f;
+    r32 result_green    = powf(this->green, (1.0f / MAG_DEF_GAMMA)) * 255.0f;
+    r32 result_blue     = powf(this->blue,  (1.0f / MAG_DEF_GAMMA)) * 255.0f;
+    r32 result_alpha    = powf(this->alpha, (1.0f / MAG_DEF_GAMMA)) * 255.0f;
+    result_red         += MAG_TRUNC_EPSILON;
+    result_green       += MAG_TRUNC_EPSILON;
+    result_blue        += MAG_TRUNC_EPSILON;
+    result_alpha       += MAG_TRUNC_EPSILON;
+
+    packed_color result = {0};
+    result.component_argb.red    = (u8)(result_red);
+    result.component_argb.green  = (u8)(result_green);
+    result.component_argb.blue   = (u8)(result_blue);
+    result.component_argb.alpha  = (u8)(result_alpha);
     return result;
 
 }

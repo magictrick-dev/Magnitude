@@ -4,6 +4,7 @@
 #include <string>
 #include <definitions.hpp>
 #include <graphics/color.hpp>
+#include <graphics/bitmap.hpp>
 
 #define MAGWINDEF_WIDTH     1600
 #define MAGWINDEF_HEIGHT    900
@@ -19,14 +20,20 @@
 // has a window implementation; just call Window::create() to get back a window
 // suitable for the platform you're running on.
 //
-// The Window interface gives you access to the pixels within the window for
-// modification. This is for testing, experimentation, and even for a little bit
-// of fun. Per-pixel manipulation is slow, especially if you intend to write a lot
-// of pixels to the window. Instead, you should provide a bitmap buffer of all your
-// changes so that you make a single call. Writing to memory is *significantly* faster
-// than per-pixel addressing. The OS doesn't care if you write one pixel, or all the
-// pixels. Therefore, it's way more efficient to feed it a complete bitmap image.
-// Either way, power to you. Have fun.
+// The set_bitmap(), set_pixel(), and get_pixel() functions are implemented for
+// your personal enrichment. If you want to write to the window, using set_pixel()
+// is the easiest way to put a dot down, but it is the slowest. For Windows, the
+// WinGDI library does a whole lot of under-the-hood abstractions that make OS
+// calls like set_pixel() expensive. If you want get a faster, more authentic
+// direct-to-window rendering, use set_bitmap() instead. The idea here is that you
+// create a bitmap of the size of the window, render to that and then render that
+// to the window. Since your proxy your drawing to memory, it's way faster. The
+// OS doesn't care if you render one pixel or one million pixels, a single call
+// will always be faster than a million calls.
+//
+// The API is designed such that you can have multiple windows. This is nice to
+// have in case you want to render different images in different windows but the
+// trade-off is that it is still single-threaded.
 //
 
 class Window
@@ -58,8 +65,9 @@ class Window
         virtual bool            did_size_change()   const = 0;
         virtual bool            did_focus_change()  const = 0;
 
-        virtual void            set_pixel(i32 x, i32 y, pcolor what) = 0;
-        virtual pcolor          get_pixel(i32 x, i32 y) = 0;
+        virtual void            set_bitmap(i32 x, i32 y, bitmap_info_header *info, u32 *data) = 0;
+        virtual void            set_pixel(i32 x, i32 y, packed_color what) = 0;
+        virtual packed_color    get_pixel(i32 x, i32 y) = 0;
 
 };
 

@@ -1,6 +1,11 @@
+#include <platform/win32/win32window.hpp>
+#include <glad/glad.h>
+#include <iostream>
 #include <windows.h>
 #include <wingdi.h>
-#include <platform/win32/win32window.hpp>
+#include <imgui/imgui.h>
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 Win32Window::
 Win32Window(std::string title, i32 width, i32 height)
@@ -257,7 +262,17 @@ set_size(i32 width, i32 height)
 }
 
 void Win32Window::
-set_pixel(i32 x, i32 y, pcolor what)
+set_bitmap(i32 x, i32 y, bitmap_info_header *info, u32 *data)
+{
+
+    i32 result = StretchDIBits(this->device_context, x, y, this->width, this->height,
+            0, 0, info->width, info->height, data,
+            (BITMAPINFO*)info, DIB_RGB_COLORS, SRCCOPY);
+
+}
+
+void Win32Window::
+set_pixel(i32 x, i32 y, packed_color what)
 {
 
     if (x < 0.0f || x >= this->width || y < 0.0f || y >= this->height) return;
@@ -266,22 +281,22 @@ set_pixel(i32 x, i32 y, pcolor what)
 
 }
 
-pcolor Win32Window::
+packed_color Win32Window::
 get_pixel(i32 x, i32 y)
 {
 
-    pcolor result = {0};
+    packed_color result = {0};
     if (x < 0.0f || x >= this->width || y < 0.0f || y >= this->height) return result;
     result.pack = (u32)GetPixel(this->device_context, x, y);
     return result;
 
 }
 
-
 LRESULT CALLBACK Win32Window::
 window_procedure(HWND window, UINT message, WPARAM w_param, LPARAM l_param)
 {
 
+    ImGui_ImplWin32_WndProcHandler(window, message, w_param, l_param);
     Win32Window *self = (Win32Window*)GetWindowLongPtr(window, GWLP_USERDATA);
     LRESULT ret_result = 0;   
 
