@@ -2,7 +2,7 @@
 #include <platform/win32/win32opengl.hpp>
 
 bool OpenGLRenderContext::
-create(std::shared_ptr<Window> window)
+create_render_context(std::shared_ptr<Window> window)
 {
 
     if (Win32OpenGLRenderContext::context == nullptr)
@@ -26,5 +26,13 @@ OpenGLRenderContext()
 OpenGLRenderContext::
 ~OpenGLRenderContext()
 {
+
+}
+
+OpenGLRenderContext& OpenGLRenderContext::
+get_render_context()
+{
+
+    return *Win32OpenGLRenderContext::context;
 
 }

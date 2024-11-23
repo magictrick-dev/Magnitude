@@ -26,6 +26,7 @@
 #include <utilities/cli.hpp>
 #include <graphics/color.hpp>
 #include <graphics/bitmap.hpp>
+#include <imgui/imgui.h>
 #include <glad/glad.h>
 
 i32
@@ -74,7 +75,7 @@ main(i32 argc, cptr *argv)
 
     // Create the window and attempt to establish an OpenGL render context.
     std::shared_ptr<Window> main_window = Window::create("Example Project", 1280, 720);
-    OpenGLRenderContext::create(main_window);
+    OpenGLRenderContext::create_render_context(main_window);
     glEnable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
@@ -95,6 +96,7 @@ main(i32 argc, cptr *argv)
 
         // Poll the window events.
         main_window->poll_events();
+        
 
         /*
         // If the window size changed, we need to resize our render bitmap.
@@ -128,10 +130,20 @@ main(i32 argc, cptr *argv)
         main_window->set_bitmap(0, 0, &image_format.info_header, render_bitmap.get_data());
         */
 
+        OpenGLRenderContext::get_render_context().begin_frame();
         glViewport(0, 0, main_window->get_width(), main_window->get_height());
         glClear(GL_COLOR_BUFFER_BIT);
         glClear(GL_DEPTH_BUFFER_BIT);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+
+        // Show the Dear ImGUI demo window.
+        static bool show_demo = true;
+        if (show_demo)
+        {
+            ImGui::ShowDemoWindow(&show_demo);
+        }
+
+        OpenGLRenderContext::get_render_context().end_frame();
 
         // Swap the frames.
         main_window->swap_frames();

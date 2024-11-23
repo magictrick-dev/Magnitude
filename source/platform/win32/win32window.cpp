@@ -3,6 +3,9 @@
 #include <iostream>
 #include <windows.h>
 #include <wingdi.h>
+#include <imgui/imgui.h>
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 Win32Window::
 Win32Window(std::string title, i32 width, i32 height)
@@ -293,6 +296,7 @@ LRESULT CALLBACK Win32Window::
 window_procedure(HWND window, UINT message, WPARAM w_param, LPARAM l_param)
 {
 
+    ImGui_ImplWin32_WndProcHandler(window, message, w_param, l_param);
     Win32Window *self = (Win32Window*)GetWindowLongPtr(window, GWLP_USERDATA);
     LRESULT ret_result = 0;   
 

@@ -24,10 +24,13 @@ class OpenGLRenderContext
 {
 
     public:
-        static bool     create(std::shared_ptr<Window> window);
+        static bool                     create_render_context(std::shared_ptr<Window> window);
+        static OpenGLRenderContext&     get_render_context();
 
         virtual bool    bind_to(std::shared_ptr<Window> window) = 0;
-        virtual bool    unbind() = 0;
+        virtual bool    unbind()        = 0;
+        virtual void    begin_frame()   = 0;
+        virtual void    end_frame()     = 0;
 
     protected:
                             OpenGLRenderContext();
