@@ -33,12 +33,14 @@ class IResource
 {
 
     public:
-        inline              IResource() { };
+        inline              IResource(i64 index) : associated_handle(index) { };
         inline virtual     ~IResource() { };
 
-        inline Filepath     get_path() const    { return this->path; }
-        inline vptr         get_buffer() const  { return this->buffer_ptr; }
-        inline u64          get_size() const    { return this->buffer_size; }
+        inline Filepath     get_path() const            { return this->path; }
+        inline vptr         get_buffer() const          { return this->buffer_ptr; }
+        inline u64          get_size() const            { return this->buffer_size; }
+        inline i64          get_handle_index() const    { return this->associated_handle; }
+        inline b32          is_loaded() const           { return this->loaded; }
 
         virtual bool        reserve()           = 0;
         virtual bool        load()              = 0;
@@ -49,6 +51,8 @@ class IResource
         Filepath        path;
         vptr            buffer_ptr;
         u64             buffer_size;
+        b32             loaded;
+        rhandle         associated_handle;
 
 };
 
@@ -80,7 +84,6 @@ class ResourceManager
         static bool         resource_handle_is_valid(rhandle handle);
         static bool         resource_is_reserved(rhandle handle);
         static bool         resource_is_loaded(rhandle handle);
-        static bool         resource_is_memory_resource(rhandle handle);
         static vptr         get_resource_as_raw(rhandle handle);
         static ccptr        get_resource_as_string(rhandle handle);
         static cptr         get_resource_as_string_buffer(rhandle handle);
@@ -95,6 +98,8 @@ class ResourceManager
         virtual            ~ResourceManager();
     protected:
         ResourceManager();
+
+        std::shared_ptr<IResource> get_resource(rhandle handle);
 
         std::unordered_map<std::string, rhandle>    resource_lookup;
         std::vector<std::shared_ptr<IResource>>     resource_list;

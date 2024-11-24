@@ -11,7 +11,7 @@ class FileResource : public IResource
 {
 
     public:
-                    FileResource();
+                    FileResource(i64 index, Filepath path);
         virtual    ~FileResource();
 
         inline virtual bool     reserve()           override;
@@ -22,7 +22,7 @@ class FileResource : public IResource
 };
 
 FileResource::
-FileResource()
+FileResource(i64 index, Filepath path) : IResource(index)
 {
 
 }
@@ -67,14 +67,17 @@ resize(u64 size)
 
 // --- Memory Resource ---------------------------------------------------------
 //
-// Represents resources that are in-memory only.
+// Represents resources that are in-memory only. When the user passes in their
+// own buffer, it is *copied* so that the memory resource maintains ownership.
+// Otherwise, the user is free to let the memory resource acquire its own memory
+// using a different constructor.
 //
 
 class MemoryResource : public IResource
 {
 
     public:
-                    MemoryResource();
+                    MemoryResource(i64 index, vptr buffer, u64 size);
         virtual    ~MemoryResource();
 
         inline virtual bool     reserve()           override;
@@ -85,7 +88,7 @@ class MemoryResource : public IResource
 };
 
 MemoryResource::
-MemoryResource()
+MemoryResource(i64 index, vptr buffer, u64 size) : IResource(index)
 {
 
 }
@@ -170,7 +173,25 @@ create_file_resource(Filepath path)
 
     ResourceManager& self = ResourceManager::get();
 
-    return -1;
+    // Search if the resource already exists.
+    std::string path_as_string = path.c_str();
+    auto result = self.resource_lookup.find(path_as_string);
+    if (result != self.resource_lookup.end())
+    {
+        rhandle handle = result->second;
+        return handle;
+    }
+
+    // Ensure the path is valid first.
+    if (!path.is_valid_file()) return -1;
+
+    // Otherwise the resource is added to the loopup table
+    rhandle current_index = self.resource_list.size();
+    std::shared_ptr<FileResource> res = std::make_shared<FileResource>(current_index, path);
+    self.resource_list.push_back(res);
+    self.resource_lookup[path_as_string] = current_index;
+    return current_index;
+
 }
 
 rhandle ResourceManager::
@@ -178,8 +199,11 @@ create_memory_resource(vptr buffer, u64 buffer_size)
 {
 
     ResourceManager& self = ResourceManager::get();
-
-    return -1;
+    rhandle current_index = self.resource_list.size();
+    std::shared_ptr<MemoryResource> res = std::make_shared<MemoryResource>(
+            current_index, buffer, buffer_size);
+    self.resource_list.push_back(res);
+    return current_index;
 
 }
 
@@ -188,7 +212,9 @@ release_resource(rhandle handle)
 {
 
     ResourceManager& self = ResourceManager::get();
-
+    std::shared_ptr<IResource> res = self.get_resource(handle);
+    MAG_ENSURE_PTR(res);
+    res->release();
     return;
 
 }
@@ -198,8 +224,9 @@ resource_handle_is_valid(rhandle handle)
 {
 
     ResourceManager& self = ResourceManager::get();
-
-    return false;
+    if (handle < 0 || handle >= self.resource_list.size())
+        return false;
+    return true;
 
 }
         
@@ -208,8 +235,10 @@ resource_is_reserved(rhandle handle)
 {
 
     ResourceManager& self = ResourceManager::get();
-
-    return false;
+    std::shared_ptr<IResource> res = self.get_resource(handle);
+    MAG_ENSURE_PTR(res);
+    b32 result = res->get_buffer() != nullptr;
+    return result;
 
 }
 
@@ -218,18 +247,10 @@ resource_is_loaded(rhandle handle)
 {
 
     ResourceManager& self = ResourceManager::get();
-
-    return false;
-
-}
-
-bool ResourceManager::
-resource_is_memory_resource(rhandle handle)
-{
-
-    ResourceManager& self = ResourceManager::get();
-
-    return false;
+    std::shared_ptr<IResource> res = self.get_resource(handle);
+    MAG_ENSURE_PTR(res);
+    b32 result = res->is_loaded();
+    return result;
 
 }
 
@@ -238,8 +259,10 @@ get_resource_as_raw(rhandle handle)
 {
 
     ResourceManager& self = ResourceManager::get();
-
-    return nullptr;
+    std::shared_ptr<IResource> res = self.get_resource(handle);
+    MAG_ENSURE_PTR(res);
+    vptr result = res->get_buffer();
+    return result;
 
 }
 
@@ -248,8 +271,10 @@ get_resource_as_string(rhandle handle)
 {
 
     ResourceManager& self = ResourceManager::get();
-
-    return nullptr;
+    std::shared_ptr<IResource> res = self.get_resource(handle);
+    MAG_ENSURE_PTR(res);
+    ccptr result = (ccptr)res->get_buffer();
+    return result;
 
 }
 
@@ -258,8 +283,10 @@ get_resource_as_string_buffer(rhandle handle)
 {
 
     ResourceManager& self = ResourceManager::get();
-
-    return nullptr;
+    std::shared_ptr<IResource> res = self.get_resource(handle);
+    MAG_ENSURE_PTR(res);
+    cptr result = (cptr)res->get_buffer();
+    return result;
 
 }
 
@@ -268,8 +295,10 @@ get_resource_size(rhandle handle)
 {
 
     ResourceManager& self = ResourceManager::get();
-
-    return 0;
+    std::shared_ptr<IResource> res = self.get_resource(handle);
+    MAG_ENSURE_PTR(res);
+    u64 result = res->get_size();
+    return result;
 
 }
 
@@ -278,8 +307,10 @@ get_resource_file_path(rhandle handle)
 {
 
     ResourceManager& self = ResourceManager::get();
-
-    return {};
+    std::shared_ptr<IResource> res = self.get_resource(handle);
+    MAG_ENSURE_PTR(res);
+    Filepath result = res->get_path();
+    return result;
 
 }
 
@@ -288,8 +319,10 @@ reserve_resource(rhandle handle)
 {
 
     ResourceManager& self = ResourceManager::get();
-
-    return false;
+    std::shared_ptr<IResource> res = self.get_resource(handle);
+    MAG_ENSURE_PTR(res);
+    bool result = res->reserve();
+    return result;
 
 }
 
@@ -298,8 +331,10 @@ load_resource(rhandle handle)
 {
 
     ResourceManager& self = ResourceManager::get();
-
-    return false;
+    std::shared_ptr<IResource> res = self.get_resource(handle);
+    MAG_ENSURE_PTR(res);
+    bool result = res->load();
+    return result;
 
 }
 
@@ -308,7 +343,26 @@ resize_resource(rhandle handle, u64 new_size)
 {
 
     ResourceManager& self = ResourceManager::get();
+    std::shared_ptr<IResource> res = self.get_resource(handle);
+    MAG_ENSURE_PTR(res);
+    bool result = res->resize(new_size);
+    return result;
 
-    return false;
+}
+
+std::shared_ptr<IResource> ResourceManager::
+get_resource(rhandle handle)
+{
+
+    // Resource doesn't exist in this case.
+    if (handle < 0 || handle >= this->resource_list.size())
+        return nullptr;
+
+    // Fetch and check.
+    std::shared_ptr<IResource> res = this->resource_list[handle];
+    MAG_ASSERT(res->get_handle_index() == handle && 
+            "Did you accidently increment the handle when you shouldn't have?");
+
+    return res;
 
 }
