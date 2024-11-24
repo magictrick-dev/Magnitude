@@ -52,6 +52,10 @@ add_executable(Magnitude
     "source/utilities/path.cpp"
     "source/utilities/cli.hpp"
     "source/utilities/cli.cpp"
+    "source/utilities/resourceman.hpp"
+    "source/utilities/resourceman.cpp"
+    "source/utilities/rdtokenizer.hpp"
+    "source/utilities/rdtokenizer.cpp"
 
     "source/platform/window.hpp"
     "source/platform/opengl.hpp"
