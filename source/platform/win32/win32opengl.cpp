@@ -48,6 +48,7 @@ Win32OpenGLRenderContext(std::shared_ptr<Window> window)
 
     // Intiialize OpenGL using GLAD.
     HGLRC opengl_render_context = wglCreateContext(device_context);
+    this->render_context = opengl_render_context;
     this->context_check_last_error();
 
     wglMakeCurrent(device_context, opengl_render_context);
@@ -71,7 +72,7 @@ Win32OpenGLRenderContext::
 }
 
 bool Win32OpenGLRenderContext::
-bind_to(std::shared_ptr<Window> window) 
+bind(std::shared_ptr<Window> window) 
 { 
 
     // TODO(Chris): We should use GetLastError here to get more information on
@@ -288,7 +289,7 @@ imgui_initialize_platform(void *platform_handle, void *render_context, i32 width
     ImGuiStyle& style = ImGui::GetStyle();
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
-        style.WindowRounding = 0.0f;
+        style.WindowRounding = 3.0f;
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
     }
 

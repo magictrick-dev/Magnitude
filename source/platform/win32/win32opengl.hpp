@@ -13,12 +13,12 @@ class Win32OpenGLRenderContext : public OpenGLRenderContext
                     Win32OpenGLRenderContext(std::shared_ptr<Window> window);
         virtual    ~Win32OpenGLRenderContext();
 
-        virtual bool        bind_to(std::shared_ptr<Window> window);
-        virtual bool        unbind();
-        virtual void        begin_frame();
-        virtual void        end_frame();
+        bool        bind(std::shared_ptr<Window> window);
+        bool        unbind();
+        void        begin_frame();
+        void        end_frame();
 
-        bool                context_check_last_error() const;
+        bool        context_check_last_error() const;
 
         static inline thread_local std::shared_ptr<Win32OpenGLRenderContext> context = nullptr;
 
