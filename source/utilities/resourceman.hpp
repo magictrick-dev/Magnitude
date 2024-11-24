@@ -1,6 +1,7 @@
 #ifndef MAGNITUDE_UTILITIES_RESOURCEMAN_HPP
 #define MAGNITUDE_UTILITIES_RESOURCEMAN_HPP
 #include <unordered_map>
+#include <string>
 #include <vector>
 #include <definitions.hpp>
 #include <utilities/path.hpp>
@@ -91,12 +92,15 @@ class ResourceManager
 
         static bool         resize_resource(rhandle handle, u64 new_size);
 
+        virtual            ~ResourceManager();
     protected:
         ResourceManager();
 
+        std::unordered_map<std::string, rhandle>    resource_lookup;
+        std::vector<std::shared_ptr<IResource>>     resource_list;
+
     protected:
         static ResourceManager& get();
-        static inline std::shared_ptr<ResourceManager> instance = nullptr;
 
 };
 
