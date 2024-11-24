@@ -134,9 +134,14 @@ context_check_last_error() const
 
 }
 
-// --- Dear ImGUI --------------------------------------------------------------
+// --- Dear ImGUI Initialization & Setup --------------------------------------- 
 //
-// Of course, what would a hardware renderer be without Dear ImGUI?
+// Setting up Dear ImGUI is generally easy, except it isn't so easy if you want
+// multiple viewports. A lot of this is glued up code from the examples, so there
+// isn't really much we have to do aside ensuring our book-keeping is up to date.
+//
+// The most important thing to note is that we need to establish our OpenGL context
+// first before we can do anything crazy with ImGUI.
 //
 
 // Data stored per platform window
@@ -267,6 +272,8 @@ void
 imgui_initialize_platform(void *platform_handle, void *render_context, i32 width, i32 height)
 {
 
+    // Pretty much glued straight from the example code. If it aint broke, don't
+    // fix it, I guess.
     g_MainWindow = { GetDC((HWND)platform_handle) };
     g_hRC = (HGLRC)render_context;
     g_Width = width;
@@ -285,7 +292,8 @@ imgui_initialize_platform(void *platform_handle, void *render_context, i32 width
     ImGui::StyleColorsDark();
     //ImGui::StyleColorsClassic();
 
-    // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
+    // When viewports are enabled we tweak WindowRounding/WindowBg 
+    // so platform windows can look identical to regular ones.
     ImGuiStyle& style = ImGui::GetStyle();
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
@@ -297,7 +305,8 @@ imgui_initialize_platform(void *platform_handle, void *render_context, i32 width
     ImGui_ImplWin32_InitForOpenGL((HWND)platform_handle);
     ImGui_ImplOpenGL3_Init();
 
-    // Win32+GL needs specific hooks for viewport, as there are specific things needed to tie Win32 and GL api.
+    // Win32+GL needs specific hooks for viewport, as there are specific things 
+    // needed to tie Win32 and GL api.
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
         ImGuiPlatformIO& platform_io = ImGui::GetPlatformIO();
@@ -310,6 +319,18 @@ imgui_initialize_platform(void *platform_handle, void *render_context, i32 width
         platform_io.Renderer_SwapBuffers = Hook_Renderer_SwapBuffers;
         platform_io.Platform_RenderWindow = Hook_Platform_RenderWindow;
     }
+
+    // Just in case our monitor does something weird, we set our monitor
+    // work position as main monitor position.
+    {
+        ImGuiPlatformIO& platform_io = ImGui::GetPlatformIO();
+        for (int i = 0; i < platform_io.Monitors.Size; i++)
+        {
+            ImGuiPlatformMonitor& mon = platform_io.Monitors[i];
+            mon.WorkPos = mon.MainPos;
+        }
+    }
+
 }
 
 void 
