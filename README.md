@@ -42,13 +42,20 @@ The following list of features outline what Magnitude supports/will support:
 - [ ] Window System: Non-blocking Fix
 - [X] Vendor: Dear ImGUI
 - [ ] Vendor: ASSIMP
+- [X] Vendor: STBImage
+- [ ] Resource Management System: Handles
+- [ ] Resource Management System: File Loading
+- [ ] Resource Management System: File Saving
+- [ ] Resource Management System: File Streaming
 - [ ] Input System: Keyboard
 - [ ] Input System: Mouse
 - [ ] Input System: Controller
 - [ ] RDView Parser: Tokenizer
 - [ ] RDView Parser: Parser
 - [ ] RDView Parser: Dynamic Parsing
-- [ ] RDView Parser: Editor
+- [X] Text Editor: Editor GUI System (Github: BalazsJako)
+- [ ] Text Editor: Editor Highlighting
+- [ ] Text Editor: Performant Refactor of BalazsJako's code.
 - [ ] Modeling: 2D Primitives
 - [ ] Modeling: 3D Primitives
 - [ ] Modeling: Object File Loading
@@ -61,6 +68,7 @@ The following list of features outline what Magnitude supports/will support:
 - [ ] Hardware Renderer: 3D Rendering
 - [ ] Hardware Renderer: Lighting & Texturing
 - [ ] Behavioral: Renderer Swap from Software to Hardware, vice-versa.
+- [ ] Behavioral: Application Icon
 - [ ] OPTIONAL: Video Rendering, FFMPEG Support?
 
 Magnitude should eventually support all major hardware accelerations APIs which

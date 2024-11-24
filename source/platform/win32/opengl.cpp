@@ -17,6 +17,24 @@ create_render_context(std::shared_ptr<Window> window)
 
 }
 
+bool OpenGLRenderContext::
+destroy_render_context()
+{
+
+    
+    if (Win32OpenGLRenderContext::context != nullptr)
+    {
+
+        // Setting it to null will basically yeet the context.
+        Win32OpenGLRenderContext::context = nullptr;
+        return true;
+
+    }
+
+    return false;
+
+}
+
 OpenGLRenderContext::
 OpenGLRenderContext()
 {
@@ -29,10 +47,38 @@ OpenGLRenderContext::
 
 }
 
-OpenGLRenderContext& OpenGLRenderContext::
-get_render_context()
+bool OpenGLRenderContext::
+bind(std::shared_ptr<Window> window)
 {
 
-    return *Win32OpenGLRenderContext::context;
+    MAG_ASSERT(Win32OpenGLRenderContext::context != nullptr);
+    return Win32OpenGLRenderContext::context->bind(window);
+
+}
+
+bool OpenGLRenderContext::
+unbind()
+{
+
+    MAG_ASSERT(Win32OpenGLRenderContext::context != nullptr);
+    return Win32OpenGLRenderContext::context->unbind();
+
+}
+
+void OpenGLRenderContext::
+begin_frame()
+{
+
+    MAG_ASSERT(Win32OpenGLRenderContext::context != nullptr);
+    Win32OpenGLRenderContext::context->begin_frame();
+
+}
+
+void OpenGLRenderContext::
+end_frame()
+{
+
+    MAG_ASSERT(Win32OpenGLRenderContext::context != nullptr);
+    Win32OpenGLRenderContext::context->end_frame();
 
 }

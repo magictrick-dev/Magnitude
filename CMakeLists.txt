@@ -52,6 +52,10 @@ add_executable(Magnitude
     "source/utilities/path.cpp"
     "source/utilities/cli.hpp"
     "source/utilities/cli.cpp"
+    "source/utilities/resourceman.hpp"
+    "source/utilities/resourceman.cpp"
+    "source/utilities/rdtokenizer.hpp"
+    "source/utilities/rdtokenizer.cpp"
 
     "source/platform/window.hpp"
     "source/platform/opengl.hpp"
@@ -74,6 +78,8 @@ add_executable(Magnitude
     "vendor/imgui/imstb_rectpack.h"
     "vendor/imgui/imstb_textedit.h"
     "vendor/imgui/imstb_truetype.h"
+    "vendor/balazedit/texteditor.h"
+    "vendor/balazedit/texteditor.cpp"
 
     ${PLATFORM_FILES}
 )
@@ -85,7 +91,7 @@ add_executable(Magnitude
 #
 
 find_package(OpenGL REQUIRED)
-target_include_directories(Magnitude PUBLIC "source" "vendor")
+target_include_directories(Magnitude PRIVATE "source" "vendor")
 set_property(TARGET Magnitude PROPERTY CXX_STANDARD 20)
 
 if (WIN32)

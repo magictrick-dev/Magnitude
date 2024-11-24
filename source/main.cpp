@@ -28,6 +28,7 @@
 #include <graphics/bitmap.hpp>
 #include <imgui/imgui.h>
 #include <glad/glad.h>
+#include <balazedit/texteditor.h>
 
 i32
 main(i32 argc, cptr *argv)
@@ -72,10 +73,25 @@ main(i32 argc, cptr *argv)
     // establish an OpenGL context. This ensures that everything is properly set
     // up for hardware rendering and DearImGUI.
     //
+    // The general workflow is as follows:
+    //      1.  Create the window.
+    //      2.  Establish a render context (probably OpenGL).
+    //      3.  Show window.
+    //      4.  Enter runtime loop.
+    //      5.  Bind our render context to the active window (probably main window).
+    //      6.  Begin frame in render context.
+    //      7.  Poll window events.
+    //      8.  Do some rendering & logic updates.
+    //      9.  End frame in render context.
+    //      10. Unbind the render context.
+    //      11. Swap the buffers in the window.
+    //
 
     // Create the window and attempt to establish an OpenGL render context.
-    std::shared_ptr<Window> main_window = Window::create("Example Project", 1280, 720);
+    std::shared_ptr<Window> main_window = Window::create("Magnitude Graphics Visualizer", 1280, 720);
     OpenGLRenderContext::create_render_context(main_window);
+    
+    // Initialize OpenGL.
     glEnable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
@@ -88,49 +104,20 @@ main(i32 argc, cptr *argv)
     main_window->swap_frames();
     main_window->show();
 
-    // Create a bitmap that we will draw to. (It's optimal.)
-    //BitmapImageWrapper render_bitmap(main_window->get_width(), main_window->get_height());
+    // Create the text editor.
+    TextEditor basic_editor;
 
     while (!main_window->should_close())
     {
 
+        // Set the context.
+        OpenGLRenderContext::bind(main_window);
+
         // Poll the window events.
         main_window->poll_events();
         
-
-        /*
-        // If the window size changed, we need to resize our render bitmap.
-        if (main_window->did_size_change())
-        {
-            render_bitmap.resize(main_window->get_width(), main_window->get_height());
-        }
-
-        // Render to the window.
-        for (i32 y = 0; y < main_window->get_height(); ++y)
-        {
-
-            for (i32 x = 0; x < main_window->get_width(); ++x)
-            {
-
-                r32 red     = (r32)x / main_window->get_width();
-                r32 green   = (r32)y / main_window->get_height();
-                r32 blue    = 0.0f;
-                r32 alpha   = 1.0f;
-
-                RGBAColor assignment_color(red, green, blue, alpha);
-                packed_color output_color = assignment_color.pack_to_bgra();
-                render_bitmap.set_pixel(x, y, output_color);
-
-            }
-
-        }
-
-        // Take our bitmap and render it to the window.
-        bitmap_image image_format = render_bitmap.get_image_format();
-        main_window->set_bitmap(0, 0, &image_format.info_header, render_bitmap.get_data());
-        */
-
-        OpenGLRenderContext::get_render_context().begin_frame();
+        // Begin the rendering.
+        OpenGLRenderContext::begin_frame();
         glViewport(0, 0, main_window->get_width(), main_window->get_height());
         glClear(GL_COLOR_BUFFER_BIT);
         glClear(GL_DEPTH_BUFFER_BIT);
@@ -143,9 +130,18 @@ main(i32 argc, cptr *argv)
             ImGui::ShowDemoWindow(&show_demo);
         }
 
-        OpenGLRenderContext::get_render_context().end_frame();
+        // Show the editor.
+        static bool show_editor = true;
+        if (show_editor)
+        {
+            ImGui::Begin("RDView Text Editor", &show_editor);
+            basic_editor.Render("EditorArea");
+            ImGui::End();
+        }
 
-        // Swap the frames.
+        // End the rendering.
+        OpenGLRenderContext::end_frame();
+        OpenGLRenderContext::unbind();
         main_window->swap_frames();
 
     }
