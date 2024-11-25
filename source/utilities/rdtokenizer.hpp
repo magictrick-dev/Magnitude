@@ -3,6 +3,7 @@
 #include <string>
 #include <definitions.hpp>
 #include <utilities/path.hpp>
+#include <utilities/resourceman.hpp>
 
 // --- RDView Tokenizer --------------------------------------------------------
 //
@@ -18,9 +19,11 @@ enum class RDViewTokenType
 {
     TypeError       =  -2,
     TypeEOF         =  -1,
-    TypeReal        =   0,
-    TypeString      =   1,
-    TypeIdentifier  =   2,
+    TypeReal        =   0, // Basic float formats, can prceed +/-.
+    TypeInteger     =   1, // Basic integer formats, can preceed +/-.
+    TypeString      =   2, // Conventionally double, but we can do singles.
+    TypeBoolean     =   3, // true, yes, on, or 1 : false, no, off, or 0
+    TypeIdentifier  =   4, // Anything not classified as a direct keyword.
 };
 
 class RDViewToken
@@ -28,6 +31,7 @@ class RDViewToken
 
     public:
                             RDViewToken();
+                            RDViewToken(rhandle handle, i32 offset, i32 length);
         virtual            ~RDViewToken();
 
         RDViewTokenType     get_type()      const;
@@ -36,10 +40,13 @@ class RDViewToken
         std::pair<i32, i32> get_location()  const;
         Filepath            get_filepath()  const;
 
+        void                set_type(RDViewTokenType type);
+
     protected:
         RDViewTokenType     type;
         i32                 offset;
         i32                 length;
+        rhandle             handle;
 
 };
 
@@ -47,7 +54,7 @@ class RDViewTokenizer
 {
 
     public:
-                            RDViewTokenizer();
+                            RDViewTokenizer(Filepath path);
         virtual            ~RDViewTokenizer();
 
         void                shift();
@@ -59,7 +66,7 @@ class RDViewTokenizer
 
     protected:
         Filepath            path;
-        std::string         source;
+        rhandle             handle;
 
         RDViewToken         tokens[3];
         RDViewToken*        previous_token;
