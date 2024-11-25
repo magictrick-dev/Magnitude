@@ -79,6 +79,11 @@ The following list of features outline what Magnitude supports/will support:
 - [X] Behavioral: Application Icon
 - [X] Behavioral: Custom Dear ImGUI Font
 - [X] Behavioral: Custom Dear ImGUI UI Color Scheme
+- [ ] Mathematics Library: Vectors (2D, 3D, 4D Homogenous)
+- [ ] Mathematics Library: Matrix (4D)
+- [ ] Mathematics Library: Vector Operations
+- [ ] Mathematics Library: Matrix Operations
+- [ ] Mathematics Library: Common Matrix Transforms (Projections, Rotations, etc.)
 - [ ] OPTIONAL: Video Rendering, FFMPEG Support?
 
 Magnitude should eventually support all major hardware accelerations APIs which
