@@ -38,10 +38,14 @@ typedef struct vector2
 
     };
 
-    vector2& operator+=(const vector2& rhs);
-    vector2& operator-=(const vector2& rhs);
-    vector2& operator*=(const r32& rhs);
-    vector2& operator/=(const r32& rhs);
+    vector2&    operator+=(const vector2& rhs);
+    vector2&    operator-=(const vector2& rhs);
+    vector2&    operator*=(const r32& rhs);
+    vector2&    operator/=(const r32& rhs);
+
+    r32         magnitude_squared() const;
+    r32         magntidue() const;
+    vector2     normalize() const;
 
 } vec2, v2;
 
