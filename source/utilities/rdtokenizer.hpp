@@ -30,6 +30,7 @@ class RDViewToken
 {
 
     public:
+                            RDViewToken();
                             RDViewToken(rhandle handle, i32 offset, i32 length);
         virtual            ~RDViewToken();
 

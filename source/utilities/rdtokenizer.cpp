@@ -13,6 +13,12 @@ RDViewToken()
 }
 
 RDViewToken::
+RDViewToken(rhandle handle, i32 offset, i32 length)
+{
+
+}
+
+RDViewToken::
 ~RDViewToken()
 {
 
@@ -26,7 +32,7 @@ get_type() const
 
 }
 
-RDViewTokenType RDViewToken::
+void RDViewToken::
 set_type(RDViewTokenType type)
 {
 
@@ -50,16 +56,16 @@ get_length() const
 
 }
 
-i32 RDViewToken::
+std::pair<i32, i32> RDViewToken::
 get_location() const
 {
 
-    return 0;
+    return { 0, 0 };
 
 }
 
 Filepath RDViewToken::
-get_filepath()
+get_filepath() const
 {
 
     Filepath result = ResourceManager::get_resource_file_path(this->handle);
