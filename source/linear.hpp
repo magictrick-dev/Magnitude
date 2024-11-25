@@ -10,88 +10,138 @@
 // preferred; however until then we roll our own matrix library.
 //
 
-typedef union vector2
+typedef struct vector2
 {
 
-    r32 elements[2];
-
-    struct
+    union
     {
-        r32 x;
-        r32 y;
+
+        r32 elements[2] = { 0.0f, 0.0f };
+
+        struct
+        {
+            r32 x;
+            r32 y;
+        };
+
+        struct
+        {
+            r32 u;
+            r32 v;
+        };
+
+        struct
+        {
+            r32 width;
+            r32 height;
+        };
+
     };
 
-    struct
-    {
-        r32 u;
-        r32 v;
-    };
-
-    struct
-    {
-        r32 width;
-        r32 height;
-    };
+    vector2& operator+=(const vector2& rhs);
+    vector2& operator-=(const vector2& rhs);
+    vector2& operator*=(const r32& rhs);
+    vector2& operator/=(const r32& rhs);
 
 } vec2, v2;
 
-typedef union vector3
+vector2 operator+(const vector2& lhs, const vector2& rhs);
+vector2 operator-(const vector2& lhs, const vector2& rhs);
+vector2 operator*(const vector2& lhs, const r32& rhs);
+vector2 operator*(const r32& lhs, const vector2& rhs);
+vector2 operator/(const vector2& lhs, const r32& rhs);
+vector2 operator/(const r32& lhs, const vector2& rhs);
+
+typedef struct vector3
 {
     
-    r32 elements[3];
-
-    struct
+    union
     {
-        r32 x;
-        r32 y;
-        r32 z;
+
+        r32 elements[3] = { 0.0f, 0.0f, 0.0f };
+
+        struct
+        {
+            r32 x;
+            r32 y;
+            r32 z;
+        };
+
+        struct
+        {
+            r32 r;
+            r32 g;
+            r32 b;
+        };
+
+        struct
+        {
+            r32 width;
+            r32 height;
+            r32 depth;
+        };
+
     };
 
-    struct
-    {
-        r32 r;
-        r32 g;
-        r32 b;
-    };
-
-    struct
-    {
-        r32 width;
-        r32 height;
-        r32 depth;
-    };
+    vector3& operator+=(const vector3& rhs);
+    vector3& operator-=(const vector3& rhs);
+    vector3& operator*=(const r32& rhs);
+    vector3& operator/=(const r32& rhs);
 
 } vec3, v3;
 
-typedef union vector4
+vector3 operator+(const vector3& lhs, const vector3& rhs);
+vector3 operator-(const vector3& lhs, const vector3& rhs);
+vector3 operator*(const vector3& lhs, const r32& rhs);
+vector3 operator*(const r32& lhs, const vector3& rhs);
+vector3 operator/(const vector3& lhs, const r32& rhs);
+vector3 operator/(const r32& lhs, const vector3& rhs);
+
+typedef struct vector4
 {
 
-    r32 elements[4];
+    union {
 
-    struct
-    {
-        r32 x;
-        r32 y;
-        r32 z;
-        r32 w;
+        r32 elements[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+
+        struct
+        {
+            r32 x;
+            r32 y;
+            r32 z;
+            r32 w;
+        };
+
+        struct
+        {
+            r32 r;
+            r32 g;
+            r32 b;
+            r32 a;
+        };
+
+        struct
+        {
+            r32 s;
+            r32 t;
+            r32 u;
+            r32 v;
+        };
+
     };
 
-    struct
-    {
-        r32 r;
-        r32 g;
-        r32 b;
-        r32 a;
-    };
-
-    struct
-    {
-        r32 s;
-        r32 t;
-        r32 u;
-        r32 v;
-    };
+    vector4& operator+=(const vector4& rhs);
+    vector4& operator-=(const vector4& rhs);
+    vector4& operator*=(const r32& rhs);
+    vector4& operator/=(const r32& rhs);
 
 } vec4, v4, homogenous_point, hp;
+
+vector4 operator+(const vector4& lhs, const vector4& rhs);
+vector4 operator-(const vector4& lhs, const vector4& rhs);
+vector4 operator*(const vector4& lhs, const r32& rhs);
+vector4 operator*(const r32& lhs, const vector4& rhs);
+vector4 operator/(const vector4& lhs, const r32& rhs);
+vector4 operator/(const r32& lhs, const vector4& rhs);
 
 #endif
