@@ -87,10 +87,14 @@ typedef struct vector3
 
     };
 
-    vector3& operator+=(const vector3& rhs);
-    vector3& operator-=(const vector3& rhs);
-    vector3& operator*=(const r32& rhs);
-    vector3& operator/=(const r32& rhs);
+    vector3&    operator+=(const vector3& rhs);
+    vector3&    operator-=(const vector3& rhs);
+    vector3&    operator*=(const r32& rhs);
+    vector3&    operator/=(const r32& rhs);
+
+    r32         magnitude_squared() const;
+    r32         magntidue() const;
+    vector3     normalize() const;
 
 } vec3, v3;
 
@@ -134,10 +138,15 @@ typedef struct vector4
 
     };
 
-    vector4& operator+=(const vector4& rhs);
-    vector4& operator-=(const vector4& rhs);
-    vector4& operator*=(const r32& rhs);
-    vector4& operator/=(const r32& rhs);
+    vector4&    operator+=(const vector4& rhs);
+    vector4&    operator-=(const vector4& rhs);
+    vector4&    operator*=(const r32& rhs);
+    vector4&    operator/=(const r32& rhs);
+
+    r32         magnitude_squared() const;
+    r32         magntidue() const;
+    vector4     normalize() const;
+    vector4     homogenize() const;
 
 } vec4, v4, homogenous_point, hp;
 
