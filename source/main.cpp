@@ -24,6 +24,7 @@
 #include <platform/opengl.hpp>
 #include <utilities/path.hpp>
 #include <utilities/cli.hpp>
+#include <utilities/resourceman.hpp>
 #include <graphics/color.hpp>
 #include <graphics/bitmap.hpp>
 #include <imgui/imgui.h>
@@ -65,7 +66,12 @@ main(i32 argc, cptr *argv)
         runtime_path.canonicalize();
     }
 
-    std::cout << "[ CLI ] View file from arguments is: " << runtime_path << std::endl;
+    // Attempt to load the user file into the resource manager.
+    rhandle user_file_handle = ResourceManager::create_file_resource(runtime_path);
+    MAG_ASSERT(ResourceManager::resource_handle_is_valid(user_file_handle) &&
+            "This shouldn't fail, we expressly check for this at startup.");
+    MAG_ASSERT(ResourceManager::load_resource(user_file_handle) &&
+            "This shouldn't fail, we haven't even loaded the resource yet.");
 
     // --- Runtime Configuration & Main Loop ----------------------------------- 
     //
@@ -106,6 +112,8 @@ main(i32 argc, cptr *argv)
 
     // Create the text editor.
     TextEditor basic_editor;
+    basic_editor.SetText(ResourceManager::get_resource_as_string(user_file_handle));
+    ResourceManager::release_resource(user_file_handle); // No longer need it.
 
     while (!main_window->should_close())
     {

@@ -78,6 +78,7 @@ class ResourceManager
 
     public:
         static rhandle      create_file_resource(Filepath path); 
+        static rhandle      create_memory_resource(u64 request_size);
         static rhandle      create_memory_resource(vptr buffer, u64 buffer_size);
         static void         release_resource(rhandle handle);
 

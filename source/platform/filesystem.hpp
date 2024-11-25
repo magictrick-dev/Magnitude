@@ -2,6 +2,11 @@
 #define MAGNITUDE_PLATFORM_FILESYSTEM_H
 #include <definitions.hpp>
 
+// --- Filesystem --------------------------------------------------------------
+//
+// For all your file API needs, OS-abstracted.
+//
+
 b32         file_exists(ccptr file_path);
 b32         file_ready(ccptr file_path);
 b32         file_is_directory(ccptr file_path);
