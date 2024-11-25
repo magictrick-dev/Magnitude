@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <wingdi.h>
 #include <imgui/imgui.h>
+#include <utilities/path.hpp>
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -65,6 +66,17 @@ Win32Window(std::string title, i32 width, i32 height)
 
     // Now set the actual title.
     SetWindowTextA(window_handle, title.c_str());
+
+    // Now set the icon.
+    Filepath icon_directory = Filepath::cwd();
+    icon_directory += "./assets/icons/app.ico";
+    icon_directory.canonicalize();
+    MAG_ASSERT(icon_directory.is_valid_file() && "Unable to locate icon file path.");
+
+    HANDLE image_handle = LoadImageA(display_window_class.hInstance,
+            icon_directory.c_str(), IMAGE_ICON, LR_DEFAULTSIZE, LR_DEFAULTSIZE, LR_LOADFROMFILE);
+    MAG_ASSERT(image_handle != NULL && "Unable to create icon handle.");
+    SetClassLongPtr(window_handle, GCLP_HICON, (LONG_PTR)(HICON)image_handle);
 
 }
 

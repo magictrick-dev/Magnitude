@@ -76,7 +76,7 @@ The following list of features outline what Magnitude supports/will support:
 - [ ] Hardware Renderer: 3D Rendering
 - [ ] Hardware Renderer: Lighting & Texturing
 - [ ] Behavioral: Renderer Swap from Software to Hardware, vice-versa.
-- [ ] Behavioral: Application Icon
+- [X] Behavioral: Application Icon
 - [X] Behavioral: Custom Dear ImGUI Font
 - [X] Behavioral: Custom Dear ImGUI UI Color Scheme
 - [ ] OPTIONAL: Video Rendering, FFMPEG Support?
