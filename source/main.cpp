@@ -27,6 +27,7 @@
 #include <utilities/resourceman.hpp>
 #include <graphics/color.hpp>
 #include <graphics/bitmap.hpp>
+#include <editor/mainmenu.hpp>
 #include <imgui/imgui.h>
 #include <glad/glad.h>
 #include <balazedit/texteditor.h>
@@ -110,6 +111,9 @@ main(i32 argc, cptr *argv)
     main_window->swap_frames();
     main_window->show();
 
+    // Create our UI components.
+    MainMenuComponent main_menu;
+
     // Create the text editor.
     TextEditor basic_editor;
     basic_editor.SetText(ResourceManager::get_resource_as_string(user_file_handle));
@@ -130,6 +134,13 @@ main(i32 argc, cptr *argv)
         glClear(GL_COLOR_BUFFER_BIT);
         glClear(GL_DEPTH_BUFFER_BIT);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+
+        // Show the main menu bar.
+        main_menu.render();
+
+        ImGui::Begin("Scene Viewport");
+
+        ImGui::End();
 
         // Show the Dear ImGUI demo window.
         static bool show_demo = true;
