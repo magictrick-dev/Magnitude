@@ -42,6 +42,7 @@ endif (WIN32)
 add_executable(Magnitude
     "source/main.cpp"
     "source/definitions.hpp"
+    "source/linear.hpp"
 
     "source/graphics/color.hpp"
     "source/graphics/color.cpp"
