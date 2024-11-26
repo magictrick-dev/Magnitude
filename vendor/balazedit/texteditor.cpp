@@ -2017,7 +2017,7 @@ const TextEditor::Palette & TextEditor::GetDarkPalette()
 			0xffc040a0, // Preproc identifier
 			0xff206020, // Comment (single line)
 			0xff406020, // Comment (multi line)
-			0xff101010, // Background
+			0x00101000, // Background
 			0xffe0e0e0, // Cursor
 			0x80a06020, // Selection
 			0x800020ff, // ErrorMarker
@@ -2045,7 +2045,7 @@ const TextEditor::Palette & TextEditor::GetLightPalette()
 			0xffc040a0, // Preproc identifier
 			0xff205020, // Comment (single line)
 			0xff405020, // Comment (multi line)
-			0xffffffff, // Background
+			0x00ffffff, // Background
 			0xff000000, // Cursor
 			0x80600000, // Selection
 			0xa00010ff, // ErrorMarker

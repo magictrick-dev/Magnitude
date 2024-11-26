@@ -359,7 +359,7 @@ imgui_initialize_platform(void *platform_handle, void *render_context, i32 width
     colors[ImGuiCol_TitleBgActive]          = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
     colors[ImGuiCol_TitleBgCollapsed]       = ImVec4(0.00f, 0.00f, 0.00f, 0.51f);
     colors[ImGuiCol_MenuBarBg]              = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
-    colors[ImGuiCol_ScrollbarBg]            = ImVec4(0.02f, 0.02f, 0.02f, 0.53f);
+    colors[ImGuiCol_ScrollbarBg]            = ImVec4(0.02f, 0.02f, 0.02f, 0.00f);
     colors[ImGuiCol_ScrollbarGrab]          = ImVec4(0.31f, 0.31f, 0.31f, 1.00f);
     colors[ImGuiCol_ScrollbarGrabHovered]   = ImVec4(0.41f, 0.41f, 0.41f, 1.00f);
     colors[ImGuiCol_ScrollbarGrabActive]    = ImVec4(0.51f, 0.51f, 0.51f, 1.00f);
@@ -404,12 +404,12 @@ imgui_initialize_platform(void *platform_handle, void *render_context, i32 width
     colors[ImGuiCol_NavWindowingDimBg]      = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
     colors[ImGuiCol_ModalWindowDimBg]       = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
 
-    style.WindowRounding = 4;
-    style.TabRounding = 4;
-    style.FrameRounding = 2;
-    style.GrabRounding = 2;
-    style.TabBarOverlineSize = 0;
-    style.FramePadding.y = 4;
+    style.WindowRounding        = 4;
+    style.TabRounding           = 4;
+    style.FrameRounding         = 2;
+    style.GrabRounding          = 2;
+    style.TabBarOverlineSize    = 0;
+    style.FramePadding.y        = 4;
 
 }
 

@@ -53,29 +53,30 @@ render()
     ImGui::Separator();
     if (ImGui::BeginMenu("File"))
     {
-        ImGui::Text("Entry");
-        ImGui::SeparatorText("Additional Stuff");
-        ImGui::Text("Entry");
-        ImGui::Text("Entry");
-        ImGui::Text("Entry");
+        ImGui::Text("The menu is fake, for now.");
+        ImGui::Text("Open");
+        ImGui::Text("Save");
+        ImGui::Text("Save as");
+        ImGui::Text("Close File");
+        ImGui::Text("Exit");
+        ImGui::SeparatorText("Preferences");
+        ImGui::Text("Editor Highlighting");
+        ImGui::Text("Editor Display Errors Realtime");
+        ImGui::Text("Editor Display Help Contexts");
         ImGui::EndMenu();
     }
-    if (ImGui::BeginMenu("Menu"))
+    if (ImGui::BeginMenu("View"))
     {
-        ImGui::Text("Entry");
-        ImGui::SeparatorText("Additional Stuff");
-        ImGui::Text("Entry");
-        ImGui::Text("Entry");
-        ImGui::Text("Entry");
+        ImGui::Text("Editor");
+        ImGui::Text("Viewport");
+        ImGui::Text("Inspector");
+        ImGui::Text("Console");
         ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("Settings"))
     {
-        ImGui::Text("Entry");
-        ImGui::SeparatorText("Additional Stuff");
-        ImGui::Text("Entry");
-        ImGui::Text("Entry");
-        ImGui::Text("Entry");
+        ImGui::Text("Verbose Logs");
+        ImGui::Text("Force Hardware Acceleration");
         ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("About"))

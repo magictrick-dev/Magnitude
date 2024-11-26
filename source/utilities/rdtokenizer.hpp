@@ -26,27 +26,13 @@ enum class RDViewTokenType
     TypeIdentifier  =   4, // Anything not classified as a direct keyword.
 };
 
-class RDViewToken
+struct RDViewToken
 {
 
-    public:
-                            RDViewToken();
-                            RDViewToken(rhandle handle, i32 offset, i32 length);
-        virtual            ~RDViewToken();
-
-        RDViewTokenType     get_type()      const;
-        i32                 get_offset()    const;
-        i32                 get_length()    const;
-        std::pair<i32, i32> get_location()  const;
-        Filepath            get_filepath()  const;
-
-        void                set_type(RDViewTokenType type);
-
-    protected:
-        RDViewTokenType     type;
-        i32                 offset;
-        i32                 length;
-        rhandle             handle;
+    RDViewTokenType     type;
+    std::string         reference;
+    i32                 row;
+    i32                 column;
 
 };
 
@@ -55,6 +41,7 @@ class RDViewTokenizer
 
     public:
                             RDViewTokenizer(Filepath path);
+                            RDViewTokenizer(std::string memory_resource);
         virtual            ~RDViewTokenizer();
 
         void                shift();
@@ -62,11 +49,20 @@ class RDViewTokenizer
         RDViewToken         get_current() const;
         RDViewToken         get_next() const;
 
-        bool                is_eof();
+    protected:
+        bool                consume_whitespace();
+        
+        bool                match_numbers();
+        bool                match_strings();
+        bool                match_identifiers();
+
+        bool                eof() const;
+        char                peek(i32 how_far) const;
+        void                consume(i32 how_many);
+        void                synchronize();
 
     protected:
-        Filepath            path;
-        rhandle             handle;
+        std::string         source;
 
         RDViewToken         tokens[3];
         RDViewToken*        previous_token;
@@ -75,6 +71,8 @@ class RDViewTokenizer
 
         i32                 step;
         i32                 offset;
+        i32                 row;
+        i32                 column;
 
 };
 
