@@ -58,12 +58,13 @@ The following list of features outline what Magnitude supports/will support:
 - [X] Text Editor: Editor GUI System (Github: BalazsJako)
 - [ ] Text Editor: Editor Highlighting
 - [ ] Text Editor: Performant Refactor of BalazsJako's code.
-- [ ] User Interface: Text Editor Layout
+- [X] User Interface: Text Editor Layout
 - [ ] User Interface: Frame Explorer
 - [ ] User Interface: Object List
 - [ ] User Interface: Object Inspector
 - [ ] User Interface: Runtime Information
 - [ ] User Interface: Asset Explorer
+- [ ] User Interface: Console
 - [ ] Modeling: 2D Primitives
 - [ ] Modeling: 3D Primitives
 - [ ] Modeling: Object File Loading

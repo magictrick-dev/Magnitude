@@ -57,11 +57,29 @@ render()
 
     if (this->visible == false) return;
     
-    ImGui::Begin("Console", &this->visible);
+    ImGui::Begin("Console", &this->visible, ImGuiWindowFlags_MenuBar);
+
+    if (ImGui::BeginMenuBar())
+    {
+
+        if (ImGui::BeginMenu("Filters"))
+        {
+            ImGui::Button("Debug");
+            ImGui::Button("Info");
+            ImGui::Button("Warning");
+            ImGui::Button("Critical");
+            ImGui::Button("Error");
+
+            ImGui::EndMenu();
+        }
+
+        ImGui::EndMenuBar();
+    }
 
     const r32 footer_height_to_reserve = ImGui::GetStyle().ItemSpacing.y + 
         ImGui::GetFrameHeightWithSpacing();
 
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 1));
     if (ImGui::BeginChild("ScrollingRegion", ImVec2(0, -footer_height_to_reserve), 
                 ImGuiChildFlags_NavFlattened, ImGuiWindowFlags_HorizontalScrollbar))
     {
@@ -73,8 +91,9 @@ render()
         }
 
     }
-
     ImGui::EndChild();
+    ImGui::PopStyleVar();
+
     ImGui::Separator();
 
     ImGuiInputTextFlags input_text_flags = ImGuiInputTextFlags_EnterReturnsTrue | 
