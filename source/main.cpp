@@ -112,6 +112,9 @@ main(i32 argc, cptr *argv)
     main_window->swap_frames();
     main_window->show();
 
+    // Setup the editor and the necessary components we want to use.
+    Editor& editor = Editor::get();
+
     // Create the text editor.
     TextEditor basic_editor;
     basic_editor.SetText(ResourceManager::get_resource_as_string(user_file_handle));
@@ -137,9 +140,8 @@ main(i32 argc, cptr *argv)
         glClear(GL_DEPTH_BUFFER_BIT);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
-        ImGui::Begin("Scene Viewport");
-
-        ImGui::End();
+        // Render the editor.
+        editor.render();
 
         // Show the Dear ImGUI demo window.
         static bool show_demo = true;

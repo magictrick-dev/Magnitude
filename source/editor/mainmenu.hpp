@@ -18,7 +18,7 @@ class MainMenuComponent : public EditorComponent
 };
 
 inline MainMenuComponent::
-MainMenuComponent() : EditorComponent("main_menu", -1)
+MainMenuComponent() : EditorComponent(-1, "main_menu")
 {
 
     this->visible = true;
@@ -36,6 +36,7 @@ close()
 {
 
     // Do nothing.
+    return false;
 
 }
 
@@ -44,6 +45,7 @@ open()
 {
 
     // Do nothing.
+    return false;
 
 }
 

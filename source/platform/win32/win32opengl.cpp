@@ -380,7 +380,7 @@ imgui_initialize_platform(void *platform_handle, void *render_context, i32 width
     colors[ImGuiCol_ResizeGripActive]       = ImVec4(0.75f, 0.52f, 0.23f, 1.00f);
     colors[ImGuiCol_TabHovered]             = ImVec4(0.58f, 0.47f, 0.34f, 1.00f);
     colors[ImGuiCol_Tab]                    = ImVec4(0.27f, 0.25f, 0.21f, 1.00f);
-    colors[ImGuiCol_TabSelected]            = ImVec4(0.27f, 0.25f, 0.21f, 1.00f);
+    colors[ImGuiCol_TabSelected]            = ImVec4(0.580f, 0.471f, 0.341f, 1.000f);
     colors[ImGuiCol_TabSelectedOverline]    = ImVec4(0.42f, 0.36f, 0.29f, 1.00f);
     colors[ImGuiCol_TabDimmed]              = ImVec4(0.16f, 0.16f, 0.16f, 1.00f);
     colors[ImGuiCol_TabDimmedSelected]      = ImVec4(0.16f, 0.16f, 0.16f, 1.00f);

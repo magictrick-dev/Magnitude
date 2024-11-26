@@ -1,5 +1,6 @@
 #ifndef MAGNITUDE_EDITOR_COMPONENT_HPP
 #define MAGNITUDE_EDITOR_COMPONENT_HPP
+#include <string>
 #include <definitions.hpp>
 
 // --- Editor Components -------------------------------------------------------
@@ -23,7 +24,7 @@ class EditorComponent
     public:
                             EditorComponent();
                             EditorComponent(i32 id);
-                            EditorComponent(std::string name, i32 id);
+                            EditorComponent(i32 id, std::string);
         virtual            ~EditorComponent();
 
         bool                is_visible() const;
