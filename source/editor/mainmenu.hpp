@@ -1,18 +1,8 @@
 #ifndef MAGNITUDE_EDITOR_MAINMENU_HPP
 #define MAGNITUDE_EDITOR_MAINMENU_HPP
 #include <definitions.hpp>
+#include <editor/component.hpp>
 #include <imgui/imgui.h>
-
-class EditorComponent
-{
-    public:
-        inline virtual ~EditorComponent() {};
-        virtual void    render() = 0;
-        inline bool     is_visible() const { return this->visible; }
-
-    protected:
-        bool        visible;
-};
 
 class MainMenuComponent : public EditorComponent
 {
@@ -20,12 +10,15 @@ class MainMenuComponent : public EditorComponent
     public:
         inline                  MainMenuComponent();
         inline virtual         ~MainMenuComponent();
-        inline virtual void     render() override;
+
+        inline virtual void     render()    override;
+        inline virtual bool     close()     override;
+        inline virtual bool     open()      override;
 
 };
 
 inline MainMenuComponent::
-MainMenuComponent()
+MainMenuComponent() : EditorComponent("main_menu", -1)
 {
 
     this->visible = true;
@@ -36,7 +29,21 @@ inline MainMenuComponent::
 ~MainMenuComponent()
 {
 
-    this->visible = true;
+}
+
+inline bool MainMenuComponent::
+close()
+{
+
+    // Do nothing.
+
+}
+
+inline bool MainMenuComponent::
+open()
+{
+
+    // Do nothing.
 
 }
 
@@ -49,8 +56,6 @@ render()
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     ImGui::BeginMainMenuBar();
     ImGui::PopStyleVar();
-    ImGui::TextColored(ImVec4(0.580f, 0.470f, 0.340f, 1.000f), " Magnitude ");
-    ImGui::Separator();
     if (ImGui::BeginMenu("File"))
     {
         ImGui::Text("The menu is fake, for now.");
