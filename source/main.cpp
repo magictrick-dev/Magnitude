@@ -25,6 +25,7 @@
 #include <utilities/path.hpp>
 #include <utilities/cli.hpp>
 #include <utilities/resourceman.hpp>
+#include <utilities/rdtokenizer.hpp>
 #include <graphics/color.hpp>
 #include <graphics/bitmap.hpp>
 #include <editor/mainmenu.hpp>
@@ -117,6 +118,20 @@ main(i32 argc, cptr *argv)
     // Create the text editor.
     TextEditor basic_editor;
     basic_editor.SetText(ResourceManager::get_resource_as_string(user_file_handle));
+
+    // Tokenizer.
+    RDViewTokenizer tokenizer(runtime_path);
+    RDViewToken current_token = tokenizer.get_current();
+    while (current_token.type != RDViewTokenType::TypeEOF &&
+           current_token.type != RDViewTokenType::TypeError)
+    {
+
+        std::cout << "Token: " << current_token.reference << std::endl;
+
+        tokenizer.shift();
+        current_token = tokenizer.get_current();
+    }
+
     ResourceManager::release_resource(user_file_handle); // No longer need it.
 
     while (!main_window->should_close())

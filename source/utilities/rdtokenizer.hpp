@@ -14,16 +14,48 @@
 // important, and comments begin with "#". The language specification is outlined
 // in the parser if you care to learn more.
 //
+// If you add keywords or identifier maps, they need to be set in the string_to_type()
+// function so that they're properly converted from identifiers to keywords.
+//
 
 enum class RDViewTokenType
 {
     TypeError       =  -2,
     TypeEOF         =  -1,
-    TypeReal        =   0, // Basic float formats, can prceed +/-.
-    TypeInteger     =   1, // Basic integer formats, can preceed +/-.
-    TypeString      =   2, // Conventionally double, but we can do singles.
-    TypeBoolean     =   3, // true, yes, on, or 1 : false, no, off, or 0
-    TypeIdentifier  =   4, // Anything not classified as a direct keyword.
+    TypeReal        =   0,  // Basic float formats, can preceed +/-.
+    TypeInteger     =   1,  // Basic integer formats, can preceed +/-.
+    TypeString      =   2,  // Conventionally double, but we can do singles.
+    TypeIdentifier  =   3,  // Anything not classified as a direct keyword.
+
+    TypeBooleanTrue,        // Booleans: true, yes, on (integer 1 too)
+    TypeBooleanFalse,       // Booleans: false, no, off (integer 0 too)
+
+    TypeKeyDisplay,
+    TypeKeyCameraAt,
+    TypeKeyCameraEye,
+    TypeKeyCameraUp,
+    TypeKeyFrameBegin,
+    TypeKeyFrameEnd,
+    TypeKeyWorldBegin,
+    TypeKeyWorldEnd,
+    TypeKeyPoint,
+    TypeKeyBackground,
+    TypeKeyColor,
+    TypeKeyLine,
+    TypeKeyFormat,
+    TypeKeyCircle,
+    TypeKeyFill,
+    TypeKeyCube,
+    TypeKeyScale,
+    TypeKeyTranslate,
+    TypeKeyRotate,
+    TypeKeySphere,
+    TypeKeyPolySet,
+    TypeKeyXformPush,
+    TypeKeyXformPop,
+    TypeKeyObjectBegin,
+    TypeKeyObjectEnd,
+
 };
 
 struct RDViewToken
