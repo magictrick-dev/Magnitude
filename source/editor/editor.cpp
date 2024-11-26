@@ -2,6 +2,7 @@
 #include <editor/mainmenu.hpp>
 #include <editor/sceneviewer.hpp>
 #include <editor/inspector.hpp>
+#include <editor/console.hpp>
 
 Editor::
 Editor()
@@ -10,6 +11,7 @@ Editor()
     this->main_menu_component       = std::make_shared<MainMenuComponent>();
     this->scene_viewer_component    = std::make_shared<SceneViewerComponent>();
     this->inspector_component       = std::make_shared<InspectorComponent>();
+    this->console_component         = std::make_shared<ConsoleComponent>();
 
 }
 
@@ -44,6 +46,7 @@ render()
     this->main_menu_component->render();
     this->scene_viewer_component->render();
     this->inspector_component->render();
+    this->console_component->render();
 
     // Snap-ins.
     for (auto component : this->editor_components)

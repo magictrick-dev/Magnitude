@@ -22,6 +22,7 @@ class Editor
         std::shared_ptr<EditorComponent> main_menu_component;
         std::shared_ptr<EditorComponent> scene_viewer_component;
         std::shared_ptr<EditorComponent> inspector_component;
+        std::shared_ptr<EditorComponent> console_component;
 
         std::vector<std::shared_ptr<EditorComponent>>                       editor_components;
         std::unordered_map<std::string, std::shared_ptr<EditorComponent>>   editor_map;

@@ -28,25 +28,21 @@
 // less depending on how much memory you actually want to use for this.
 //
 
-enum class LogFlags : u32 
-{
-    LogNone         = (0),
-
-    LogDebug        = (1 << 0),
-    LogInfo         = (1 << 1),
-    LogWarning      = (1 << 2),
-    LogCritical     = (1 << 3),
-    LogError        = (1 << 4),
-
-    LogInternal     = (1 << 16),
-    LogRenderer     = (1 << 17),
-    LogParser       = (1 << 18),
-};
+typedef u32 LogFlags;
+#define LogFlag_None        (0)
+#define LogFlag_Debug       (1 << 0)
+#define LogFlag_Info        (1 << 1)
+#define LogFlag_Warning     (1 << 2)
+#define LogFlag_Critical    (1 << 3)
+#define LogFlag_Error       (1 << 4)
+#define LogFlag_Internal    (1 << 16)
+#define LogFlag_Renderer    (1 << 17)
+#define LogFlag_Parser      (1 << 18)
 
 struct LogDescriptor 
 {
     std::string     message;
-    LogFlags        flags;
+    u32             flags;
 };
 
 class Logger
@@ -55,15 +51,15 @@ class Logger
     public:
         static std::vector<LogDescriptor> get_messages();
         static std::vector<LogDescriptor> get_messages(i32 amount);
-        static std::vector<LogDescriptor> get_messages_and_filter(LogFlags filter);
-        static std::vector<LogDescriptor> get_messages_and_filter(LogFlags filter, i32 amount);
+        static std::vector<LogDescriptor> get_messages_and_filter(u32 filter);
+        static std::vector<LogDescriptor> get_messages_and_filter(u32 filter, i32 amount);
 
-        static void log(LogFlags flags, std::string message);
-        static void log_debug(LogFlags flags, std::string message);
-        static void log_info(LogFlags flags, std::string message);
-        static void log_warning(LogFlags flags, std::string message);
-        static void log_critical(LogFlags flags, std::string message);
-        static void log_error(LogFlags flags, std::string message);
+        static void log(u32 flags, std::string message);
+        static void log_debug(u32 flags, std::string message);
+        static void log_info(u32 flags, std::string message);
+        static void log_warning(u32 flags, std::string message);
+        static void log_critical(u32 flags, std::string message);
+        static void log_error(u32 flags, std::string message);
 
         virtual        ~Logger();
     protected:

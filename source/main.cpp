@@ -26,6 +26,7 @@
 #include <utilities/cli.hpp>
 #include <utilities/resourceman.hpp>
 #include <utilities/rdtokenizer.hpp>
+#include <utilities/logging.hpp>
 #include <graphics/color.hpp>
 #include <graphics/bitmap.hpp>
 #include <editor/editor.hpp>
@@ -118,6 +119,19 @@ main(i32 argc, cptr *argv)
     // Create the text editor.
     TextEditor basic_editor;
     basic_editor.SetText(ResourceManager::get_resource_as_string(user_file_handle));
+
+    // Testing all the logging formats.
+    Logger::log(LogFlag_Debug | LogFlag_Internal, "Hello, world. D_I");
+    Logger::log(LogFlag_Debug | LogFlag_Renderer, "Hello, world. D_R");
+    Logger::log(LogFlag_Debug | LogFlag_Parser, "Hello, world. D_P");
+    Logger::log(LogFlag_Error | LogFlag_Internal, "Hello, world. D_I");
+    Logger::log(LogFlag_Error | LogFlag_Renderer, "Hello, world. D_R");
+    Logger::log(LogFlag_Error | LogFlag_Parser, "Hello, world. D_P");
+    Logger::log_debug(LogFlag_None, "Debug");
+    Logger::log_info(LogFlag_None, "Info");
+    Logger::log_warning(LogFlag_None, "Warning");
+    Logger::log_critical(LogFlag_None, "Critical");
+    Logger::log_error(LogFlag_None, "Error");
 
     // Tokenizer.
     RDViewTokenizer tokenizer(runtime_path);
