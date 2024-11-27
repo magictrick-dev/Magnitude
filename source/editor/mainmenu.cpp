@@ -1,5 +1,6 @@
 #include <editor/mainmenu.hpp>
 #include <editor/editor.hpp>
+#include <platform/filesystem.hpp>
 
 MainMenuComponent::
 MainMenuComponent() : EditorComponent(COMPONENT_ID_MAIN_MENU, COMPONENT_NAME_MAIN_MENU)
@@ -47,22 +48,24 @@ render()
 
         if (ImGui::MenuItem("Open", NULL))
         {
-            Logger::log_info(LogFlag_None, "Open Triggered.");
+            std::string open_path = file_open_system_dialogue(); 
+            Logger::log_info(LogFlag_None, "Opening... %s.", open_path.c_str());
         }
 
         if (ImGui::MenuItem("Save", NULL))
         {
-            Logger::log_info(LogFlag_None, "Save Triggered.");
+            Logger::log_info(LogFlag_None, "Saving...");
         }
 
         if (ImGui::MenuItem("Save as", NULL))
         {
-            Logger::log_info(LogFlag_None, "Save-as Triggered.");
+            std::string save_path = file_save_as_system_dialogue(".rd", "Render View File .rd\0");
+            Logger::log_info(LogFlag_None, "Saving as... %s.", save_path.c_str());
         }
 
         if (ImGui::MenuItem("Close", NULL))
         {
-            Logger::log_info(LogFlag_None, "Close Triggered.");
+            Logger::log_info(LogFlag_None, "Closing...");
         }
 
         ImGui::EndMenu();

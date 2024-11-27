@@ -168,3 +168,52 @@ file_canonicalize_path(u32 buffer_size, cptr dest, ccptr path)
     MAG_ASSERT(result);
 
 }
+
+std::string
+file_open_system_dialogue()
+{
+
+	// Zero the buffer.
+	char filepathBuffer[260];
+	memset(filepathBuffer, 0x00, 260);
+
+	// Initialize the structure.
+	OPENFILENAMEA fileOpenResults 	= {};
+	fileOpenResults.lStructSize 	= sizeof(OPENFILENAMEA);
+	fileOpenResults.hwndOwner 		= NULL;
+	fileOpenResults.lpstrFile 		= filepathBuffer;
+	fileOpenResults.nMaxFile 		= 260;
+	fileOpenResults.Flags 			= OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+	// Perform the action.
+	if (GetOpenFileNameA(&fileOpenResults))
+		return std::string(fileOpenResults.lpstrFile);
+	else
+		return "";
+
+}
+
+std::string
+file_save_as_system_dialogue(ccptr default_extension, ccptr extension_filters)
+{
+
+	// Zero the buffer.
+	char filepathBuffer[260];
+	memset(filepathBuffer, 0x00, 260);
+
+	// Initialize the structure.
+	OPENFILENAMEA fileOpenResults 	= {};
+	fileOpenResults.lStructSize 	= sizeof(OPENFILENAMEA);
+	fileOpenResults.hwndOwner 		= NULL;
+	fileOpenResults.lpstrFile 		= filepathBuffer;
+	fileOpenResults.nMaxFile 		= 260;
+	fileOpenResults.lpstrDefExt 	= default_extension;
+	fileOpenResults.lpstrFilter 	= extension_filters;
+
+	// Perform the action.
+	if (GetSaveFileNameA(&fileOpenResults))
+		return std::string(fileOpenResults.lpstrFile);
+	else
+		return "";
+
+}
