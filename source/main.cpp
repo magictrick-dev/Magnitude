@@ -30,6 +30,7 @@
 #include <graphics/color.hpp>
 #include <graphics/bitmap.hpp>
 #include <editor/editor.hpp>
+#include <editor/metrics.hpp>
 #include <imgui/imgui.h>
 #include <glad/glad.h>
 #include <balazedit/texteditor.h>
@@ -97,7 +98,7 @@ main(i32 argc, cptr *argv)
     //
 
     // Create the window and attempt to establish an OpenGL render context.
-    std::shared_ptr<Window> main_window = Window::create("Magnitude Graphics Visualizer", 1280, 720);
+    std::shared_ptr<Window> main_window = Window::create("Magnitude", 1280, 720);
     OpenGLRenderContext::create_render_context(main_window);
     
     // Initialize OpenGL.
@@ -115,6 +116,9 @@ main(i32 argc, cptr *argv)
 
     // Setup the editor and the necessary components we want to use.
     Editor& editor = Editor::get();
+    editor.add_component<MetricsComponent>("metrics");
+
+    Logger::log(LogFlag_Debug, "Hello %s, this is a test.", "Chris");
 
     // Create the text editor.
     TextEditor basic_editor;

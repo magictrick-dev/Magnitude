@@ -20,7 +20,7 @@ class ConsoleComponent : public EditorComponent
 };
 
 inline ConsoleComponent::
-ConsoleComponent() : EditorComponent(-4, "console")
+ConsoleComponent() : EditorComponent(COMPONENT_ID_CONSOLE, COMPONENT_NAME_CONSOLE)
 {
 
     this->visible = true;
@@ -96,7 +96,8 @@ render()
 
     ImGui::Separator();
 
-    ImGuiInputTextFlags input_text_flags = ImGuiInputTextFlags_EnterReturnsTrue | 
+    ImGuiInputTextFlags input_text_flags = 
+        ImGuiInputTextFlags_EnterReturnsTrue | 
         ImGuiInputTextFlags_EscapeClearsAll;
 
     static char input_buffer[256];
@@ -108,7 +109,7 @@ render()
     }
 
     bool reclaim_focus = false;
-    if (ImGui::InputText("Input", input_buffer, 256, input_text_flags))
+    if (ImGui::Button("Run Command"))
     {
         reclaim_focus = true;
         if (strcmp(input_buffer, "") != 0)
@@ -117,6 +118,19 @@ render()
             input_buffer[0] = '\0';
         }
     }
+
+    ImGui::SameLine();
+    ImGui::PushItemWidth(-FLT_MIN);
+    if (ImGui::InputText("##ConsoleIn", input_buffer, 256, input_text_flags))
+    {
+        reclaim_focus = true;
+        if (strcmp(input_buffer, "") != 0)
+        {
+            Logger::log_debug(LogFlag_None, input_buffer);
+            input_buffer[0] = '\0';
+        }
+    }
+    ImGui::PopItemWidth();
 
     ImGui::SetItemDefaultFocus();
     if (reclaim_focus)

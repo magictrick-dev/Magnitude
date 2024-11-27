@@ -18,7 +18,7 @@ class InspectorComponent : public EditorComponent
 };
 
 inline InspectorComponent::
-InspectorComponent() : EditorComponent(-3, "inspector")
+InspectorComponent() : EditorComponent(COMPONENT_ID_INSPECTOR, COMPONENT_NAME_INSPECTOR)
 {
 
     this->visible = true;

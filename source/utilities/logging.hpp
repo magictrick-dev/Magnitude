@@ -3,6 +3,8 @@
 #include <deque>
 #include <vector>
 #include <string>
+#include <format>
+#include <iostream>
 #include <definitions.hpp>
 
 #define LOGGER_ROLLING_BUFFER_SIZE 1024
@@ -54,12 +56,12 @@ class Logger
         static std::vector<LogDescriptor> get_messages_and_filter(u32 filter);
         static std::vector<LogDescriptor> get_messages_and_filter(u32 filter, i32 amount);
 
-        static void log(u32 flags, std::string message);
-        static void log_debug(u32 flags, std::string message);
-        static void log_info(u32 flags, std::string message);
-        static void log_warning(u32 flags, std::string message);
-        static void log_critical(u32 flags, std::string message);
-        static void log_error(u32 flags, std::string message);
+        template <class... Args> static inline void log(u32 flags, std::string format, Args... args);
+        template <class... Args> static inline void log_debug(u32 flags, std::string format, Args... args);
+        template <class... Args> static inline void log_info(u32 flags, std::string format, Args... args);
+        template <class... Args> static inline void log_warning(u32 flags, std::string format, Args... args);
+        template <class... Args> static inline void log_critical(u32 flags, std::string format, Args... args);
+        template <class... Args> static inline void log_error(u32 flags, std::string format, Args... args);
 
         virtual        ~Logger();
     protected:
@@ -71,5 +73,96 @@ class Logger
         std::deque<LogDescriptor> rolling_buffer;
 
 };
+
+template <class... Args> void Logger::
+log(LogFlags flags, std::string format, Args... args)
+{
+
+    int size_s = std::snprintf( nullptr, 0, format.c_str(), args...) + 1;
+    std::string result(size_s, ' ');
+    std::snprintf( result.data(), size_s, format.c_str(), args...);
+
+    Logger& self = Logger::get();
+    self.rolling_buffer.push_back({result , flags});
+    if (self.rolling_buffer.size() >= 1024) self.rolling_buffer.pop_front();
+    return;
+
+}
+
+template <class... Args> void Logger::
+log_debug(LogFlags flags, std::string format, Args... args)
+{
+
+    int size_s = std::snprintf( nullptr, 0, format.c_str(), args...) + 1;
+    std::string result(size_s, ' ');
+    std::snprintf( result.data(), size_s, format.c_str(), args...);
+
+    Logger& self = Logger::get();
+    self.rolling_buffer.push_back({result, flags | LogFlag_Debug});
+    if (self.rolling_buffer.size() >= 1024) self.rolling_buffer.pop_front();
+    return;
+
+}
+
+template <class... Args> void Logger::
+log_info(LogFlags flags, std::string format, Args... args)
+{
+
+    int size_s = std::snprintf( nullptr, 0, format.c_str(), args...) + 1;
+    std::string result(size_s, ' ');
+    std::snprintf( result.data(), size_s, format.c_str(), args...);
+
+    Logger& self = Logger::get();
+    self.rolling_buffer.push_back({result, flags | LogFlag_Info});
+    if (self.rolling_buffer.size() >= 1024) self.rolling_buffer.pop_front();
+    return;
+
+}
+
+template <class... Args> void Logger::
+log_warning(LogFlags flags, std::string format, Args... args)
+{
+
+
+    int size_s = std::snprintf( nullptr, 0, format.c_str(), args...) + 1;
+    std::string result(size_s, ' ');
+    std::snprintf( result.data(), size_s, format.c_str(), args...);
+
+    Logger& self = Logger::get();
+    self.rolling_buffer.push_back({result, flags | LogFlag_Warning});
+    if (self.rolling_buffer.size() >= 1024) self.rolling_buffer.pop_front();
+    return;
+
+}
+
+template <class... Args> void Logger::
+log_critical(LogFlags flags, std::string format, Args... args)
+{
+
+    int size_s = std::snprintf( nullptr, 0, format.c_str(), args...);
+    std::string result(size_s, ' ');
+    std::snprintf( result.data(), size_s, format.c_str(), args...);
+
+    Logger& self = Logger::get();
+    self.rolling_buffer.push_back({result, flags | LogFlag_Critical});
+    if (self.rolling_buffer.size() >= 1024) self.rolling_buffer.pop_front();
+    return;
+
+}
+
+template <class... Args> void Logger::
+log_error(LogFlags flags, std::string format, Args... args)
+{
+
+    int size_s = std::snprintf( nullptr, 0, format.c_str(), args...) + 1;
+    std::string result(size_s, ' ');
+    std::snprintf( result.data(), size_s, format.c_str(), args...);
+
+    Logger& self = Logger::get();
+    self.rolling_buffer.push_back({result, flags | LogFlag_Error});
+    if (self.rolling_buffer.size() >= 1024) self.rolling_buffer.pop_front();
+    return;
+
+}
 
 #endif

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <format>
 #include <utilities/logging.hpp>
 
 Logger::
@@ -98,80 +99,6 @@ get_messages_and_filter(LogFlags filter, i32 amount)
     }
 
     return logs;
-
-}
-
-void Logger::
-log(LogFlags flags, std::string message)
-{
-
-    if (flags & (LogFlag_Critical | LogFlag_Warning | LogFlag_Error))
-    {
-        std::cout << message << std::endl;
-    }
-
-    Logger& self = Logger::get();
-    self.rolling_buffer.push_back({message, flags});
-    if (self.rolling_buffer.size() >= 1024) self.rolling_buffer.pop_front();
-    return;
-
-}
-
-void Logger::
-log_debug(LogFlags flags, std::string message)
-{
-
-    Logger& self = Logger::get();
-    self.rolling_buffer.push_back({message, flags | LogFlag_Debug});
-    if (self.rolling_buffer.size() >= 1024) self.rolling_buffer.pop_front();
-    return;
-
-}
-
-void Logger::
-log_info(LogFlags flags, std::string message)
-{
-
-    Logger& self = Logger::get();
-    self.rolling_buffer.push_back({message, flags | LogFlag_Info});
-    if (self.rolling_buffer.size() >= 1024) self.rolling_buffer.pop_front();
-    return;
-
-}
-
-void Logger::
-log_warning(LogFlags flags, std::string message)
-{
-
-    std::cout << message << std::endl;
-    Logger& self = Logger::get();
-    self.rolling_buffer.push_back({message, flags | LogFlag_Warning});
-    if (self.rolling_buffer.size() >= 1024) self.rolling_buffer.pop_front();
-    return;
-
-}
-
-void Logger::
-log_critical(LogFlags flags, std::string message)
-{
-
-    std::cout << message << std::endl;
-    Logger& self = Logger::get();
-    self.rolling_buffer.push_back({message, flags | LogFlag_Critical});
-    if (self.rolling_buffer.size() >= 1024) self.rolling_buffer.pop_front();
-    return;
-
-}
-
-void Logger::
-log_error(LogFlags flags, std::string message)
-{
-
-    std::cout << message << std::endl;
-    Logger& self = Logger::get();
-    self.rolling_buffer.push_back({message, flags | LogFlag_Error});
-    if (self.rolling_buffer.size() >= 1024) self.rolling_buffer.pop_front();
-    return;
 
 }
 

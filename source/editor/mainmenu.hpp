@@ -18,7 +18,7 @@ class MainMenuComponent : public EditorComponent
 };
 
 inline MainMenuComponent::
-MainMenuComponent() : EditorComponent(-1, "main_menu")
+MainMenuComponent() : EditorComponent(COMPONENT_ID_MAIN_MENU, COMPONENT_NAME_MAIN_MENU)
 {
 
     this->visible = true;

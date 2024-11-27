@@ -18,7 +18,8 @@ class SceneViewerComponent : public EditorComponent
 };
 
 inline SceneViewerComponent::
-SceneViewerComponent() : EditorComponent(-2, "scene_viewer")
+SceneViewerComponent() : EditorComponent(COMPONENT_ID_SCENE_VIEWER, 
+        COMPONENT_NAME_SCENE_VIEWER)
 {
 
     this->visible = true;

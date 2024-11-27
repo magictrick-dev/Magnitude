@@ -8,10 +8,16 @@ Editor::
 Editor()
 {
 
+    // Critical components.
     this->main_menu_component       = std::make_shared<MainMenuComponent>();
     this->scene_viewer_component    = std::make_shared<SceneViewerComponent>();
     this->inspector_component       = std::make_shared<InspectorComponent>();
     this->console_component         = std::make_shared<ConsoleComponent>();
+
+    this->editor_map[COMPONENT_NAME_MAIN_MENU]      = this->main_menu_component;
+    this->editor_map[COMPONENT_NAME_SCENE_VIEWER]   = this->scene_viewer_component;
+    this->editor_map[COMPONENT_NAME_INSPECTOR]      = this->inspector_component;
+    this->editor_map[COMPONENT_NAME_CONSOLE]        = this->console_component;
 
 }
 
