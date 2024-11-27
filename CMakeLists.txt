@@ -54,6 +54,8 @@ add_executable(Magnitude
     "source/editor/editor.cpp"
     "source/editor/component.hpp"
     "source/editor/component.cpp"
+    "source/editor/mainmenu.hpp"
+    "source/editor/mainmenu.cpp"
 
     "source/utilities/path.hpp"
     "source/utilities/path.cpp"
