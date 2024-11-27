@@ -1,6 +1,7 @@
 #include <editor/mainmenu.hpp>
 #include <editor/editor.hpp>
 #include <platform/filesystem.hpp>
+#include <environment.hpp>
 
 MainMenuComponent::
 MainMenuComponent() : EditorComponent(COMPONENT_ID_MAIN_MENU, COMPONENT_NAME_MAIN_MENU)
@@ -48,8 +49,7 @@ render()
 
         if (ImGui::MenuItem("Open", NULL))
         {
-            std::string open_path = file_open_system_dialogue(); 
-            Logger::log_info(LogFlag_None, "Opening... %s.", open_path.c_str());
+            Environment::rdview_file_open();
         }
 
         if (ImGui::MenuItem("Save", NULL))

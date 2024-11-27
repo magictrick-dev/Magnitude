@@ -20,20 +20,26 @@
 // -----------------------------------------------------------------------------
 #include <iostream>
 #include <definitions.hpp>
+#include <environment.hpp>
+
 #include <platform/window.hpp>
 #include <platform/opengl.hpp>
+
 #include <utilities/path.hpp>
 #include <utilities/cli.hpp>
 #include <utilities/resourceman.hpp>
 #include <utilities/rdtokenizer.hpp>
 #include <utilities/logging.hpp>
+
 #include <graphics/color.hpp>
 #include <graphics/bitmap.hpp>
+
 #include <editor/editor.hpp>
 #include <editor/metrics.hpp>
+#include <editor/rdviewer.hpp>
+
 #include <imgui/imgui.h>
 #include <glad/glad.h>
-#include <balazedit/texteditor.h>
 
 i32
 main(i32 argc, cptr *argv)
@@ -48,35 +54,35 @@ main(i32 argc, cptr *argv)
     if (!CLI::parse(argc, argv))
     {
         std::cout << "[ CLI ] Unable to parse the given command line arguments." << std::endl;
+        CLI::short_help();
         return -1;
     }
     
-    if (CLI::size() <= 1)
-    {
-        CLI::short_help();
-        return 0;
-    }
-
     // Get the rdview filepath.
-    Filepath runtime_path = Filepath::cwd();
-    CLIArgument *initial_argument = CLI::get(1);
-    if (initial_argument->get_type() == CLIArgumentType::String)
+    Filepath runtime_path;
+    if (CLI::size() >= 2)
     {
-        CLIValue *user_argument = dynamic_cast<CLIValue*>(initial_argument);
-        MAG_ASSERT(user_argument != nullptr); // This should never occur.
-        ccptr user_string = user_argument->get_string();
-        runtime_path += "./";
-        runtime_path += user_string;
-        runtime_path.canonicalize();
+        CLIArgument *initial_argument = CLI::get(1);
+        if (initial_argument->get_type() == CLIArgumentType::String)
+        {
+            CLIValue *user_argument = dynamic_cast<CLIValue*>(initial_argument);
+            MAG_ASSERT(user_argument != nullptr); // This should never occur.
+            ccptr user_string = user_argument->get_string();
+            runtime_path = Filepath::cwd();
+            runtime_path += "./";
+            runtime_path += user_string;
+            runtime_path.canonicalize();
+        }
+
+        if (!runtime_path.is_valid_file())
+        {
+            Logger::log_warning(LogFlag_None, "Unable to open the file: %s, file does not exist.",
+                    runtime_path.c_str());
+            runtime_path = "";
+        }
+
     }
-
-    // Attempt to load the user file into the resource manager.
-    rhandle user_file_handle = ResourceManager::create_file_resource(runtime_path);
-    MAG_ASSERT(ResourceManager::resource_handle_is_valid(user_file_handle) &&
-            "This shouldn't fail, we expressly check for this at startup.");
-    MAG_ASSERT(ResourceManager::load_resource(user_file_handle) &&
-            "This shouldn't fail, we haven't even loaded the resource yet.");
-
+    
     // --- Runtime Configuration & Main Loop ----------------------------------- 
     //
     // Launch the window, perform the operation(s). We construct a window, then
@@ -117,17 +123,10 @@ main(i32 argc, cptr *argv)
     // Setup the editor and the necessary components we want to use.
     Editor& editor = Editor::get();
     editor.add_component<MetricsComponent>("metrics");
+    editor.add_component<RDViewerComponent>("rdviewer");
 
-    Logger::log(LogFlag_Debug, "Hello %s, this is a test.", "Chris");
-
-    // Create the text editor.
-    TextEditor basic_editor;
-    basic_editor.SetText(ResourceManager::get_resource_as_string(user_file_handle));
-
-    // Tokenizer.
-    RDViewTokenizer tokenizer(runtime_path);
-    RDViewToken current_token = tokenizer.get_current();
-    ResourceManager::release_resource(user_file_handle); // No longer need it.
+    // Now that the editor is fully set, we can attempt to load it.
+    Environment::rdview_file_set(runtime_path);
 
     while (!main_window->should_close())
     {
@@ -147,22 +146,6 @@ main(i32 argc, cptr *argv)
 
         // Render the editor.
         editor.render();
-
-        // Show the Dear ImGUI demo window.
-        static bool show_demo = true;
-        if (show_demo)
-        {
-            ImGui::ShowDemoWindow(&show_demo);
-        }
-
-        // Show the editor.
-        static bool show_editor = true;
-        if (show_editor)
-        {
-            ImGui::Begin("RDView Text Editor", &show_editor);
-            basic_editor.Render("EditorArea");
-            ImGui::End();
-        }
 
         // End the rendering.
         OpenGLRenderContext::end_frame();

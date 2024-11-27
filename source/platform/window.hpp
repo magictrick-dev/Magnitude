@@ -8,7 +8,7 @@
 
 #define MAGWINDEF_WIDTH     1600
 #define MAGWINDEF_HEIGHT    900
-#define MAGWINDEF_TITLE     "Magnitude Rendering Utility"
+#define MAGWINDEF_TITLE     "Magnitude"
 
 // --- Window ------------------------------------------------------------------
 //
@@ -30,10 +30,6 @@
 // to the window. Since your proxy your drawing to memory, it's way faster. The
 // OS doesn't care if you render one pixel or one million pixels, a single call
 // will always be faster than a million calls.
-//
-// The API is designed such that you can have multiple windows. This is nice to
-// have in case you want to render different images in different windows but the
-// trade-off is that it is still single-threaded.
 //
 
 class Window

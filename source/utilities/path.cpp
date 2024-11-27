@@ -5,6 +5,13 @@ Filepath::
 Filepath()
 {
     this->zero_initialize();
+    u64 string_length = 8;
+    u64 required_size = this->find_best_fit(string_length + 1);
+    this->buffer_ptr        = (char*)MAG_MEMORY_ALLOC(required_size);
+    this->buffer_capacity   = required_size;
+    this->buffer_length     = string_length;
+    memset(this->buffer_ptr, '\0', required_size);
+    return;
 }
 
 Filepath::
