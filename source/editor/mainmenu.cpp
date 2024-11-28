@@ -84,6 +84,8 @@ render()
             // Attempt to set the file.
             rdviewer->set_file(path);
 
+            Logger::log_info(0, "Here");
+
         }
 
         bool disable_save = false;

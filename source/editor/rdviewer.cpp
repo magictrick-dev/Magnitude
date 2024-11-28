@@ -154,6 +154,7 @@ set_file(Filepath path)
     Logger::log_info(LogFlag_None, "The project source has been set to %s.", path.c_str());
 
     ResourceManager::release_resource(resource);
+    this->file_changes = false;
 
     return true;
 
@@ -168,8 +169,7 @@ new_file()
 
         bool choice = file_confirm_message("New", 
                 "Are you sure you want to create a new view without saving changes?");
-        if (choice == false)
-            return false;
+        if (choice == false) return false;
 
     }
 
@@ -196,35 +196,42 @@ render()
     this->file_editor.Render("Text Editor");
     ImGui::PopStyleColor();
 
-    if (ImGui::IsKeyPressed(ImGuiKey_S) && ImGui::IsKeyDown(ImGuiKey_LeftCtrl) && this->file_changes)
+    ImGui::End();
+
+    if (this->file_editor.IsTextChanged())
+    {
+        this->file_changes = true;
+    }
+
+    if (ImGui::IsKeyReleased(ImGuiKey_S) && 
+        ImGui::IsKeyDown(ImGuiKey_LeftCtrl) && 
+        this->file_changes)
     {
         this->save_file();
     }
 
-    if (ImGui::IsKeyPressed(ImGuiKey_S) && 
+    if (ImGui::IsKeyReleased(ImGuiKey_S) && 
         ImGui::IsKeyDown(ImGuiKey_LeftCtrl) && 
         ImGui::IsKeyDown(ImGuiKey_LeftShift))
     {
         this->save_as_file();
     }
 
-    if (ImGui::IsKeyPressed(ImGuiKey_N) &&
+    if (ImGui::IsKeyReleased(ImGuiKey_N) &&
         ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
     {
         this->new_file();
     }
 
-    if (ImGui::IsKeyPressed(ImGuiKey_O) &&
+    if (ImGui::IsKeyReleased(ImGuiKey_O) &&
         ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
     {
-        this->new_file();
-    }
+        // Request the file.
+        std::string result = file_open_system_dialogue();
+        Filepath path = result.c_str();
 
-    ImGui::End();
-
-    if (this->file_editor.IsTextChanged())
-    {
-        this->file_changes = true;
+        // Attempt to set the file.
+        this->set_file(path);
     }
 
 }
