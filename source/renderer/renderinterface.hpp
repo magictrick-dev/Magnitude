@@ -1,0 +1,9 @@
+#ifndef MAGNITUDE_RENDERER_RENDERERINTERFACE_HPP
+#define MAGNITUDE_RENDERER_RENDERERINTERFACE_HPP
+
+class RenderInterface
+{
+
+};
+
+#endif

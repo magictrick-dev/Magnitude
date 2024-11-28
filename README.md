@@ -39,18 +39,18 @@ The following list of features outline what Magnitude supports/will support:
 
 - [X] Window System: Launching
 - [X] Window System: OpenGL Support
-- [ ] Window System: Non-blocking Fix
+- [ ] Window System: Non-blocking Fix (Potentially conflicts with ImGUI)
 - [X] Vendor: Dear ImGUI
 - [ ] Vendor: ASSIMP
 - [X] Vendor: STBImage
 - [X] Resource Management System: Handles
 - [X] Resource Management System: File Loading
-- [ ] Resource Management System: File Saving
+- [X] Resource Management System: File Saving
 - [ ] Resource Management System: File Streaming
-- [ ] Input System: Keyboard
-- [ ] Input System: Mouse
+- [X] Input System: Keyboard
+- [X] Input System: Mouse
 - [ ] Input System: Controller
-- [ ] RDView Parser: Tokenizer
+- [X] RDView Parser: Tokenizer
 - [ ] RDView Parser: Parser
 - [ ] RDView Parser: Dynamic Parsing
 - [ ] RDView Parser: Language Documentation
@@ -62,9 +62,9 @@ The following list of features outline what Magnitude supports/will support:
 - [ ] User Interface: Frame Explorer
 - [ ] User Interface: Object List
 - [ ] User Interface: Object Inspector
-- [ ] User Interface: Runtime Information
+- [X] User Interface: Runtime Information
 - [ ] User Interface: Asset Explorer
-- [ ] User Interface: Console
+- [X] User Interface: Console
 - [ ] Modeling: 2D Primitives
 - [ ] Modeling: 3D Primitives
 - [ ] Modeling: Object File Loading

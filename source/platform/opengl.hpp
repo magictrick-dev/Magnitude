@@ -26,10 +26,31 @@ class OpenGLRenderContext
     public:
         static bool     create_render_context(std::shared_ptr<Window> window);
         static bool     destroy_render_context();
+
         static bool     bind(std::shared_ptr<Window> window);
         static bool     unbind();
+
         static void     begin_frame();
         static void     end_frame();
+
+        static u32      shader_create(u32 type);
+        static b32      shader_compile(u32 shader, ccptr source);
+        static void     shader_release(u32 shader);
+
+        static u32      program_create();
+        static b32      program_link(u32 program);
+        static void     program_attach(u32 program, u32 shader);
+        static void     program_release(u32 program);
+
+        /*
+        static b32      program_set_uniform(u32 program, ccptr loc, matrix4 *source, u64 count);
+        static b32      program_set_uniform_vec2(u32 program, ccptr loc, vec2 *source, u64 count);
+        static b32      program_set_uniform_vec3(u32 program, ccptr loc, vec3 *source, u64 count);
+        static b32      program_set_uniform_vec4(u32 program, ccptr loc, vec4 *source, u64 count);
+        */
+        static b32      program_set_uniform_r32(u32 program, ccptr loc, r32 *source, u64 count);
+        static b32      program_set_uniform_i32(u32 program, ccptr loc, i32 *source, u64 count);
+        static b32      program_set_uniform_u32(u32 program, ccptr loc, u32 *source, u64 count);
 
     protected:
                             OpenGLRenderContext();
