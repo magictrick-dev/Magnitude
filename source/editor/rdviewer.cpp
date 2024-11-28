@@ -199,10 +199,19 @@ render()
 
     ImGui::End();
 
+    // Requires after render since property is an ImGui component with internal
+    // state outside of update.
     if (this->file_editor.IsTextChanged())
     {
         this->file_changes = true;
     }
+
+}
+
+void RDViewerComponent::
+update()
+{
+
 
     if (input_key_is_released(MagKeyS) && 
         input_key_is_down(MagKeyControl) && 

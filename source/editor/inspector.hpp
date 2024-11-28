@@ -12,6 +12,7 @@ class InspectorComponent : public EditorComponent
         inline virtual         ~InspectorComponent();
 
         inline virtual void     render()    override;
+        inline virtual void     update()    override;
 
 };
 
@@ -38,6 +39,12 @@ render()
     ImGui::Begin("Inspector", &this->visible);
 
     ImGui::End();
+
+}
+
+inline void InspectorComponent::
+update()
+{
 
 }
 

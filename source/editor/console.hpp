@@ -14,6 +14,7 @@ class ConsoleComponent : public EditorComponent
         inline virtual         ~ConsoleComponent();
 
         inline virtual void     render() override;
+        inline virtual void     update() override;
 
 };
 
@@ -122,5 +123,12 @@ render()
 
 }
 
+void ConsoleComponent::
+update()
+{
+
+    return;
+
+}
 
 #endif

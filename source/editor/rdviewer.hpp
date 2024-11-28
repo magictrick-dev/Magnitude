@@ -17,6 +17,7 @@ class RDViewerComponent : public EditorComponent
         virtual            ~RDViewerComponent();
 
         virtual void        render()    override;
+        virtual void        update()    override;
 
         bool                new_file();
         bool                close_file();

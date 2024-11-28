@@ -165,6 +165,7 @@ main(i32 argc, cptr *argv)
         if (input_key_is_down(MagKeyA)) Logger::log_info(LogFlag_None, "A is down.");
 
         // Render the editor.
+        Editor::update();
         Editor::render();
 
         // End the rendering.

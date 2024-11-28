@@ -12,6 +12,7 @@ class SceneViewerComponent : public EditorComponent
         inline virtual         ~SceneViewerComponent();
 
         inline virtual void     render()    override;
+        inline virtual void     update()    override;
 
 };
 
@@ -38,6 +39,12 @@ render()
     ImGui::Begin("Scene", &this->visible);
 
     ImGui::End();
+
+}
+
+inline void SceneViewerComponent::
+update()
+{
 
 }
 

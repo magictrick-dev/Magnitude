@@ -190,10 +190,10 @@ initialize_input_states()
     virtual_map[0x75]       = MagKeyF6;
     virtual_map[0x76]       = MagKeyF7;
     virtual_map[0x77]       = MagKeyF8;
-    virtual_map[0x78]       = MagKeyF10;
-    virtual_map[0x79]       = MagKeyF11;
-    virtual_map[0x7a]       = MagKeyF12;
-    virtual_map[0x7b]       = MagKeyNull;
+    virtual_map[0x78]       = MagKeyF9;
+    virtual_map[0x79]       = MagKeyF10;
+    virtual_map[0x7a]       = MagKeyF11;
+    virtual_map[0x7b]       = MagKeyF12;
     virtual_map[0x7c] = MagKeyNull;
     virtual_map[0x7d] = MagKeyNull;
     virtual_map[0x7e] = MagKeyNull;

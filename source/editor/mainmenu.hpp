@@ -13,6 +13,8 @@ class MainMenuComponent : public EditorComponent
         virtual         ~MainMenuComponent();
 
         virtual void     render() override;
+        virtual void     update() override;
+
         virtual bool     open() override;
         virtual bool     close() override;
         virtual bool     toggle() override;

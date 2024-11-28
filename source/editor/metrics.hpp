@@ -14,6 +14,7 @@ class MetricsComponent : public EditorComponent
         inline virtual         ~MetricsComponent();
 
         inline virtual void     render()    override;
+        inline virtual void     update()    override;
 
         inline void             set_frame_time(r32 delta);
 
@@ -64,6 +65,14 @@ render()
     ImGui::Text("Average %.2f ms/f", this->frame_average * 1000.0f);
 
     ImGui::End();
+
+}
+
+inline void MetricsComponent::
+update()
+{
+
+    return;
 
 }
 

@@ -33,6 +33,7 @@ class EditorComponent
         inline std::string         get_menu_shortcut() const { return this->shortcut; }
 
         inline virtual void render() = 0;
+        inline virtual void update() = 0;
 
         inline virtual bool close()             { return this->visible = false; };
         inline virtual bool open()              { return this->visible = true; };

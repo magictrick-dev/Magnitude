@@ -3,6 +3,7 @@
 #include <definitions.hpp>
 #include <platform/input.hpp>
 #include <editor/component.hpp>
+#include <utilities/logging.hpp>
 #include <imgui/imgui.h>
 
 class ImguiDocsComponent : public EditorComponent
@@ -13,6 +14,7 @@ class ImguiDocsComponent : public EditorComponent
         inline virtual         ~ImguiDocsComponent();
 
         inline virtual void     render()    override;
+        inline virtual void     update()    override;
 
 };
 
@@ -37,6 +39,13 @@ render()
 
     if (this->visible == false) return;
     ImGui::ShowDemoWindow(&this->visible);
+
+}
+
+inline void ImguiDocsComponent::
+update()
+{
+
     if (input_key_is_released(MagKeyF11))
         this->visible = !this->visible;
 

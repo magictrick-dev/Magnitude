@@ -12,6 +12,7 @@ class Editor
 
     public:
         static inline void render();   
+        static inline void update();   
 
         static inline std::vector<shared_ptr<EditorComponent>>  get_component_list();
         template <class T> static inline shared_ptr<T>          get_component_by_name(std::string name);
@@ -141,6 +142,18 @@ render()
     // Snap-ins.
     for (auto component : editor.editor_components)
         component->render();
+
+}
+
+void Editor::
+update()
+{
+    
+    Editor& editor = Editor::get();
+
+    // Snap-ins.
+    for (auto component : editor.editor_components)
+        component->update();
 
 }
 

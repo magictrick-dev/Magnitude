@@ -147,3 +147,12 @@ render()
     
 
 }
+
+void MainMenuComponent::
+update()
+{
+
+    return;
+
+}
+
