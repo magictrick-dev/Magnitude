@@ -41,6 +41,7 @@
 #include <editor/sceneviewer.hpp>
 #include <editor/console.hpp>
 #include <editor/inspector.hpp>
+#include <editor/imguidocs.hpp>
 
 #include <imgui/imgui.h>
 #include <glad/glad.h>
@@ -119,17 +120,17 @@ main(i32 argc, cptr *argv)
 
     // Setup the editor and the necessary components we want to use.
     Editor::add_component<MainMenuComponent>("main_menu");
-    Editor::add_component<SceneViewerComponent>("scene_viewer");
-    Editor::add_component<InspectorComponent>("inspector");
-    Editor::add_component<MetricsComponent>("metrics");
-    Editor::add_component<RDViewerComponent>("rdviewer");
-    Editor::add_component<ConsoleComponent>("console");
+    Editor::add_component<SceneViewerComponent>("Scene Viewer");
+    Editor::add_component<InspectorComponent>("Inspector");
+    Editor::add_component<MetricsComponent>("Metrics");
+    Editor::add_component<RDViewerComponent>("Editor");
+    Editor::add_component<ConsoleComponent>("Console");
+    Editor::add_component<ImguiDocsComponent>("Imgui Documentation");
 
     // Set the file, if possible.
-    auto rdviewer = Editor::get_component_by_name<RDViewerComponent>("rdviewer");
-    auto metrics = Editor::get_component_by_name<MetricsComponent>("metrics");
+    auto rdviewer = Editor::get_component_by_name<RDViewerComponent>("Editor");
+    auto metrics = Editor::get_component_by_name<MetricsComponent>("Metrics");
     rdviewer->set_file(runtime_path);
-
 
     // Show the window and begin the runtime.
     main_window->swap_frames();
@@ -162,16 +163,6 @@ main(i32 argc, cptr *argv)
 
         // Render the editor.
         Editor::render();
-
-        static bool show_demo = false;
-        if (ImGui::IsKeyPressed(ImGuiKey_F3))
-        {
-            show_demo = !show_demo;
-        }
-        if (show_demo)
-        {
-            ImGui::ShowDemoWindow(&show_demo);
-        }
 
         // End the rendering.
         OpenGLRenderContext::end_frame();

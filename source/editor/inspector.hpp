@@ -12,8 +12,6 @@ class InspectorComponent : public EditorComponent
         inline virtual         ~InspectorComponent();
 
         inline virtual void     render()    override;
-        inline virtual bool     close()     override;
-        inline virtual bool     open()      override;
 
 };
 
@@ -28,24 +26,6 @@ InspectorComponent(i32 id, std::string name) : EditorComponent(id, name)
 inline InspectorComponent::
 ~InspectorComponent()
 {
-
-}
-
-inline bool InspectorComponent::
-close()
-{
-
-    this->visible = false;
-    return true;
-
-}
-
-inline bool InspectorComponent::
-open()
-{
-
-    this->visible = true;
-    return true;
 
 }
 

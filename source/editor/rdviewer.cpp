@@ -110,15 +110,6 @@ save_as_file()
 }
 
 bool RDViewerComponent::
-close()
-{
-
-    this->visible = false;
-    return true;
-
-}
-
-bool RDViewerComponent::
 close_file()
 {
 
@@ -136,6 +127,7 @@ close_file()
     {
         this->file_editor.SetText("");
         this->file_path = "";
+        Logger::log_info(LogFlag_None, "The project source has successfully closed.");
         return true;
     }
 
@@ -159,6 +151,7 @@ set_file(Filepath path)
     if (!ResourceManager::load_resource(resource)) return false;
 
     this->file_editor.SetText(ResourceManager::get_resource_as_string(resource));
+    Logger::log_info(LogFlag_None, "The project source has been set to %s.", path.c_str());
 
     ResourceManager::release_resource(resource);
 
@@ -183,16 +176,7 @@ new_file()
     this->file_path = "";
     this->file_editor.SetText("");
     this->file_changes = false;
-    return true;
-
-}
-
-
-bool RDViewerComponent::
-open()
-{
-
-    this->visible = true;
+    Logger::log_info(LogFlag_None, "A new project has been created.");
     return true;
 
 }
@@ -215,6 +199,25 @@ render()
     if (ImGui::IsKeyPressed(ImGuiKey_S) && ImGui::IsKeyDown(ImGuiKey_LeftCtrl) && this->file_changes)
     {
         this->save_file();
+    }
+
+    if (ImGui::IsKeyPressed(ImGuiKey_S) && 
+        ImGui::IsKeyDown(ImGuiKey_LeftCtrl) && 
+        ImGui::IsKeyDown(ImGuiKey_LeftShift))
+    {
+        this->save_as_file();
+    }
+
+    if (ImGui::IsKeyPressed(ImGuiKey_N) &&
+        ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
+    {
+        this->new_file();
+    }
+
+    if (ImGui::IsKeyPressed(ImGuiKey_O) &&
+        ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
+    {
+        this->new_file();
     }
 
     ImGui::End();

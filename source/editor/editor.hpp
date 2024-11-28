@@ -13,6 +13,7 @@ class Editor
     public:
         static inline void render();   
 
+        static inline std::vector<shared_ptr<EditorComponent>>  get_component_list();
         template <class T> static inline shared_ptr<T>          get_component_by_name(std::string name);
         template <class T> static inline shared_ptr<T>          get_component_by_id(i32 idx);
         template <class T, class... Args> static inline bool    add_component(std::string name, Args... args);
@@ -28,6 +29,15 @@ class Editor
         i32 editor_step = 1;
 
 };
+
+std::vector<shared_ptr<EditorComponent>> Editor::
+get_component_list()
+{
+
+    Editor& editor = Editor::get();
+    return editor.editor_components;
+
+}
 
 template <class T> shared_ptr<T> Editor::
 get_component_by_name(std::string name)

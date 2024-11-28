@@ -12,8 +12,6 @@ class SceneViewerComponent : public EditorComponent
         inline virtual         ~SceneViewerComponent();
 
         inline virtual void     render()    override;
-        inline virtual bool     close()     override;
-        inline virtual bool     open()      override;
 
 };
 
@@ -28,24 +26,6 @@ SceneViewerComponent(i32 id, std::string name) : EditorComponent(id, name)
 inline SceneViewerComponent::
 ~SceneViewerComponent()
 {
-
-}
-
-inline bool SceneViewerComponent::
-close()
-{
-
-    this->visible = false;
-    return true;
-
-}
-
-inline bool SceneViewerComponent::
-open()
-{
-
-    this->visible = true;
-    return true;
 
 }
 

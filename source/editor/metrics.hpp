@@ -14,8 +14,6 @@ class MetricsComponent : public EditorComponent
         inline virtual         ~MetricsComponent();
 
         inline virtual void     render()    override;
-        inline virtual bool     close()     override;
-        inline virtual bool     open()      override;
 
         inline void             set_frame_time(r32 delta);
 
@@ -44,24 +42,6 @@ MetricsComponent(i32 index, std::string name) : EditorComponent(index, name)
 inline MetricsComponent::
 ~MetricsComponent()
 {
-
-}
-
-inline bool MetricsComponent::
-close()
-{
-
-    this->visible = false;
-    return true;
-
-}
-
-inline bool MetricsComponent::
-open()
-{
-
-    this->visible = true;
-    return true;
 
 }
 

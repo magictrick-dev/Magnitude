@@ -30,7 +30,7 @@ rdview_file_set(Filepath path)
 
     Environment::rdview_file = path;
     Editor& editor = Editor::get();
-    std::shared_ptr<RDViewerComponent> viewer = editor.get_component_by_name<RDViewerComponent>("rdviewer");
+    std::shared_ptr<RDViewerComponent> viewer = editor.get_component_by_name<RDViewerComponent>("Editor");
     MAG_ASSERT(viewer != nullptr);
     viewer->set_file(path);
 

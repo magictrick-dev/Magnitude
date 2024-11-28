@@ -12,9 +12,12 @@ class MainMenuComponent : public EditorComponent
                          MainMenuComponent(i32 id, std::string name);
         virtual         ~MainMenuComponent();
 
-        virtual void     render()    override;
-        virtual bool     close()     override;
-        virtual bool     open()      override;
+        virtual void     render() override;
+        virtual bool     open() override;
+        virtual bool     close() override;
+        virtual bool     toggle() override;
+        virtual bool     is_toggleable() override;
+        virtual bool     is_menuable() override;
 
 };
 

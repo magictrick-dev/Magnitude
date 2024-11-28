@@ -19,21 +19,35 @@ MainMenuComponent::
 }
 
 bool MainMenuComponent::
-close()
+is_toggleable()
 {
 
-    // Do nothing.
     return false;
 
 }
 
 bool MainMenuComponent::
+is_menuable()
+{
+    return false;
+}
+
+bool MainMenuComponent::
+toggle()
+{
+    return false;
+}
+
+bool MainMenuComponent::
 open()
 {
-
-    // Do nothing.
     return false;
+}
 
+bool MainMenuComponent::
+close()
+{
+    return false;
 }
 
 void MainMenuComponent::
@@ -42,26 +56,25 @@ render()
 
     if (this->visible != true) return;
 
-    auto rdviewer = Editor::get_component_by_name<RDViewerComponent>("rdviewer");
+    auto rdviewer = Editor::get_component_by_name<RDViewerComponent>("Editor");
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     ImGui::BeginMainMenuBar();
     ImGui::PopStyleVar();
 
     std::string stem = rdviewer->get_file_path().get_file_stem();
     if (stem.empty()) stem = "Unopened Project";
-    ImGui::Text(stem.c_str());
-    ImGui::Separator();
+    ImGui::TextColored(ImVec4(0.510f, 0.510f, 0.510f, 1.000f), stem.c_str());
     ImGui::Separator();
 
     if (ImGui::BeginMenu("File"))
     {
 
-        if (ImGui::MenuItem("New", NULL))
+        if (ImGui::MenuItem("New", "Ctrl-N"))
         {
             rdviewer->new_file();
         }
 
-        if (ImGui::MenuItem("Open", NULL))
+        if (ImGui::MenuItem("Open", "Ctrl-O"))
         {
 
             // Request the file.
@@ -77,18 +90,18 @@ render()
         if (!rdviewer->file_unsaved()) disable_save = true;
 
         if (disable_save) ImGui::BeginDisabled();
-        if (ImGui::MenuItem("Save", NULL))
+        if (ImGui::MenuItem("Save", "Ctrl-S"))
         {
             rdviewer->save_file();
         }
         if (disable_save) ImGui::EndDisabled();
 
-        if (ImGui::MenuItem("Save as", NULL))
+        if (ImGui::MenuItem("Save as", "Ctrl-Shift-S"))
         {
             rdviewer->save_as_file();
         }
 
-        if (ImGui::MenuItem("Close", NULL))
+        if (ImGui::MenuItem("Close Document", NULL))
         {
             rdviewer->close_file();
         }
@@ -96,20 +109,29 @@ render()
         ImGui::EndMenu();
 
     }
+
     if (ImGui::BeginMenu("View"))
     {
-        ImGui::Text("Editor");
-        ImGui::Text("Viewport");
-        ImGui::Text("Inspector");
-        ImGui::Text("Console");
+
+        auto component_list = Editor::get_component_list();
+        for (auto component : component_list)
+        {
+
+            if (!component->is_menuable()) continue;
+            if (!component->is_toggleable()) ImGui::BeginDisabled();
+            bool status = component->is_visible();
+            if (ImGui::MenuItem(component->get_name().c_str(),
+                                component->get_menu_shortcut().c_str(), &status))
+            {
+                component->toggle();
+            }
+            if (!component->is_toggleable()) ImGui::BeginDisabled();
+
+        }
+
         ImGui::EndMenu();
     }
-    if (ImGui::BeginMenu("Settings"))
-    {
-        ImGui::Text("Verbose Logs");
-        ImGui::Text("Force Hardware Acceleration");
-        ImGui::EndMenu();
-    }
+
     if (ImGui::BeginMenu("About"))
     {
         ImGui::Text("Magnitude Version A.0.1");

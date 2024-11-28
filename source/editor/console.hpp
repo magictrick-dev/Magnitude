@@ -13,9 +13,7 @@ class ConsoleComponent : public EditorComponent
         inline                  ConsoleComponent(i32 id, std::string name);
         inline virtual         ~ConsoleComponent();
 
-        inline virtual void     render()    override;
-        inline virtual bool     close()     override;
-        inline virtual bool     open()      override;
+        inline virtual void     render() override;
 
 };
 
@@ -30,24 +28,6 @@ ConsoleComponent(i32 id, std::string name) : EditorComponent(id, name)
 inline ConsoleComponent::
 ~ConsoleComponent()
 {
-
-}
-
-inline bool ConsoleComponent::
-close()
-{
-
-    this->visible = false;
-    return true;
-
-}
-
-inline bool ConsoleComponent::
-open()
-{
-
-    this->visible = true;
-    return true;
 
 }
 

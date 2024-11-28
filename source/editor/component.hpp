@@ -27,19 +27,25 @@ class EditorComponent
                             EditorComponent(i32 id, std::string);
         virtual            ~EditorComponent();
 
-        bool                is_visible() const;
-        i32                 get_id() const;
-        std::string         get_name() const;
+        inline bool                is_visible() const { return this->visible; }
+        inline i32                 get_id() const { return this->id; }
+        inline std::string         get_name() const { return this->name; }
+        inline std::string         get_menu_shortcut() const { return this->shortcut; }
 
-        virtual void        render() = 0;
-        virtual bool        close() = 0;
-        virtual bool        open() = 0;
-        
+        inline virtual void render() = 0;
+
+        inline virtual bool close()             { return this->visible = false; };
+        inline virtual bool open()              { return this->visible = true; };
+        inline virtual bool toggle()            { return this->visible = !this->visible; }
+        inline virtual bool is_visible()        { return this->visible; }
+        inline virtual bool is_toggleable()     { return true; }
+        inline virtual bool is_menuable()       { return true; }
 
     protected:
-        bool        visible;
-        std::string name;
-        i32         id;
+        std::string name        = "Unset Component Title";
+        std::string shortcut    = "";
+        i32         id          = -1;
+        bool        visible     = true;
 
 };
 
