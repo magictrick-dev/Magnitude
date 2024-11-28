@@ -8,7 +8,7 @@
 
 #define MAGWINDEF_WIDTH     1600
 #define MAGWINDEF_HEIGHT    900
-#define MAGWINDEF_TITLE     "Magnitude Rendering Utility"
+#define MAGWINDEF_TITLE     "Magnitude"
 
 // --- Window ------------------------------------------------------------------
 //
@@ -31,16 +31,12 @@
 // OS doesn't care if you render one pixel or one million pixels, a single call
 // will always be faster than a million calls.
 //
-// The API is designed such that you can have multiple windows. This is nice to
-// have in case you want to render different images in different windows but the
-// trade-off is that it is still single-threaded.
-//
 
 class Window
 {
     
     public:
-        static std::shared_ptr<Window> create(std::string title, i32 width, i32 height);
+        static shared_ptr<Window> create(std::string title, i32 width, i32 height);
 
         virtual void            poll_events()           = 0;
         virtual void            swap_frames()           = 0;

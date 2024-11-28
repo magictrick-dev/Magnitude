@@ -20,18 +20,32 @@
 // -----------------------------------------------------------------------------
 #include <iostream>
 #include <definitions.hpp>
+
 #include <platform/window.hpp>
 #include <platform/opengl.hpp>
+#include <platform/system.hpp>
+#include <platform/input.hpp>
+
 #include <utilities/path.hpp>
 #include <utilities/cli.hpp>
 #include <utilities/resourceman.hpp>
 #include <utilities/rdtokenizer.hpp>
+#include <utilities/logging.hpp>
+
 #include <graphics/color.hpp>
 #include <graphics/bitmap.hpp>
+
+#include <editor/editor.hpp>
+#include <editor/metrics.hpp>
+#include <editor/rdviewer.hpp>
 #include <editor/mainmenu.hpp>
+#include <editor/sceneviewer.hpp>
+#include <editor/console.hpp>
+#include <editor/inspector.hpp>
+#include <editor/imguidocs.hpp>
+
 #include <imgui/imgui.h>
 #include <glad/glad.h>
-#include <balazedit/texteditor.h>
 
 i32
 main(i32 argc, cptr *argv)
@@ -46,96 +60,91 @@ main(i32 argc, cptr *argv)
     if (!CLI::parse(argc, argv))
     {
         std::cout << "[ CLI ] Unable to parse the given command line arguments." << std::endl;
+        CLI::short_help();
         return -1;
     }
     
-    if (CLI::size() <= 1)
-    {
-        CLI::short_help();
-        return 0;
-    }
-
     // Get the rdview filepath.
-    Filepath runtime_path = Filepath::cwd();
-    CLIArgument *initial_argument = CLI::get(1);
-    if (initial_argument->get_type() == CLIArgumentType::String)
+    Filepath runtime_path;
+    if (CLI::size() >= 2)
     {
-        CLIValue *user_argument = dynamic_cast<CLIValue*>(initial_argument);
-        MAG_ASSERT(user_argument != nullptr); // This should never occur.
-        ccptr user_string = user_argument->get_string();
-        runtime_path += "./";
-        runtime_path += user_string;
-        runtime_path.canonicalize();
+        CLIArgument *initial_argument = CLI::get(1);
+        if (initial_argument->get_type() == CLIArgumentType::String)
+        {
+            CLIValue *user_argument = dynamic_cast<CLIValue*>(initial_argument);
+            MAG_ASSERT(user_argument != nullptr); // This should never occur.
+            ccptr user_string = user_argument->get_string();
+            runtime_path = Filepath::cwd();
+            runtime_path += "./";
+            runtime_path += user_string;
+            runtime_path.canonicalize();
+        }
+
+        if (!runtime_path.is_valid_file())
+        {
+            Logger::log_warning(LogFlag_None, "Unable to open the file: %s, file does not exist.",
+                    runtime_path.c_str());
+            runtime_path = "";
+        }
+
     }
-
-    // Attempt to load the user file into the resource manager.
-    rhandle user_file_handle = ResourceManager::create_file_resource(runtime_path);
-    MAG_ASSERT(ResourceManager::resource_handle_is_valid(user_file_handle) &&
-            "This shouldn't fail, we expressly check for this at startup.");
-    MAG_ASSERT(ResourceManager::load_resource(user_file_handle) &&
-            "This shouldn't fail, we haven't even loaded the resource yet.");
-
-    // --- Runtime Configuration & Main Loop ----------------------------------- 
+    
+    // --- Runtime Configuration -----------------------------------------------
     //
-    // Launch the window, perform the operation(s). We construct a window, then
-    // establish an OpenGL context. This ensures that everything is properly set
-    // up for hardware rendering and DearImGUI.
+    // Generating a functional runtime environment requires a standard order
+    // of operations to ensure everything gets boiled together correctly.
+    // The window and OpenGL context must be created first. Then, it would make
+    // sense to properly initialize OpenGL afterwards.
     //
-    // The general workflow is as follows:
-    //      1.  Create the window.
-    //      2.  Establish a render context (probably OpenGL).
-    //      3.  Show window.
-    //      4.  Enter runtime loop.
-    //      5.  Bind our render context to the active window (probably main window).
-    //      6.  Begin frame in render context.
-    //      7.  Poll window events.
-    //      8.  Do some rendering & logic updates.
-    //      9.  End frame in render context.
-    //      10. Unbind the render context.
-    //      11. Swap the buffers in the window.
+    // The application using editor components as its primary method of delegating
+    // functionality across the UI. There is coupling in functionality. Certain
+    // components can look for other components and interact with them. Therefore
+    // all components must be added to the component list.
+    //
+    // Afterwards, the runtime loop is run. So long as all components are added
+    // and successfully exist, there shouldn't be order errors in the runtime
+    // loop. If there are, it is because there is tight coupling of components.
     //
 
     // Create the window and attempt to establish an OpenGL render context.
-    std::shared_ptr<Window> main_window = Window::create("Magnitude Graphics Visualizer", 1280, 720);
+    std::shared_ptr<Window> main_window = Window::create("Magnitude", 1600, 900);
     OpenGLRenderContext::create_render_context(main_window);
     
     // Initialize OpenGL.
     glEnable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
-
-    // Preset values, swap frame afterwards to show it.
     glViewport(0, 0, main_window->get_width(), main_window->get_height());
     glClear(GL_COLOR_BUFFER_BIT);
     glClear(GL_DEPTH_BUFFER_BIT);
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+
+    // Setup the editor and the necessary components we want to use.
+    Editor::add_component<MainMenuComponent>("main_menu");
+    Editor::add_component<SceneViewerComponent>("Scene Viewer");
+    Editor::add_component<InspectorComponent>("Inspector");
+    Editor::add_component<MetricsComponent>("Metrics");
+    Editor::add_component<RDViewerComponent>("Editor");
+    Editor::add_component<ConsoleComponent>("Console");
+    Editor::add_component<ImguiDocsComponent>("Imgui Documentation");
+
+    // Set the file, if possible.
+    auto rdviewer = Editor::get_component_by_name<RDViewerComponent>("Editor");
+    auto metrics = Editor::get_component_by_name<MetricsComponent>("Metrics");
+    rdviewer->set_file(runtime_path);
+
+    // Show the window and begin the runtime.
     main_window->swap_frames();
     main_window->show();
 
-    // Create our UI components.
-    MainMenuComponent main_menu;
-
-    // Create the text editor.
-    TextEditor basic_editor;
-    basic_editor.SetText(ResourceManager::get_resource_as_string(user_file_handle));
-
-    // Tokenizer.
-    RDViewTokenizer tokenizer(runtime_path);
-    RDViewToken current_token = tokenizer.get_current();
-    while (current_token.type != RDViewTokenType::TypeEOF &&
-           current_token.type != RDViewTokenType::TypeError)
-    {
-
-        std::cout << "Token: " << current_token.reference << std::endl;
-
-        tokenizer.shift();
-        current_token = tokenizer.get_current();
-    }
-
-    ResourceManager::release_resource(user_file_handle); // No longer need it.
+    u64 frame_begin = 0;
+    u64 frame_end   = 0;
+    r32 delta_time  = 1.0f / 60.0f;
 
     while (!main_window->should_close())
     {
+
+        frame_begin = system_timestamp();
 
         // Set the context.
         OpenGLRenderContext::bind(main_window);
@@ -150,33 +159,22 @@ main(i32 argc, cptr *argv)
         glClear(GL_DEPTH_BUFFER_BIT);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
-        // Show the main menu bar.
-        main_menu.render();
+        // Update the metrics.
+        metrics->set_frame_time(delta_time);
 
-        ImGui::Begin("Scene Viewport");
+        if (input_key_is_down(MagKeyA)) Logger::log_info(LogFlag_None, "A is down.");
 
-        ImGui::End();
-
-        // Show the Dear ImGUI demo window.
-        static bool show_demo = true;
-        if (show_demo)
-        {
-            ImGui::ShowDemoWindow(&show_demo);
-        }
-
-        // Show the editor.
-        static bool show_editor = true;
-        if (show_editor)
-        {
-            ImGui::Begin("RDView Text Editor", &show_editor);
-            basic_editor.Render("EditorArea");
-            ImGui::End();
-        }
+        // Render the editor.
+        Editor::update();
+        Editor::render();
 
         // End the rendering.
         OpenGLRenderContext::end_frame();
         OpenGLRenderContext::unbind();
         main_window->swap_frames();
+
+        frame_end = system_timestamp();
+        delta_time = system_timestamp_difference_ss(frame_begin, frame_end);
 
     }
 

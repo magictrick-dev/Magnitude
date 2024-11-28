@@ -28,6 +28,9 @@ if (WIN32)
         "source/platform/win32/win32opengl.cpp"
         "source/platform/win32/filesystem.cpp"
         "source/platform/win32/system.cpp"
+        "source/platform/win32/input.cpp"
+        "source/platform/win32/inputhandler.hpp"
+        "source/platform/win32/inputhandler.cpp"
 
         "vendor/imgui/backends/imgui_impl_opengl3.cpp"
         "vendor/imgui/backends/imgui_impl_win32.cpp"
@@ -50,6 +53,14 @@ add_executable(Magnitude
     "source/graphics/bitmap.hpp"
     "source/graphics/bitmap.cpp"
 
+    "source/editor/editor.hpp"
+    "source/editor/component.hpp"
+    "source/editor/component.cpp"
+    "source/editor/mainmenu.hpp"
+    "source/editor/mainmenu.cpp"
+    "source/editor/rdviewer.hpp"
+    "source/editor/rdviewer.cpp"
+
     "source/utilities/path.hpp"
     "source/utilities/path.cpp"
     "source/utilities/cli.hpp"
@@ -58,6 +69,8 @@ add_executable(Magnitude
     "source/utilities/resourceman.cpp"
     "source/utilities/rdtokenizer.hpp"
     "source/utilities/rdtokenizer.cpp"
+    "source/utilities/logging.hpp"
+    "source/utilities/logging.cpp"
 
     "source/platform/window.hpp"
     "source/platform/opengl.hpp"

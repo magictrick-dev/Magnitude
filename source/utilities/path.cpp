@@ -5,6 +5,13 @@ Filepath::
 Filepath()
 {
     this->zero_initialize();
+    u64 string_length = 8;
+    u64 required_size = this->find_best_fit(string_length + 1);
+    this->buffer_ptr        = (char*)MAG_MEMORY_ALLOC(required_size);
+    this->buffer_capacity   = required_size;
+    this->buffer_length     = string_length;
+    memset(this->buffer_ptr, '\0', required_size);
+    return;
 }
 
 Filepath::
@@ -224,4 +231,23 @@ cwd()
 
 }
 
+std::string Filepath::
+get_file_stem() const
+{
 
+    if (this->buffer_ptr[0] == '\0') return "";
+
+    u64 last_slash = 0;
+    u64 index = 0;
+    while (this->buffer_ptr[index] != '\0')
+    {
+        if (this->buffer_ptr[index] == '\\')
+            last_slash = index;
+        index++;
+    }
+
+    if (last_slash != 0) last_slash++;
+    std::string stem = this->buffer_ptr + last_slash;
+    return stem;
+
+}
