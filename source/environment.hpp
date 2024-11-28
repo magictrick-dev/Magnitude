@@ -13,13 +13,12 @@ class Environment
     
     public:
         static inline bool              rdview_file_open();
-        static inline bool              rdview_file_open_from(std::string);
         static inline bool              rdview_file_save(Filepath location);
         static inline bool              rdview_file_save_as(Filepath location);
         static inline bool              rdview_file_set(Filepath path);
 
     protected:
-        static inline Filepath          rdview_file;
+        static inline Filepath          rdview_file     = "";
 
 };
 
@@ -29,16 +28,11 @@ rdview_file_set(Filepath path)
 
     if (!path.is_valid_file()) return false;
 
-    rhandle resource = ResourceManager::create_file_resource(path);
-    if (!ResourceManager::resource_handle_is_valid(resource)) return false;
-    if (!ResourceManager::load_resource(resource)) return false;
-
     Environment::rdview_file = path;
-    std::shared_ptr<RDViewerComponent> viewer = 
-        Editor::get().get_component_by_name<RDViewerComponent>("rdviewer");
+    Editor& editor = Editor::get();
+    std::shared_ptr<RDViewerComponent> viewer = editor.get_component_by_name<RDViewerComponent>("rdviewer");
     MAG_ASSERT(viewer != nullptr);
     viewer->set_file(path);
-
 
     return true;
 

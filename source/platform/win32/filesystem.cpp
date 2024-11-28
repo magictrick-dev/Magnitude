@@ -88,7 +88,7 @@ file_write_all(ccptr file_path, vptr buffer, u64 buffer_size)
 {
 
     HANDLE file_handle = CreateFileA(file_path, GENERIC_WRITE, FILE_SHARE_WRITE,
-            NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+            NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     if (file_handle == INVALID_HANDLE_VALUE)
         return 0;
 

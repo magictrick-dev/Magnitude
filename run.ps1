@@ -1,1 +1,1 @@
-./bin/Debug/Magnitude ./rdviews/s44.rd
+./bin/Debug/Magnitude ./rdviews/sample.rd

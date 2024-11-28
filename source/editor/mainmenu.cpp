@@ -1,7 +1,8 @@
+#include <platform/filesystem.hpp>
 #include <editor/mainmenu.hpp>
 #include <editor/editor.hpp>
-#include <platform/filesystem.hpp>
-#include <environment.hpp>
+#include <editor/rdviewer.hpp>
+
 
 MainMenuComponent::
 MainMenuComponent() : EditorComponent(COMPONENT_ID_MAIN_MENU, COMPONENT_NAME_MAIN_MENU)
@@ -47,9 +48,24 @@ render()
     if (ImGui::BeginMenu("File"))
     {
 
+        if (ImGui::MenuItem("New", NULL))
+        {
+
+        }
+
         if (ImGui::MenuItem("Open", NULL))
         {
-            Environment::rdview_file_open();
+
+            // Request the file.
+            std::string result = file_open_system_dialogue();
+            Filepath path = result.c_str();
+
+            // Attempt to set the file.
+            Editor& editor = Editor::get();
+            auto rdviewer = editor.get_component_by_name<RDViewerComponent>("rdviewer");
+            MAG_ENSURE_PTR(rdviewer);
+            rdviewer->set_file(path);
+
         }
 
         if (ImGui::MenuItem("Save", NULL))

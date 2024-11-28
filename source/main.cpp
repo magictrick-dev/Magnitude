@@ -20,7 +20,6 @@
 // -----------------------------------------------------------------------------
 #include <iostream>
 #include <definitions.hpp>
-#include <environment.hpp>
 
 #include <platform/window.hpp>
 #include <platform/opengl.hpp>
@@ -125,8 +124,10 @@ main(i32 argc, cptr *argv)
     editor.add_component<MetricsComponent>("metrics");
     editor.add_component<RDViewerComponent>("rdviewer");
 
-    // Now that the editor is fully set, we can attempt to load it.
-    Environment::rdview_file_set(runtime_path);
+    // Set the file, if possible.
+    auto rdviewer = editor.get_component_by_name<RDViewerComponent>("rdviewer");
+    MAG_ENSURE_PTR(rdviewer);
+    rdviewer->set_file(runtime_path);
 
     while (!main_window->should_close())
     {
@@ -145,7 +146,19 @@ main(i32 argc, cptr *argv)
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
         // Render the editor.
+        ImGui::PushStyleColor(ImGuiCol_NavHighlight, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
         editor.render();
+        ImGui::PopStyleColor();
+
+        static bool show_demo = false;
+        if (ImGui::IsKeyPressed(ImGuiKey_F3))
+        {
+            show_demo = !show_demo;
+        }
+        if (show_demo)
+        {
+            ImGui::ShowDemoWindow(&show_demo);
+        }
 
         // End the rendering.
         OpenGLRenderContext::end_frame();

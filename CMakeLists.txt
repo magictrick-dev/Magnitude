@@ -56,6 +56,8 @@ add_executable(Magnitude
     "source/editor/component.cpp"
     "source/editor/mainmenu.hpp"
     "source/editor/mainmenu.cpp"
+    "source/editor/rdviewer.hpp"
+    "source/editor/rdviewer.cpp"
 
     "source/utilities/path.hpp"
     "source/utilities/path.cpp"
