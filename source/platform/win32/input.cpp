@@ -1,6 +1,8 @@
-#include <platform/win32/inputhandler.h>
-#include <platform/window.h>
-#include <platform/input.h>
+#include <windows.h>
+#include <platform/win32/inputhandler.hpp>
+#include <platform/window.hpp>
+#include <platform/input.hpp>
+#include <platform/system.hpp>
 
 void 
 input_release_all()
@@ -121,14 +123,18 @@ void
 input_mouse_position_relative_unbounded(i32 *x, i32 *y)
 {
 
-    NX_ENSURE_POINTER(x);
-    NX_ENSURE_POINTER(y);
+    MAG_NO_IMPL("No implementation for this function since it is window dep.");
+
+    /*
+    MAG_ENSURE_PTR(x);
+    MAG_ENSURE_PTR(y);
 
     POINT position = {0};
     GetCursorPos(&position);
     ScreenToClient((HWND)window_get_handle(), &position);
     *x = position.x;
     *y = position.y;
+    */
 
 }
 
@@ -136,8 +142,8 @@ void
 input_mouse_position_relative_bounded(i32 *x, i32 *y)
 {
 
-    NX_ENSURE_POINTER(x);
-    NX_ENSURE_POINTER(y);
+    MAG_ENSURE_PTR(x);
+    MAG_ENSURE_PTR(y);
     input_state *current_frame = get_current_input_state();
     *x = current_frame->mouse_position.mouse_x;
     *y = current_frame->mouse_position.mouse_y;
@@ -148,8 +154,8 @@ void
 input_mouse_position_absolute(i32 *x, i32 *y)
 {
 
-    NX_ENSURE_POINTER(x);
-    NX_ENSURE_POINTER(y);
+    MAG_ENSURE_PTR(x);
+    MAG_ENSURE_PTR(y);
 
     POINT position = {0};
     GetCursorPos(&position);
@@ -169,8 +175,8 @@ input_mouse_position_moved()
 void 
 input_mouse_position_relative_delta(i32 *x, i32 *y)
 {
-    NX_ENSURE_POINTER(x);
-    NX_ENSURE_POINTER(y);
+    MAG_ENSURE_PTR(x);
+    MAG_ENSURE_PTR(y);
     input_state *current_frame = get_current_input_state();
     *x = current_frame->mouse_position.delta_x;
     *y = current_frame->mouse_position.delta_y;

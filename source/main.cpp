@@ -24,6 +24,7 @@
 #include <platform/window.hpp>
 #include <platform/opengl.hpp>
 #include <platform/system.hpp>
+#include <platform/input.hpp>
 
 #include <utilities/path.hpp>
 #include <utilities/cli.hpp>
@@ -160,6 +161,8 @@ main(i32 argc, cptr *argv)
 
         // Update the metrics.
         metrics->set_frame_time(delta_time);
+
+        if (input_key_is_down(MagKeyA)) Logger::log_info(LogFlag_None, "A is down.");
 
         // Render the editor.
         Editor::render();

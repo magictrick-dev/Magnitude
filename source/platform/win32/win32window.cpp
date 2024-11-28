@@ -1,16 +1,24 @@
-#include <platform/win32/win32window.hpp>
-#include <glad/glad.h>
 #include <iostream>
+
 #include <windows.h>
 #include <wingdi.h>
-#include <imgui/imgui.h>
+
 #include <utilities/path.hpp>
+#include <platform/system.hpp>
+#include <platform/win32/win32window.hpp>
+#include <platform/win32/inputhandler.hpp>
+
+#include <glad/glad.h>
+#include <imgui/imgui.h>
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 Win32Window::
 Win32Window(std::string title, i32 width, i32 height)
 {
+
+    // Set the input intialization stuff.
+    initialize_input_states();
 
     // Set the properties as provided by the user. Validate.
     // TODO(Chris): I know there's a minimum window size specification that we
@@ -93,6 +101,43 @@ poll_events()
     // Reset our state-change flags.
     this->was_resized = false;
     this->was_focused = false;
+
+    // Swap the input frames.
+    swap_input_states();
+
+    // Update the input states.
+    input_state *previous_frame = get_previous_input_state();
+    input_state *current_frame = get_current_input_state();
+    for (u64 idx = 0; idx < 256; ++idx)
+    {
+
+        if (current_frame->keyboard[idx].is_released)
+            current_frame->keyboard[idx].time = system_timestamp();
+        if (current_frame->keyboard[idx].is_pressed)
+            current_frame->keyboard[idx].time = system_timestamp();
+
+        current_frame->keyboard[idx].is_released = false;
+        current_frame->keyboard[idx].is_pressed = false;
+
+    }
+
+    for (u64 idx = 0; idx < 8; ++idx)
+    {
+
+        if (current_frame->mouse[idx].is_released)
+            current_frame->mouse[idx].time = system_timestamp();
+        if (current_frame->mouse[idx].is_pressed)
+            current_frame->mouse[idx].time = system_timestamp();
+
+        current_frame->mouse[idx].is_released = false;
+        current_frame->mouse[idx].is_pressed = false;
+
+    }
+
+    current_frame->mouse_position.moved = false;
+    current_frame->mouse_wheelie = false;
+    current_frame->mouse_wheel.delta_x = 0.0;
+    current_frame->mouse_wheel.delta_y = 0.0;
 
     // Pump the message loop.
     MSG current_message = {0};
@@ -312,6 +357,9 @@ window_procedure(HWND window, UINT message, WPARAM w_param, LPARAM l_param)
     Win32Window *self = (Win32Window*)GetWindowLongPtr(window, GWLP_USERDATA);
     LRESULT ret_result = 0;   
 
+    input_state *previous_frame = get_previous_input_state();
+    input_state *current_frame = get_current_input_state();
+
     switch (message)
     {
 
@@ -358,12 +406,135 @@ window_procedure(HWND window, UINT message, WPARAM w_param, LPARAM l_param)
 
         } break;
 
+        case WM_KEYDOWN:
+        {
+
+            u32 mapping = convert_keycode((u32)w_param);
+
+            if (!previous_frame->keyboard[mapping].is_down) 
+            {
+                current_frame->keyboard[mapping].is_pressed = true;
+            }
+
+            current_frame->keyboard[mapping].is_down = true;
+
+        } break;
+
+        case WM_KEYUP:
+        {
+
+            u32 mapping = convert_keycode((u32)w_param);
+
+            if (previous_frame->keyboard[mapping].is_down)
+            {
+                current_frame->keyboard[mapping].is_released = true;
+            }
+
+            current_frame->keyboard[mapping].is_down = false;
+
+            break;
+
+        } break;
+
+        case WM_MBUTTONDOWN:
+        case WM_RBUTTONDOWN:
+        case WM_LBUTTONDOWN:
+        {
+            
+            if (w_param == MK_LBUTTON)
+            {
+
+                u32 mapping = MagMouseLeft;
+
+                if (!previous_frame->mouse[mapping].is_down) 
+                {
+                    current_frame->mouse[mapping].is_pressed = true;
+                }
+
+                current_frame->mouse[mapping].is_down = true;
+
+            }
+
+            else if (w_param == MK_RBUTTON)
+            {
+
+                u32 mapping = MagMouseRight;
+
+                if (!previous_frame->mouse[mapping].is_down) 
+                {
+                    current_frame->mouse[mapping].is_pressed = true;
+                }
+
+                current_frame->mouse[mapping].is_down = true;
+
+            }
+
+            else if (w_param == MK_MBUTTON)
+            {
+
+                u32 mapping = MagMouseMiddle;
+
+                if (!previous_frame->mouse[mapping].is_down) 
+                {
+                    current_frame->mouse[mapping].is_pressed = true;
+                }
+
+                current_frame->mouse[mapping].is_down = true;
+
+            }
+
+        } break;
+
+        case WM_MBUTTONUP:
+        {
+
+            u32 mapping = MagMouseMiddle;
+
+            if (previous_frame->mouse[mapping].is_down)
+            {
+                current_frame->mouse[mapping].is_released = true;
+            }
+
+            current_frame->mouse[mapping].is_down = false;
+
+        } break;
+
+        case WM_RBUTTONUP:
+        {
+
+            u32 mapping = MagMouseRight;
+
+            if (previous_frame->mouse[mapping].is_down)
+            {
+                current_frame->mouse[mapping].is_released = true;
+            }
+
+            current_frame->mouse[mapping].is_down = false;
+
+        } break;
+
+        case WM_LBUTTONUP:
+        {
+
+            u32 mapping = MagMouseLeft;
+
+            if (previous_frame->mouse[mapping].is_down)
+            {
+                current_frame->mouse[mapping].is_released = true;
+            }
+
+            current_frame->mouse[mapping].is_down = false;
+
+        } break;
+
         case WM_ACTIVATEAPP:
         {
 
             b32 is_active = (w_param == TRUE);
             self->focused = is_active;
             self->was_focused = true;
+
+            if (!is_active) input_release_all();
 
         } break;
 

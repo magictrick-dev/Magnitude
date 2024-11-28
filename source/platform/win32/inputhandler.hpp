@@ -1,7 +1,7 @@
-#ifndef SRC_PLATFORM_WIN32_INPUTHANDLER_H
-#define SRC_PLATFORM_WIN32_INPUTHANDLER_H
-#include <core/definitions.h>
-#include <platform/input.h>
+#ifndef MAGNITUDE_PLATFORM_WIN32_INPUTHANDLER_HPP
+#define MAGNITUDE_PLATFORM_WIN32_INPUTHANDLER_HPP
+#include <definitions.hpp>
+#include <platform/input.hpp>
 
 typedef struct digital_input
 {
@@ -31,7 +31,7 @@ typedef struct input_state
     digital_input keyboard[256];
     digital_input mouse[8];
     analog_input mouse_wheel;
-    b32 mouse_wheelie;
+    b32 mouse_wheelie; // lol
     mouse_input mouse_position;
 } input_state;
 

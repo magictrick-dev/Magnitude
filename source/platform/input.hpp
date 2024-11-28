@@ -1,111 +1,111 @@
-#ifndef SRC_PLATFORM_INPUT_H
-#define SRC_PLATFORM_INPUT_H
-#include <core/definitions.h>
+#ifndef MAGNITUDE_PLATFORM_INPUT_HPP
+#define MAGNITUDE_PLATFORM_INPUT_HPP
+#include <definitions.hpp>
 
-void input_release_all();
+void    input_release_all();
 
-bool input_key_is_pressed(u32 key_code);
-bool input_key_is_released(u32 key_code);
-bool input_key_is_down(u32 key_code);
-r64 input_key_time_down(u32 key_code);
-r64 input_key_time_up(u32 key_code);
+bool    input_key_is_pressed(u32 key_code);
+bool    input_key_is_released(u32 key_code);
+bool    input_key_is_down(u32 key_code);
+r64     input_key_time_down(u32 key_code);
+r64     input_key_time_up(u32 key_code);
 
-bool input_mouse_button_is_pressed(u32 mouse_code);
-bool input_mouse_button_is_released(u32 mouse_code);
-bool input_mouse_button_is_down(u32 mouse_code);
-r64 input_mouse_button_time_down(u32 mouse_code);
-r64 input_mouse_button_time_up(u32 mouse_code);
+bool    input_mouse_button_is_pressed(u32 mouse_code);
+bool    input_mouse_button_is_released(u32 mouse_code);
+bool    input_mouse_button_is_down(u32 mouse_code);
+r64     input_mouse_button_time_down(u32 mouse_code);
+r64     input_mouse_button_time_up(u32 mouse_code);
 
-b32 input_mouse_position_moved();
-void input_mouse_position_relative_unbounded(i32 *x, i32 *y);
-void input_mouse_position_relative_bounded(i32 *x, i32 *y);
-void input_mouse_position_relative_delta(i32 *x, i32 *y);
-void input_mouse_position_absolute(i32 *x, i32 *y);
-r32 input_mouse_scroll_delta_y();
-b32 input_mouse_scrolled();
+b32     input_mouse_position_moved();
+void    input_mouse_position_relative_unbounded(i32 *x, i32 *y);
+void    input_mouse_position_relative_bounded(i32 *x, i32 *y);
+void    input_mouse_position_relative_delta(i32 *x, i32 *y);
+void    input_mouse_position_absolute(i32 *x, i32 *y);
+r32     input_mouse_scroll_delta_y();
+b32     input_mouse_scrolled();
 
-#define NxMouseLeft        0
-#define NxMouseRight       1
-#define NxMouseMiddle      2
+#define MagMouseLeft        0
+#define MagMouseRight       1
+#define MagMouseMiddle      2
 
-#define NxKeyA             0
-#define NxKeyB             1
-#define NxKeyC             2
-#define NxKeyD             3
-#define NxKeyE             4
-#define NxKeyF             5
-#define NxKeyG             6
-#define NxKeyH             7
-#define NxKeyI             8
-#define NxKeyJ             9
-#define NxKeyK             10
-#define NxKeyL             11
-#define NxKeyM             12
-#define NxKeyN             13
-#define NxKeyO             14
-#define NxKeyP             15
-#define NxKeyQ             16
-#define NxKeyR             17
-#define NxKeyS             18
-#define NxKeyT             19
-#define NxKeyU             20
-#define NxKeyV             21
-#define NxKeyW             22
-#define NxKeyX             23
-#define NxKeyY             24
-#define NxKeyZ             25
+#define MagKeyA             0
+#define MagKeyB             1
+#define MagKeyC             2
+#define MagKeyD             3
+#define MagKeyE             4
+#define MagKeyF             5
+#define MagKeyG             6
+#define MagKeyH             7
+#define MagKeyI             8
+#define MagKeyJ             9
+#define MagKeyK             10
+#define MagKeyL             11
+#define MagKeyM             12
+#define MagKeyN             13
+#define MagKeyO             14
+#define MagKeyP             15
+#define MagKeyQ             16
+#define MagKeyR             17
+#define MagKeyS             18
+#define MagKeyT             19
+#define MagKeyU             20
+#define MagKeyV             21
+#define MagKeyW             22
+#define MagKeyX             23
+#define MagKeyY             24
+#define MagKeyZ             25
 
-#define NxKey0             26
-#define NxKey1             27
-#define NxKey2             28
-#define NxKey3             29
-#define NxKey4             30
-#define NxKey5             31
-#define NxKey6             32
-#define NxKey7             33
-#define NxKey8             34
-#define NxKey9             35
+#define MagKey0             26
+#define MagKey1             27
+#define MagKey2             28
+#define MagKey3             29
+#define MagKey4             30
+#define MagKey5             31
+#define MagKey6             32
+#define MagKey7             33
+#define MagKey8             34
+#define MagKey9             35
 
-#define NxKeyShift         42
-#define NxKeyControl       43
-#define NxKeyAlt           44
-#define NxKeySpace         45
-#define NxKeyBack          46
-#define NxKeyDelete        47
-#define NxKeyTab           48
-#define NxKeyComma         49
-#define NxKeyPeriod        50
-#define NxKeyRightSlash    51
-#define NxKeyLeftSlash     52
-#define NxKeySemicolon     53
-#define NxKeyQuote         54
-#define NxKeyLeftBracket   55
-#define NxKeyRightBracket  56
-#define NxKeyTilde         57
-#define NxKeyMinus         58
-#define NxKeyEqual         59
-#define NxKeyEnter         60
-#define NxKeyEscape        61
+#define MagKeyShift         42
+#define MagKeyControl       43
+#define MagKeyAlt           44
+#define MagKeySpace         45
+#define MagKeyBack          46
+#define MagKeyDelete        47
+#define MagKeyTab           48
+#define MagKeyComma         49
+#define MagKeyPeriod        50
+#define MagKeyRightSlash    51
+#define MagKeyLeftSlash     52
+#define MagKeySemicolon     53
+#define MagKeyQuote         54
+#define MagKeyLeftBracket   55
+#define MagKeyRightBracket  56
+#define MagKeyTilde         57
+#define MagKeyMinus         58
+#define MagKeyEqual         59
+#define MagKeyEnter         60
+#define MagKeyEscape        61
 
-#define NxKeyF1            63
-#define NxKeyF2            64
-#define NxKeyF3            65
-#define NxKeyF4            66
-#define NxKeyF5            67
-#define NxKeyF6            68
-#define NxKeyF7            69
-#define NxKeyF8            70
-#define NxKeyF9            71
-#define NxKeyF10           72
-#define NxKeyF11           73
-#define NxKeyF12           74
+#define MagKeyF1            63
+#define MagKeyF2            64
+#define MagKeyF3            65
+#define MagKeyF4            66
+#define MagKeyF5            67
+#define MagKeyF6            68
+#define MagKeyF7            69
+#define MagKeyF8            70
+#define MagKeyF9            71
+#define MagKeyF10           72
+#define MagKeyF11           73
+#define MagKeyF12           74
 
-#define NxKeyLeft          80
-#define NxKeyRight         81
-#define NxKeyUp            82
-#define NxKeyDown          83
+#define MagKeyLeft          80
+#define MagKeyRight         81
+#define MagKeyUp            82
+#define MagKeyDown          83
 
-#define NxKeyNull          255
+#define MagKeyNull          255
 
 
 #endif

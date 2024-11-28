@@ -1,6 +1,7 @@
 #ifndef MAGNITUDE_EDITOR_IMGUIDOCS_HPP
 #define MAGNITUDE_EDITOR_IMGUIDOCS_HPP
 #include <definitions.hpp>
+#include <platform/input.hpp>
 #include <editor/component.hpp>
 #include <imgui/imgui.h>
 
@@ -36,7 +37,7 @@ render()
 
     if (this->visible == false) return;
     ImGui::ShowDemoWindow(&this->visible);
-    if (ImGui::IsKeyPressed(ImGuiKey_F11))
+    if (input_key_is_released(MagKeyF11))
         this->visible = !this->visible;
 
 }

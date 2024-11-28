@@ -28,6 +28,9 @@ if (WIN32)
         "source/platform/win32/win32opengl.cpp"
         "source/platform/win32/filesystem.cpp"
         "source/platform/win32/system.cpp"
+        "source/platform/win32/input.cpp"
+        "source/platform/win32/inputhandler.hpp"
+        "source/platform/win32/inputhandler.cpp"
 
         "vendor/imgui/backends/imgui_impl_opengl3.cpp"
         "vendor/imgui/backends/imgui_impl_win32.cpp"

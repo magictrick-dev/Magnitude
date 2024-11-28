@@ -36,7 +36,7 @@ class Window
 {
     
     public:
-        static std::shared_ptr<Window> create(std::string title, i32 width, i32 height);
+        static shared_ptr<Window> create(std::string title, i32 width, i32 height);
 
         virtual void            poll_events()           = 0;
         virtual void            swap_frames()           = 0;

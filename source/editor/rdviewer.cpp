@@ -1,5 +1,6 @@
 #include <editor/rdviewer.hpp>
 #include <utilities/logging.hpp>
+#include <platform/input.hpp>
 #include <platform/filesystem.hpp>
 
 RDViewerComponent::
@@ -203,28 +204,28 @@ render()
         this->file_changes = true;
     }
 
-    if (ImGui::IsKeyReleased(ImGuiKey_S) && 
-        ImGui::IsKeyDown(ImGuiKey_LeftCtrl) && 
+    if (input_key_is_released(MagKeyS) && 
+        input_key_is_down(MagKeyControl) && 
         this->file_changes)
     {
         this->save_file();
     }
 
-    if (ImGui::IsKeyReleased(ImGuiKey_S) && 
-        ImGui::IsKeyDown(ImGuiKey_LeftCtrl) && 
-        ImGui::IsKeyDown(ImGuiKey_LeftShift))
+    if (input_key_is_released(MagKeyS) && 
+        input_key_is_down(MagKeyControl) && 
+        input_key_is_down(MagKeyShift))
     {
         this->save_as_file();
     }
 
-    if (ImGui::IsKeyReleased(ImGuiKey_N) &&
-        ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
+    if (input_key_is_released(MagKeyN) && 
+        input_key_is_down(MagKeyControl))
     {
         this->new_file();
     }
 
-    if (ImGui::IsKeyReleased(ImGuiKey_O) &&
-        ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
+    if (input_key_is_released(MagKeyO) && 
+        input_key_is_down(MagKeyControl))
     {
         // Request the file.
         std::string result = file_open_system_dialogue();
