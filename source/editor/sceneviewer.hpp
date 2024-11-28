@@ -8,7 +8,7 @@ class SceneViewerComponent : public EditorComponent
 {
 
     public:
-        inline                  SceneViewerComponent();
+        inline                  SceneViewerComponent(i32 id, std::string name);
         inline virtual         ~SceneViewerComponent();
 
         inline virtual void     render()    override;
@@ -18,8 +18,7 @@ class SceneViewerComponent : public EditorComponent
 };
 
 inline SceneViewerComponent::
-SceneViewerComponent() : EditorComponent(COMPONENT_ID_SCENE_VIEWER, 
-        COMPONENT_NAME_SCENE_VIEWER)
+SceneViewerComponent(i32 id, std::string name) : EditorComponent(id, name)
 {
 
     this->visible = true;

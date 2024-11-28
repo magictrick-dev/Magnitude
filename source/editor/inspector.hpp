@@ -8,7 +8,7 @@ class InspectorComponent : public EditorComponent
 {
 
     public:
-        inline                  InspectorComponent();
+        inline                  InspectorComponent(i32 id, std::string name);
         inline virtual         ~InspectorComponent();
 
         inline virtual void     render()    override;
@@ -18,7 +18,7 @@ class InspectorComponent : public EditorComponent
 };
 
 inline InspectorComponent::
-InspectorComponent() : EditorComponent(COMPONENT_ID_INSPECTOR, COMPONENT_NAME_INSPECTOR)
+InspectorComponent(i32 id, std::string name) : EditorComponent(id, name)
 {
 
     this->visible = true;

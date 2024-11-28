@@ -9,6 +9,7 @@ FrameBegin 1
 WorldBegin
 
 Point 320 240 0
+Point 200 200 0
 
 WorldEnd
 FrameEnd

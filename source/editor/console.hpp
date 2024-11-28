@@ -10,7 +10,7 @@ class ConsoleComponent : public EditorComponent
 {
 
     public:
-        inline                  ConsoleComponent();
+        inline                  ConsoleComponent(i32 id, std::string name);
         inline virtual         ~ConsoleComponent();
 
         inline virtual void     render()    override;
@@ -20,7 +20,7 @@ class ConsoleComponent : public EditorComponent
 };
 
 inline ConsoleComponent::
-ConsoleComponent() : EditorComponent(COMPONENT_ID_CONSOLE, COMPONENT_NAME_CONSOLE)
+ConsoleComponent(i32 id, std::string name) : EditorComponent(id, name)
 {
 
     this->visible = true;

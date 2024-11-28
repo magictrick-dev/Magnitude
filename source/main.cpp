@@ -23,6 +23,7 @@
 
 #include <platform/window.hpp>
 #include <platform/opengl.hpp>
+#include <platform/system.hpp>
 
 #include <utilities/path.hpp>
 #include <utilities/cli.hpp>
@@ -36,6 +37,10 @@
 #include <editor/editor.hpp>
 #include <editor/metrics.hpp>
 #include <editor/rdviewer.hpp>
+#include <editor/mainmenu.hpp>
+#include <editor/sceneviewer.hpp>
+#include <editor/console.hpp>
+#include <editor/inspector.hpp>
 
 #include <imgui/imgui.h>
 #include <glad/glad.h>
@@ -82,24 +87,21 @@ main(i32 argc, cptr *argv)
 
     }
     
-    // --- Runtime Configuration & Main Loop ----------------------------------- 
+    // --- Runtime Configuration -----------------------------------------------
     //
-    // Launch the window, perform the operation(s). We construct a window, then
-    // establish an OpenGL context. This ensures that everything is properly set
-    // up for hardware rendering and DearImGUI.
+    // Generating a functional runtime environment requires a standard order
+    // of operations to ensure everything gets boiled together correctly.
+    // The window and OpenGL context must be created first. Then, it would make
+    // sense to properly initialize OpenGL afterwards.
     //
-    // The general workflow is as follows:
-    //      1.  Create the window.
-    //      2.  Establish a render context (probably OpenGL).
-    //      3.  Show window.
-    //      4.  Enter runtime loop.
-    //      5.  Bind our render context to the active window (probably main window).
-    //      6.  Begin frame in render context.
-    //      7.  Poll window events.
-    //      8.  Do some rendering & logic updates.
-    //      9.  End frame in render context.
-    //      10. Unbind the render context.
-    //      11. Swap the buffers in the window.
+    // The application using editor components as its primary method of delegating
+    // functionality across the UI. There is coupling in functionality. Certain
+    // components can look for other components and interact with them. Therefore
+    // all components must be added to the component list.
+    //
+    // Afterwards, the runtime loop is run. So long as all components are added
+    // and successfully exist, there shouldn't be order errors in the runtime
+    // loop. If there are, it is because there is tight coupling of components.
     //
 
     // Create the window and attempt to establish an OpenGL render context.
@@ -110,27 +112,37 @@ main(i32 argc, cptr *argv)
     glEnable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
-
-    // Preset values, swap frame afterwards to show it.
     glViewport(0, 0, main_window->get_width(), main_window->get_height());
     glClear(GL_COLOR_BUFFER_BIT);
     glClear(GL_DEPTH_BUFFER_BIT);
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+
+    // Setup the editor and the necessary components we want to use.
+    Editor::add_component<MainMenuComponent>("main_menu");
+    Editor::add_component<SceneViewerComponent>("scene_viewer");
+    Editor::add_component<InspectorComponent>("inspector");
+    Editor::add_component<MetricsComponent>("metrics");
+    Editor::add_component<RDViewerComponent>("rdviewer");
+    Editor::add_component<ConsoleComponent>("console");
+
+    // Set the file, if possible.
+    auto rdviewer = Editor::get_component_by_name<RDViewerComponent>("rdviewer");
+    auto metrics = Editor::get_component_by_name<MetricsComponent>("metrics");
+    rdviewer->set_file(runtime_path);
+
+
+    // Show the window and begin the runtime.
     main_window->swap_frames();
     main_window->show();
 
-    // Setup the editor and the necessary components we want to use.
-    Editor& editor = Editor::get();
-    editor.add_component<MetricsComponent>("metrics");
-    editor.add_component<RDViewerComponent>("rdviewer");
-
-    // Set the file, if possible.
-    auto rdviewer = editor.get_component_by_name<RDViewerComponent>("rdviewer");
-    MAG_ENSURE_PTR(rdviewer);
-    rdviewer->set_file(runtime_path);
+    u64 frame_begin = 0;
+    u64 frame_end   = 0;
+    r32 delta_time  = 1.0f / 60.0f;
 
     while (!main_window->should_close())
     {
+
+        frame_begin = system_timestamp();
 
         // Set the context.
         OpenGLRenderContext::bind(main_window);
@@ -145,10 +157,11 @@ main(i32 argc, cptr *argv)
         glClear(GL_DEPTH_BUFFER_BIT);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
+        // Update the metrics.
+        metrics->set_frame_time(delta_time);
+
         // Render the editor.
-        ImGui::PushStyleColor(ImGuiCol_NavHighlight, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
-        editor.render();
-        ImGui::PopStyleColor();
+        Editor::render();
 
         static bool show_demo = false;
         if (ImGui::IsKeyPressed(ImGuiKey_F3))
@@ -164,6 +177,9 @@ main(i32 argc, cptr *argv)
         OpenGLRenderContext::end_frame();
         OpenGLRenderContext::unbind();
         main_window->swap_frames();
+
+        frame_end = system_timestamp();
+        delta_time = system_timestamp_difference_ss(frame_begin, frame_end);
 
     }
 

@@ -5,7 +5,7 @@
 
 
 MainMenuComponent::
-MainMenuComponent() : EditorComponent(COMPONENT_ID_MAIN_MENU, COMPONENT_NAME_MAIN_MENU)
+MainMenuComponent(i32 id, std::string name) : EditorComponent(id, name)
 {
 
     this->visible = true;
@@ -42,10 +42,7 @@ render()
 
     if (this->visible != true) return;
 
-    Editor& editor = Editor::get();
-    auto rdviewer = editor.get_component_by_name<RDViewerComponent>("rdviewer");
-    MAG_ENSURE_PTR(rdviewer);
-
+    auto rdviewer = Editor::get_component_by_name<RDViewerComponent>("rdviewer");
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     ImGui::BeginMainMenuBar();
     ImGui::PopStyleVar();

@@ -3,6 +3,6 @@ Display "Example" "Screen" "rgbdouble"
 
 WorldBegin
 
-Point 69 420
+Point 200 420
 
 WorldEnd

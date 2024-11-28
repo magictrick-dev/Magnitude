@@ -9,7 +9,7 @@ class MainMenuComponent : public EditorComponent
 {
 
     public:
-                         MainMenuComponent();
+                         MainMenuComponent(i32 id, std::string name);
         virtual         ~MainMenuComponent();
 
         virtual void     render()    override;

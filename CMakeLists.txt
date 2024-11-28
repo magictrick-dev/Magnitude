@@ -51,7 +51,6 @@ add_executable(Magnitude
     "source/graphics/bitmap.cpp"
 
     "source/editor/editor.hpp"
-    "source/editor/editor.cpp"
     "source/editor/component.hpp"
     "source/editor/component.cpp"
     "source/editor/mainmenu.hpp"

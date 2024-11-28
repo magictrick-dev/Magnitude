@@ -208,7 +208,9 @@ render()
 
     ImGui::Begin("Text Editor", &this->visible, window_flags);
 
+    ImGui::PushStyleColor(ImGuiCol_NavHighlight, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
     this->file_editor.Render("Text Editor");
+    ImGui::PopStyleColor();
 
     if (ImGui::IsKeyPressed(ImGuiKey_S) && ImGui::IsKeyDown(ImGuiKey_LeftCtrl) && this->file_changes)
     {

@@ -7,68 +7,59 @@
 #include <utilities/logging.hpp>
 #include <editor/component.hpp>
 
-#define COMPONENT_ID_MAIN_MENU      -1
-#define COMPONENT_ID_SCENE_VIEWER   -2
-#define COMPONENT_ID_INSPECTOR      -3
-#define COMPONENT_ID_CONSOLE        -4
-#define COMPONENT_NAME_MAIN_MENU    "main_menu"
-#define COMPONENT_NAME_SCENE_VIEWER "scene_viewer"
-#define COMPONENT_NAME_INSPECTOR    "inspector"
-#define COMPONENT_NAME_CONSOLE      "console"
-
 class Editor
 {
 
     public:
-        static Editor&  get();
+        static inline void render();   
 
-        void render();   
+        template <class T> static inline shared_ptr<T>          get_component_by_name(std::string name);
+        template <class T> static inline shared_ptr<T>          get_component_by_id(i32 idx);
+        template <class T, class... Args> static inline bool    add_component(std::string name, Args... args);
 
-        template <class T> inline std::shared_ptr<T> get_component_by_name(std::string name) const;
-        template <class T> inline std::shared_ptr<T> get_component_by_id(i32 idx) const;
-        template <class T, class... Args> inline bool add_component(std::string name, Args... args);
-
-        virtual    ~Editor();
+        virtual inline             ~Editor();
     protected:
-                    Editor();
+        static inline Editor&       get();
+        inline                      Editor();
 
     protected:
-        std::shared_ptr<EditorComponent> main_menu_component;
-        std::shared_ptr<EditorComponent> scene_viewer_component;
-        std::shared_ptr<EditorComponent> inspector_component;
-        std::shared_ptr<EditorComponent> console_component;
-
-        std::vector<std::shared_ptr<EditorComponent>>                       editor_components;
-        std::unordered_map<std::string, std::shared_ptr<EditorComponent>>   editor_map;
+        std::vector<shared_ptr<EditorComponent>> editor_components;
+        std::unordered_map<std::string, shared_ptr<EditorComponent>> editor_map;
         i32 editor_step = 1;
 
 };
 
-template <class T> std::shared_ptr<T> Editor::
-get_component_by_name(std::string name) const
+template <class T> shared_ptr<T> Editor::
+get_component_by_name(std::string name)
 {
 
-    auto result = this->editor_map.find(name);
-    if (result == this->editor_map.end())
+    Editor& editor = Editor::get();
+
+    auto result = editor.editor_map.find(name);
+    MAG_ASSERT(result != editor.editor_map.end());
+    if (result == editor.editor_map.end())
     {
         return nullptr;
     }
 
-    std::shared_ptr<T> comp = dynamic_pointer_cast<T>(result->second);
+    shared_ptr<T> comp = dynamic_pointer_cast<T>(result->second);
+    MAG_ENSURE_PTR(comp);
     return comp;
 
 }
 
-template <class T> std::shared_ptr<T> Editor::
-get_component_by_id(i32 idx) const
+template <class T> shared_ptr<T> Editor::
+get_component_by_id(i32 idx)
 {
 
-    for (auto comp : this->editor_components)
+    Editor& editor = Editor::get();
+    for (auto comp : editor.editor_components)
     {
 
         if (comp->get_id() == idx)
         {
-            std::shared_ptr<T> comp = dynamic_pointer_cast<T>(comp);
+            shared_ptr<T> comp = dynamic_pointer_cast<T>(comp);
+            MAG_ENSURE_PTR(comp);
             return comp;
         }
         
@@ -82,13 +73,16 @@ template <class T, class... Args> bool Editor::
 add_component(std::string name, Args... args)
 {
 
-    if (this->get_component_by_name<T>(name) == nullptr)
+    Editor& editor = Editor::get();
+
+    auto search_results = editor.editor_map.find(name);
+    if (search_results == editor.editor_map.end())
     {
 
-        std::shared_ptr<T> new_comp = std::make_shared<T>(this->editor_step++, name, &args...); 
-        std::shared_ptr<EditorComponent> pushable = dynamic_pointer_cast<EditorComponent>(new_comp);
-        this->editor_components.push_back(pushable);
-        this->editor_map[name] = pushable;
+        shared_ptr<T> new_comp = std::make_shared<T>(editor.editor_step++, name.c_str(), &args...); 
+        shared_ptr<EditorComponent> pushable = dynamic_pointer_cast<EditorComponent>(new_comp);
+        editor.editor_components.push_back(pushable);
+        editor.editor_map[name] = pushable;
 
         return true;
 
@@ -96,6 +90,47 @@ add_component(std::string name, Args... args)
 
     Logger::log_warning(LogFlag_None, "Attempted to add an existing component with the same name '%s'.", name.c_str()); 
     return false;
+
+}
+
+Editor::
+Editor()
+{
+
+}
+
+Editor::
+~Editor()
+{
+
+}
+
+Editor& Editor::
+get()
+{
+
+    static std::shared_ptr<Editor> instance = nullptr;
+    if (instance == nullptr)
+    {
+
+        Editor *editor = new Editor();
+        instance = std::shared_ptr<Editor>(editor);
+
+    }
+
+    return *instance;
+
+}
+
+void Editor::
+render()
+{
+    
+    Editor& editor = Editor::get();
+
+    // Snap-ins.
+    for (auto component : editor.editor_components)
+        component->render();
 
 }
 
