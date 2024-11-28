@@ -1,6 +1,7 @@
 #ifndef MAGNITUDE_UTILITIES_PATH_H
 #define MAGNITUDE_UTILITIES_PATH_H
 #include <iostream>
+#include <string>
 #include <definitions.hpp>
 
 class Filepath
@@ -27,6 +28,9 @@ class Filepath
         bool        is_valid() const;
         bool        is_valid_directory() const;
         bool        is_valid_file() const;
+
+        std::string get_file_stem() const;
+
 
     public:
         static Filepath cwd();

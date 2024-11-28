@@ -231,4 +231,23 @@ cwd()
 
 }
 
+std::string Filepath::
+get_file_stem() const
+{
 
+    if (this->buffer_ptr[0] == '\0') return "";
+
+    u64 last_slash = 0;
+    u64 index = 0;
+    while (this->buffer_ptr[index] != '\0')
+    {
+        if (this->buffer_ptr[index] == '\\')
+            last_slash = index;
+        index++;
+    }
+
+    if (last_slash != 0) last_slash++;
+    std::string stem = this->buffer_ptr + last_slash;
+    return stem;
+
+}

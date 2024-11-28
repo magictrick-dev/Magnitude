@@ -103,7 +103,7 @@ main(i32 argc, cptr *argv)
     //
 
     // Create the window and attempt to establish an OpenGL render context.
-    std::shared_ptr<Window> main_window = Window::create("Magnitude", 1280, 720);
+    std::shared_ptr<Window> main_window = Window::create("Magnitude", 1600, 900);
     OpenGLRenderContext::create_render_context(main_window);
     
     // Initialize OpenGL.

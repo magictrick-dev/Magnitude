@@ -42,15 +42,26 @@ render()
 
     if (this->visible != true) return;
 
+    Editor& editor = Editor::get();
+    auto rdviewer = editor.get_component_by_name<RDViewerComponent>("rdviewer");
+    MAG_ENSURE_PTR(rdviewer);
+
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     ImGui::BeginMainMenuBar();
     ImGui::PopStyleVar();
+
+    std::string stem = rdviewer->get_file_path().get_file_stem();
+    if (stem.empty()) stem = "Unopened Project";
+    ImGui::Text(stem.c_str());
+    ImGui::Separator();
+    ImGui::Separator();
+
     if (ImGui::BeginMenu("File"))
     {
 
         if (ImGui::MenuItem("New", NULL))
         {
-
+            rdviewer->new_file();
         }
 
         if (ImGui::MenuItem("Open", NULL))
@@ -61,27 +72,28 @@ render()
             Filepath path = result.c_str();
 
             // Attempt to set the file.
-            Editor& editor = Editor::get();
-            auto rdviewer = editor.get_component_by_name<RDViewerComponent>("rdviewer");
-            MAG_ENSURE_PTR(rdviewer);
             rdviewer->set_file(path);
 
         }
 
+        bool disable_save = false;
+        if (!rdviewer->file_unsaved()) disable_save = true;
+
+        if (disable_save) ImGui::BeginDisabled();
         if (ImGui::MenuItem("Save", NULL))
         {
-            Logger::log_info(LogFlag_None, "Saving...");
+            rdviewer->save_file();
         }
+        if (disable_save) ImGui::EndDisabled();
 
         if (ImGui::MenuItem("Save as", NULL))
         {
-            std::string save_path = file_save_as_system_dialogue(".rd", "Render View File .rd\0");
-            Logger::log_info(LogFlag_None, "Saving as... %s.", save_path.c_str());
+            rdviewer->save_as_file();
         }
 
         if (ImGui::MenuItem("Close", NULL))
         {
-            Logger::log_info(LogFlag_None, "Closing...");
+            rdviewer->close_file();
         }
 
         ImGui::EndMenu();

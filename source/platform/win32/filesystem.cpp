@@ -217,3 +217,12 @@ file_save_as_system_dialogue(ccptr default_extension, ccptr extension_filters)
 		return "";
 
 }
+
+bool
+file_confirm_message(ccptr header, ccptr message)
+{
+    i32 result = MessageBoxA(NULL, message, header, MB_OKCANCEL|MB_ICONEXCLAMATION);
+    if (result == IDCANCEL)
+        return false;
+    return true;
+}

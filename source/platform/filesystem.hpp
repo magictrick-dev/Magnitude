@@ -28,6 +28,7 @@ u64         file_last_write_time(ccptr file_path);
 u64         file_current_working_directory(u32 buffer_size, cptr buffer);
 void        file_canonicalize_path(u32 buffer_size, cptr dest, ccptr path);
 
+bool        file_confirm_message(ccptr header, ccptr message);
 std::string file_open_system_dialogue();
 std::string file_save_as_system_dialogue(ccptr default_extension, ccptr extension_filters);
 

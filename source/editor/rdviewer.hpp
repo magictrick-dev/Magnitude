@@ -21,9 +21,12 @@ class RDViewerComponent : public EditorComponent
         virtual bool        open()      override;
 
         bool                new_file();
+        bool                close_file();
         bool                set_file(Filepath path);
         bool                save_file();
+        bool                save_as_file();
         bool                file_unsaved() const;
+        Filepath            get_file_path() const;
 
     protected:
         Filepath        file_path;
