@@ -117,9 +117,8 @@ shader_compile(u32 shader, ccptr source)
         {
             char *message_buffer = (char*)malloc(info_log_length);
             glGetShaderInfoLog(shader_identifier, info_log_length, NULL, message_buffer);
-            Logger::log_error(LogFlag_Renderer, "OpenGL shader compilation failed:");
-            Logger::log_error(LogFlag_Renderer, "%s", message_buffer);
-
+            Logger::log_error(LogFlag_Renderer, "OpenGL shader compilation failed:\n%s",
+                    message_buffer);
             free(message_buffer);
         }
 
@@ -168,8 +167,8 @@ program_link(u32 program)
         {
             char *message_buffer = (char*)malloc(info_log_length + 1);
             glGetProgramInfoLog(program_identifier, info_log_length, NULL, message_buffer);
-            Logger::log_error(LogFlag_Renderer, "OpenGL program linking failed:");
-            Logger::log_error(LogFlag_Renderer, "%s", message_buffer);
+            Logger::log_error(LogFlag_Renderer, "OpenGL shader linking failed:\n%s",
+                    message_buffer);
             free(message_buffer);
         }
 

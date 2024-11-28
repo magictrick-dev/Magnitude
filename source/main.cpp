@@ -145,28 +145,20 @@ main(i32 argc, cptr *argv)
     {
 
         frame_begin = system_timestamp();
-
-        // Set the context.
-        OpenGLRenderContext::bind(main_window);
-
-        // Poll the window events.
         main_window->poll_events();
-        
-        // Begin the rendering.
-        OpenGLRenderContext::begin_frame();
-        glViewport(0, 0, main_window->get_width(), main_window->get_height());
-        glClear(GL_COLOR_BUFFER_BIT);
-        glClear(GL_DEPTH_BUFFER_BIT);
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-
-        // Update the metrics.
         metrics->set_frame_time(delta_time);
 
-        if (input_key_is_down(MagKeyA)) Logger::log_info(LogFlag_None, "A is down.");
-
-        // Render the editor.
+        // Start the frame.
+        OpenGLRenderContext::bind(main_window);
+        OpenGLRenderContext::begin_frame();
         Editor::update();
         Editor::render();
+
+        // Begin the rendering outside the renderer.
+        glViewport(0, 0, main_window->get_width(), main_window->get_height());
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_DEPTH_BUFFER_BIT);
 
         // End the rendering.
         OpenGLRenderContext::end_frame();

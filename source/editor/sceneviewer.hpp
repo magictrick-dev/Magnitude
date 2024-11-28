@@ -5,6 +5,24 @@
 #include <renderer/framebuffer.hpp>
 #include <imgui/imgui.h>
 
+ccptr vertex_shader = R"(#version 430 core
+layout(location = 0) in vec3 a_position;
+
+void main()
+{
+    gl_Position = vec4(a_position, 1.0f);
+}
+)";
+
+ccptr fragment_shader = R"(#version 430 core
+out vec4 color;
+
+void main()
+{
+    color = vec4(1.0f, 0.0f, 0.0f, 1.0f);
+}
+)";
+
 class SceneViewerComponent : public EditorComponent
 {
 
@@ -20,6 +38,10 @@ class SceneViewerComponent : public EditorComponent
         i32 viewer_width = 100;
         i32 viewer_height = 100;
 
+    protected:
+        u32 vtx_buffer;
+        u32 prog;
+
 };
 
 inline SceneViewerComponent::
@@ -28,6 +50,31 @@ SceneViewerComponent(i32 id, std::string name)
 {
 
     this->visible = true;
+
+    static const GLfloat g_vertex_buffer_data[] = {
+       -0.5f, -0.5f,  0.0f,
+        0.5f, -0.5f,  0.0f,
+        0.0f,  0.5f,  0.0f,
+    };
+
+    GLuint vertexbuffer;
+    glGenBuffers(1, &vertexbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+    this->vtx_buffer = vertexbuffer;
+
+    u32 vtx_shader = OpenGLRenderContext::shader_create(GL_VERTEX_SHADER);
+    u32 frg_shader = OpenGLRenderContext::shader_create(GL_FRAGMENT_SHADER);
+    OpenGLRenderContext::shader_compile(vtx_shader, vertex_shader);
+    OpenGLRenderContext::shader_compile(frg_shader, fragment_shader);
+    this->prog = OpenGLRenderContext::program_create();
+
+    OpenGLRenderContext::program_attach(this->prog, vtx_shader);
+    OpenGLRenderContext::program_attach(this->prog, frg_shader);
+    OpenGLRenderContext::program_link(this->prog);
+    OpenGLRenderContext::shader_release(vtx_shader);
+    OpenGLRenderContext::shader_release(frg_shader);
+
 
 }
 
@@ -77,6 +124,21 @@ update()
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     glClear(GL_DEPTH_BUFFER_BIT);
+
+    glUseProgram(this->prog);
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, this->vtx_buffer);
+    glVertexAttribPointer(
+       0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+       3,                  // size
+       GL_FLOAT,           // type
+       GL_FALSE,           // normalized?
+       0,                  // stride
+       (void*)0            // array buffer offset
+    );
+    glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
+    glDisableVertexAttribArray(0);
+    glUseProgram(NULL);
 
     this->framebuffer.unbind();
 
