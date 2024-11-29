@@ -83,6 +83,7 @@ save_as_file()
 
     // Otherwise, we can save.
     std::string new_save_location = file_save_as_system_dialogue(".rd", "Render View File .rd\0");
+    if (new_save_location.empty()) return false;
     Filepath save_location = new_save_location.c_str();
 
     if (save_location.is_valid_file())
@@ -213,35 +214,39 @@ update()
 {
 
 
-    if (input_key_is_released(MagKeyS) && 
+    if (input_key_is_pressed(MagKeyS) && 
         input_key_is_down(MagKeyControl) && 
         this->file_changes)
     {
         this->save_file();
     }
 
-    if (input_key_is_released(MagKeyS) && 
+    if (input_key_is_pressed(MagKeyS) && 
         input_key_is_down(MagKeyControl) && 
         input_key_is_down(MagKeyShift))
     {
         this->save_as_file();
     }
 
-    if (input_key_is_released(MagKeyN) && 
+    if (input_key_is_pressed(MagKeyN) && 
         input_key_is_down(MagKeyControl))
     {
         this->new_file();
     }
 
-    if (input_key_is_released(MagKeyO) && 
+    if (input_key_is_pressed(MagKeyO) && 
         input_key_is_down(MagKeyControl))
     {
         // Request the file.
         std::string result = file_open_system_dialogue();
-        Filepath path = result.c_str();
+        if (!result.empty())
+        {
+            Filepath path = result.c_str();
 
-        // Attempt to set the file.
-        this->set_file(path);
+            // Attempt to set the file.
+            this->set_file(path);
+        }
+
     }
 
 }

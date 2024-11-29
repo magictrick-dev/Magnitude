@@ -3,6 +3,7 @@
 #include <platform/window.hpp>
 #include <platform/input.hpp>
 #include <platform/system.hpp>
+#include <utilities/logging.hpp>
 
 void 
 input_release_all()

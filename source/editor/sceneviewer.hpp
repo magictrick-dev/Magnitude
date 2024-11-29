@@ -38,6 +38,9 @@ class SceneViewerComponent : public EditorComponent
         i32 viewer_width = 100;
         i32 viewer_height = 100;
 
+        bool static_only        = false;
+        bool fixed_aspect_ratio = true;
+
     protected:
         u32 vtx_buffer;
         u32 prog;
@@ -91,7 +94,34 @@ render()
     if (this->visible == false) return;
     
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-    ImGui::Begin("Scene", &this->visible);
+    ImGui::Begin("Scene", &this->visible, ImGuiWindowFlags_MenuBar);
+    ImGui::PopStyleVar();
+
+    if (ImGui::BeginMenuBar())
+    {
+
+        if (ImGui::BeginMenu("Properties"))
+        {
+
+            if (ImGui::MenuItem("Static Image", NULL, &this->static_only))
+            {
+                Logger::log_debug(LogFlag_None, "Unimplemented as of yet.");
+            }
+
+            if (ImGui::MenuItem("Fix Aspect Ratio", NULL, &this->fixed_aspect_ratio))
+            {
+                Logger::log_debug(LogFlag_None, "Unimplemented as of yet.");
+            }
+
+            ImGui::EndMenu();
+
+        }
+
+        ImGui::Separator();
+
+
+        ImGui::EndMenuBar();
+    }
 
     // Actually calculate the boundary size so we know how big to render into.
     ImVec2 min_area = ImGui::GetWindowContentRegionMin();
@@ -105,7 +135,6 @@ render()
             image_size, { 0, 1 }, { 1, 0 });
 
     ImGui::End();
-    ImGui::PopStyleVar();
 
 }
 
