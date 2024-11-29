@@ -4,6 +4,14 @@
 #include <iostream>
 #include <string>
 
+// TODO(Chris): We will need to macro-ify this since not all platforms support
+//              the use of SSE (basically ARM processors which use NEON).
+//
+//              Alternatively, we can just build a typedef library that basically
+//              masks these operations out into intrinsic wrappers. That would be
+//              really cute and helpful.
+#include <xmmintrin.h>
+
 // --- Linear Algebra Library --------------------------------------------------
 //
 // This is *not* a fast library and it is used in place of external libraries
@@ -126,7 +134,8 @@ typedef struct vector4
 
     union {
 
-        r32 elements[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+        r32     elements[4]; 
+        __m128  wide;
 
         struct
         {
@@ -179,5 +188,37 @@ bool    operator==(const vector4& lhs, const vector4& rhs);
 
 std::ostream& operator<<(std::ostream& os, const vector4& rhs);
 std::string to_string(const vector4& rhs);
+
+typedef struct matrix4
+{
+
+    union
+    {
+
+        r32     elements[4][4];
+        vector4 columns[4];
+
+    };
+
+    vector4&    operator[](i32 idx);
+    vector4     operator[](i32 idx) const;
+    r32&        at(i32 row, i32 col);
+    r32         at(i32 row, i32 col) const;
+
+} mat4, m4;
+
+matrix4 matrix4_identity();
+matrix4 matrix4_diagonal(r32 d);
+matrix4 matrix4_translate(vector3 p);
+matrix4 matrix4_scale(vector3 s);
+
+matrix4 operator*(const matrix4& left, const r32& right);
+matrix4 operator/(const matrix4& left, const r32& right);
+
+vector4 operator*(const matrix4& left, const vector4& right);
+matrix4 operator*(const matrix4& left, const matrix4& right);
+
+std::ostream& operator<<(std::ostream& os, const matrix4& rhs);
+std::string to_string(const matrix4& rhs);
 
 #endif

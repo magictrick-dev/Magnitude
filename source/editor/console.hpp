@@ -16,6 +16,10 @@ class ConsoleComponent : public EditorComponent
         inline virtual void     render() override;
         inline virtual void     update() override;
 
+    protected:
+        bool        auto_scroll;
+        bool        scroll_to_bottom;
+
 };
 
 inline ConsoleComponent::
@@ -45,21 +49,25 @@ render()
 
         if (ImGui::BeginMenu("Filters"))
         {
-            ImGui::Button("Debug");
-            ImGui::Button("Info");
-            ImGui::Button("Warning");
-            ImGui::Button("Critical");
-            ImGui::Button("Error");
-
+            ImGui::SeparatorText("Levels");
+            ImGui::MenuItem("Debug",    NULL);
+            ImGui::MenuItem("Info",     NULL);
+            ImGui::MenuItem("Warning",  NULL);
+            ImGui::MenuItem("Critical", NULL);
+            ImGui::MenuItem("Error",    NULL);
+            ImGui::SeparatorText("Interface");
+            ImGui::MenuItem("Internal", NULL);
+            ImGui::MenuItem("Parser",   NULL);
+            ImGui::MenuItem("Renderer", NULL);
             ImGui::EndMenu();
         }
 
         ImGui::EndMenuBar();
     }
 
+    // --- Scrolling Region ----------------------------------------------------
     const r32 footer_height_to_reserve = ImGui::GetStyle().ItemSpacing.y + 
         ImGui::GetFrameHeightWithSpacing();
-
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 1));
     if (ImGui::BeginChild("ScrollingRegion", ImVec2(0, -footer_height_to_reserve), 
                 ImGuiChildFlags_NavFlattened, ImGuiWindowFlags_HorizontalScrollbar))
@@ -71,16 +79,19 @@ render()
             ImGui::Text(message.message.c_str());
         }
 
+        if (scroll_to_bottom || (auto_scroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY()))
+            ImGui::SetScrollHereY(1.0f);
+        scroll_to_bottom = false;
     }
     ImGui::EndChild();
     ImGui::PopStyleVar();
 
     ImGui::Separator();
 
+    // --- Command Input Region ------------------------------------------------
     ImGuiInputTextFlags input_text_flags = 
         ImGuiInputTextFlags_EnterReturnsTrue | 
         ImGuiInputTextFlags_EscapeClearsAll;
-
     static char input_buffer[256];
     static bool first_initialized = false;
     if (first_initialized == false)
