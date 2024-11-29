@@ -72,6 +72,7 @@ class RDViewTokenizer
 {
 
     public:
+                            RDViewTokenizer();
                             RDViewTokenizer(Filepath path);
                             RDViewTokenizer(std::string memory_resource);
         virtual            ~RDViewTokenizer();
@@ -80,6 +81,9 @@ class RDViewTokenizer
         RDViewToken         get_previous() const;
         RDViewToken         get_current() const;
         RDViewToken         get_next() const;
+
+        void                reset(Filepath path);
+        void                reset(std::string memory_resource);
 
     protected:
         bool                consume_whitespace();

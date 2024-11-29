@@ -67,6 +67,36 @@ string_to_type(std::string ref)
 //
 
 RDViewTokenizer::
+RDViewTokenizer()
+{
+
+    this->source    = "";
+    this->offset    = 0;
+    this->step      = 0;
+    this->column    = 1;
+    this->row       = 1;
+
+    for (i32 i = 0; i < 3; ++i)
+    {
+
+        this->tokens[i].type        = RDViewTokenType::TypeEOF;
+        this->tokens[i].reference   = "";
+        this->tokens[i].row         = 0;
+        this->tokens[i].column      = 0;
+
+    }
+
+    this->previous_token    = &this->tokens[0];
+    this->current_token     = &this->tokens[1];
+    this->next_token        = &this->tokens[2];
+
+    // Prime that shit.
+    this->shift();
+    this->shift();
+
+}
+
+RDViewTokenizer::
 RDViewTokenizer(Filepath path)
 {
 
@@ -76,11 +106,11 @@ RDViewTokenizer(Filepath path)
     if (!ResourceManager::resource_is_loaded(res))
         ResourceManager::load_resource(res);
 
-    this->source = ResourceManager::get_resource_as_string(res);
-    this->offset = 0;
-    this->step = 0;
-    this->column = 1;
-    this->row = 1;
+    this->source    = ResourceManager::get_resource_as_string(res);
+    this->offset    = 0;
+    this->step      = 0;
+    this->column    = 1;
+    this->row       = 1;
 
     for (i32 i = 0; i < 3; ++i)
     {
@@ -106,11 +136,11 @@ RDViewTokenizer::
 RDViewTokenizer(std::string memory_resource)
 {
 
-    this->source = memory_resource;
-    this->offset = 0;
-    this->step = 0;
-    this->column = 1;
-    this->row = 1;
+    this->source    = memory_resource;
+    this->offset    = 0;
+    this->step      = 0;
+    this->column    = 1;
+    this->row       = 1;
 
     for (i32 i = 0; i < 3; ++i)
     {
@@ -133,6 +163,68 @@ RDViewTokenizer::
 {
 
 
+
+}
+
+void RDViewTokenizer::
+reset(Filepath path)
+{
+
+    rhandle res = ResourceManager::create_file_resource(path);
+    MAG_ASSERT(ResourceManager::resource_handle_is_valid(res) &&
+            "You should check if the file path is valid before trying to tokenizer.");
+    if (!ResourceManager::resource_is_loaded(res))
+        ResourceManager::load_resource(res);
+
+    this->source    = ResourceManager::get_resource_as_string(res);
+    this->offset    = 0;
+    this->step      = 0;
+    this->column    = 1;
+    this->row       = 1;
+
+    for (i32 i = 0; i < 3; ++i)
+    {
+
+        this->tokens[i].type        = RDViewTokenType::TypeEOF;
+        this->tokens[i].reference   = "";
+        this->tokens[i].row         = 0;
+        this->tokens[i].column      = 0;
+
+    }
+
+    this->previous_token    = &this->tokens[0];
+    this->current_token     = &this->tokens[1];
+    this->next_token        = &this->tokens[2];
+
+    // Prime that shit.
+    this->shift();
+    this->shift();
+
+}
+
+void RDViewTokenizer::
+reset(std::string memory_resource)
+{
+
+    this->source    = memory_resource;
+    this->offset    = 0;
+    this->step      = 0;
+    this->column    = 1;
+    this->row       = 1;
+
+    for (i32 i = 0; i < 3; ++i)
+    {
+
+        this->tokens[i].type        = RDViewTokenType::TypeEOF;
+        this->tokens[i].reference   = "";
+        this->tokens[i].row         = 0;
+        this->tokens[i].column      = 0;
+
+    }
+
+    // Prime that shit.
+    this->shift();
+    this->shift();
 
 }
 
