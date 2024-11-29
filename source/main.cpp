@@ -19,7 +19,7 @@
 //
 // -----------------------------------------------------------------------------
 #include <iostream>
-#include <definitions.hpp>
+#include <common.hpp>
 
 #include <platform/window.hpp>
 #include <platform/opengl.hpp>
@@ -140,6 +140,23 @@ main(i32 argc, cptr *argv)
     u64 frame_begin = 0;
     u64 frame_end   = 0;
     r32 delta_time  = 1.0f / 60.0f;
+
+    vec2 a = { 1.0f, 1.0f };
+    vec3 b = { 1.0f, 2.0f, 2.0f };
+    vec4 c = { 1.0f, 2.0f, 3.0f, 1.0f };
+    vec4 d = { 3.0f, 2.0f, 1.0f, 1.0f };
+    vec4 e = c + d;
+
+    Logger::log_debug(LogFlag_None, "Vector2: %s", to_string(a).c_str());
+    Logger::log_debug(LogFlag_None, "Vector3: %s", to_string(b).c_str());
+    Logger::log_debug(LogFlag_None, "Vector4: %s", to_string(c).c_str());
+    Logger::log_debug(LogFlag_None, "Vector4: %s", to_string(d).c_str());
+    Logger::log_debug(LogFlag_None, "Vector4: %s", to_string(e).c_str());
+
+    mat4 identity = matrix4_identity();
+    mat4 diagonal = matrix4_diagonal(3.0f);
+    Logger::log_debug(LogFlag_None, "Identity:\n%s", to_string(identity).c_str());
+    Logger::log_debug(LogFlag_None, "Diagonal:\n%s", to_string(diagonal).c_str());
 
     while (!main_window->should_close())
     {

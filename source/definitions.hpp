@@ -27,6 +27,9 @@ typedef const char* ccptr;
 typedef char*       cptr;
 typedef void*       vptr;
 
+#define MAG_PI32    3.14159265358979f
+#define MAG_DEG2RAD(param) ((param) * (PI32 / 180.0f))
+
 #define MAG_BYTES(n)         ((u64)n)
 #define MAG_KILOBYTES(n)     (MAG_BYTES(n)        * 1024)
 #define MAG_MEGABYTES(n)     (MAG_KILOBYTES(n)    * 1024)
