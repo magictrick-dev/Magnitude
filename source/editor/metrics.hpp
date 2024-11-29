@@ -52,10 +52,16 @@ render()
 
     if (this->visible == false) return;
     
-    ImGui::Begin("Metrics", &this->visible);
+    ImGui::Begin("Metrics", &this->visible, ImGuiWindowFlags_MenuBar);
 
-    ImGui::SeparatorText("Frame Time Metrics");
-    ImGui::Checkbox("Pause", &this->pause);
+    if (ImGui::BeginMenuBar())
+    {
+
+        ImGui::MenuItem("Pause Metrics", NULL, &this->pause);
+
+        ImGui::EndMenuBar();
+    }
+
     ImGui::PushItemWidth(-FLT_MIN);
     ImGui::PlotLines("##ftimes", this->frame_time_set, METRICS_FRAME_TIME_BUFFER_SIZE,
             0, NULL, FLT_MAX, FLT_MAX, ImVec2(0, 80.0f));

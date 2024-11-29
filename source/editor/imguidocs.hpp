@@ -46,7 +46,7 @@ inline void ImguiDocsComponent::
 update()
 {
 
-    if (input_key_is_pressed(MagKeyF8))
+    if (input_key_is_pressed(MagKeyF9))
         this->visible = !this->visible;
 
 }
