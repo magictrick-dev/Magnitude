@@ -53,6 +53,10 @@ add_executable(Magnitude
     "source/graphics/bitmap.hpp"
     "source/graphics/bitmap.cpp"
 
+    "source/renderer/framebuffer.hpp"
+    "source/renderer/framebuffer.cpp"
+    "source/renderer/renderinterface.hpp"
+
     "source/editor/editor.hpp"
     "source/editor/component.hpp"
     "source/editor/component.cpp"

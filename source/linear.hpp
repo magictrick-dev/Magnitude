@@ -1,6 +1,8 @@
 #ifndef MAGNITUDE_LINEAR_HPP
 #define MAGNITUDE_LINEAR_HPP
 #include <definitions.hpp>
+#include <iostream>
+#include <string>
 
 // --- Linear Algebra Library --------------------------------------------------
 //
@@ -47,6 +49,9 @@ typedef struct vector2
     r32         magntidue() const;
     vector2     normalize() const;
 
+    r32&        operator[](i32 idx);
+    r32         operator[](i32 idx) const;
+
 } vec2, v2;
 
 vector2 operator+(const vector2& lhs, const vector2& rhs);
@@ -55,6 +60,10 @@ vector2 operator*(const vector2& lhs, const r32& rhs);
 vector2 operator*(const r32& lhs, const vector2& rhs);
 vector2 operator/(const vector2& lhs, const r32& rhs);
 vector2 operator/(const r32& lhs, const vector2& rhs);
+bool    operator==(const vector2& lhs, const vector2& rhs);
+
+std::ostream& operator<<(std::ostream& os, const vector2& rhs);
+std::string to_string(const vector2& rhs);
 
 typedef struct vector3
 {
@@ -96,6 +105,9 @@ typedef struct vector3
     r32         magntidue() const;
     vector3     normalize() const;
 
+    r32&        operator[](i32 idx);
+    r32         operator[](i32 idx) const;
+
 } vec3, v3;
 
 vector3 operator+(const vector3& lhs, const vector3& rhs);
@@ -104,6 +116,10 @@ vector3 operator*(const vector3& lhs, const r32& rhs);
 vector3 operator*(const r32& lhs, const vector3& rhs);
 vector3 operator/(const vector3& lhs, const r32& rhs);
 vector3 operator/(const r32& lhs, const vector3& rhs);
+bool    operator==(const vector3& lhs, const vector3& rhs);
+
+std::ostream& operator<<(std::ostream& os, const vector3& rhs);
+std::string to_string(const vector3& rhs);
 
 typedef struct vector4
 {
@@ -143,8 +159,11 @@ typedef struct vector4
     vector4&    operator*=(const r32& rhs);
     vector4&    operator/=(const r32& rhs);
 
+    r32&        operator[](i32 idx);
+    r32         operator[](i32 idx) const;
+
     r32         magnitude_squared() const;
-    r32         magntidue() const;
+    r32         magnitude() const;
     vector4     normalize() const;
     vector4     homogenize() const;
 
@@ -156,5 +175,9 @@ vector4 operator*(const vector4& lhs, const r32& rhs);
 vector4 operator*(const r32& lhs, const vector4& rhs);
 vector4 operator/(const vector4& lhs, const r32& rhs);
 vector4 operator/(const r32& lhs, const vector4& rhs);
+bool    operator==(const vector4& lhs, const vector4& rhs);
+
+std::ostream& operator<<(std::ostream& os, const vector4& rhs);
+std::string to_string(const vector4& rhs);
 
 #endif
