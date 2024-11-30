@@ -23,22 +23,6 @@ string_to_type(std::string ref)
         map["WorldBegin"]       = RDViewTokenType::TypeKeyWorldBegin;
         map["WorldEnd"]         = RDViewTokenType::TypeKeyWorldEnd;
         map["Point"]            = RDViewTokenType::TypeKeyPoint;
-        map["Background"]       = RDViewTokenType::TypeKeyBackground;
-        map["Color"]            = RDViewTokenType::TypeKeyColor;
-        map["Line"]             = RDViewTokenType::TypeKeyLine;
-        map["Format"]           = RDViewTokenType::TypeKeyFormat;
-        map["Circle"]           = RDViewTokenType::TypeKeyCircle;
-        map["Fill"]             = RDViewTokenType::TypeKeyFill;
-        map["Cube"]             = RDViewTokenType::TypeKeyCube;
-        map["Scale"]            = RDViewTokenType::TypeKeyScale;
-        map["Translate"]        = RDViewTokenType::TypeKeyTranslate;
-        map["Rotate"]           = RDViewTokenType::TypeKeyRotate;
-        map["Sphere"]           = RDViewTokenType::TypeKeySphere;
-        map["PolySet"]          = RDViewTokenType::TypeKeyPolySet;
-        map["XformPush"]        = RDViewTokenType::TypeKeyXformPush;
-        map["XformPop"]         = RDViewTokenType::TypeKeyXformPop;
-        map["ObjectBegin"]      = RDViewTokenType::TypeKeyObjectBegin;
-        map["ObjectEnd"]        = RDViewTokenType::TypeKeyObjectEnd;
 
         map["true"]             = RDViewTokenType::TypeBooleanTrue;
         map["on"]               = RDViewTokenType::TypeBooleanTrue;
@@ -58,6 +42,50 @@ string_to_type(std::string ref)
     }
 
     return type;
+
+}
+
+std::string
+to_string(RDViewTokenType ref)
+{
+
+    // Thank you, C++, very cool!
+    static std::unordered_map<RDViewTokenType, std::string> map;
+    static bool map_initialized = false;
+    if (map_initialized == false)
+    {
+
+        map[RDViewTokenType::TypeKeyDisplay]            = "Display";
+        map[RDViewTokenType::TypeKeyCameraAt]           = "CameraAt";
+        map[RDViewTokenType::TypeKeyCameraEye]          = "CameraEye";
+        map[RDViewTokenType::TypeKeyCameraUp]           = "CameraUp";
+        map[RDViewTokenType::TypeKeyFrameBegin]         = "FrameBegin";
+        map[RDViewTokenType::TypeKeyFrameEnd]           = "FrameEnd";
+        map[RDViewTokenType::TypeKeyWorldBegin]         = "WorldBegin";
+        map[RDViewTokenType::TypeKeyWorldEnd]           = "WorldEnd";
+        map[RDViewTokenType::TypeKeyPoint]              = "Point";
+        map[RDViewTokenType::TypeError]                 = "Error";
+        map[RDViewTokenType::TypeEOF]                   = "EOF";
+        map[RDViewTokenType::TypeReal]                  = "Real";
+        map[RDViewTokenType::TypeInteger]               = "Integer";
+        map[RDViewTokenType::TypeString]                = "String";
+        map[RDViewTokenType::TypeIdentifier]            = "Identifier";
+        map[RDViewTokenType::TypeBooleanTrue]           = "True";
+        map[RDViewTokenType::TypeBooleanFalse]          = "False";
+
+        map_initialized = true;
+
+    }
+
+    auto result = map.find(ref);
+    if (result != map.end())
+    {
+        return result->second;
+    }
+
+    MAG_ASSERT(!"Unimplemented to string.");
+    return "Unknown Type";
+
 
 }
 
@@ -509,7 +537,7 @@ shift()
 }
 
 RDViewToken RDViewTokenizer::
-get_previous() const
+get_previous_token() const
 {
 
     return *this->previous_token;
@@ -517,7 +545,7 @@ get_previous() const
 }
 
 RDViewToken RDViewTokenizer::
-get_current() const
+get_current_token() const
 {
 
     return *this->current_token;
@@ -525,9 +553,27 @@ get_current() const
 }
 
 RDViewToken RDViewTokenizer::
-get_next() const
+get_next_token() const
 {
 
     return *this->next_token;
 
+}
+
+RDViewTokenType RDViewTokenizer::
+get_previous_token_type() const
+{
+    return this->previous_token->type;
+}
+
+RDViewTokenType RDViewTokenizer::
+get_current_token_type() const
+{
+    return this->current_token->type;
+}
+
+RDViewTokenType RDViewTokenizer::
+get_next_token_type() const
+{
+    return this->next_token->type;
 }

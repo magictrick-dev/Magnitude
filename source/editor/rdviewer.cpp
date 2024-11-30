@@ -70,7 +70,7 @@ save_file()
     if (!save_location.is_valid_file())
     {
 
-        std::string new_save_location = file_save_as_system_dialogue(".rd", "Render View File .rd\0");
+        std::string new_save_location = file_save_as_system_dialogue("rd", "Render View File .rd\0");
         save_location = new_save_location.c_str();
         if (save_location.is_valid_file())
         {

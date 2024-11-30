@@ -55,8 +55,8 @@ class RDSyntaxNodeAbstract
 {
 
     public:
-        inline          RDSyntaxNodeAbstract();
-        inline virtual ~RDSyntaxNodeAbstract();
+                    RDSyntaxNodeAbstract();
+        virtual    ~RDSyntaxNodeAbstract();
 
         inline RDSyntaxNodeType     get_type() const { return this->type; }
         template <class T> inline T cast_to() { return dynamic_pointer_cast<T>(this); }
@@ -80,10 +80,11 @@ class RDSyntaxNodeRoot : public RDSyntaxNodeAbstract
                         RDSyntaxNodeRoot();
         virtual        ~RDSyntaxNodeRoot();
 
-        inline virtual void accept(RDSyntaxVisitor *visitor) override
+        inline virtual void accept(RDSyntaxVisitor *visitor)
             { visitor->visit_SyntaxNodeRoot(this); }
 
-    protected:
+        shared_ptr<RDSyntaxNodeAbstract> display_node;
+        std::vector<shared_ptr<RDSyntaxNodeAbstract>> frames;
 
 };
 
@@ -96,7 +97,10 @@ class RDSyntaxNodeDisplay : public RDSyntaxNodeAbstract
         inline virtual void accept(RDSyntaxVisitor *visitor) override
             { visitor->visit_SyntaxNodeDisplay(this); }
 
-    protected:
+        std::string title;
+        i32 frames_per_second;
+        i32 width;
+        i32 height;
 
 };
 
@@ -109,10 +113,8 @@ class RDSyntaxNodeFrame : public RDSyntaxNodeAbstract
         inline virtual void accept(RDSyntaxVisitor *visitor) override
             { visitor->visit_SyntaxNodeFrame(this); }
 
-        inline bool is_frame_valid() const { return this->valid_frame; }
-
-    protected:
-        bool valid_frame = true;
+        shared_ptr<RDSyntaxNodeAbstract> world;
+        std::vector<shared_ptr<RDSyntaxNodeAbstract>> parameters;
 
 };
 
@@ -125,7 +127,6 @@ class RDSyntaxNodeWorld : public RDSyntaxNodeAbstract
         inline virtual void accept(RDSyntaxVisitor *visitor) override
             { visitor->visit_SyntaxNodeWorld(this); }
 
-    protected:
 
 };
 
@@ -138,7 +139,6 @@ class RDSyntaxNodeCameraEye : public RDSyntaxNodeAbstract
         inline virtual void accept(RDSyntaxVisitor *visitor) override
             { visitor->visit_SyntaxNodeCameraEye(this); }
 
-    protected:
 
 };
 
@@ -151,7 +151,6 @@ class RDSyntaxNodeCameraAt : public RDSyntaxNodeAbstract
         inline virtual void accept(RDSyntaxVisitor *visitor) override
             { visitor->visit_SyntaxNodeCameraAt(this); }
 
-    protected:
 
 };
 
@@ -164,8 +163,6 @@ class RDSyntaxNodeCameraUp : public RDSyntaxNodeAbstract
         inline virtual void accept(RDSyntaxVisitor *visitor) override
             { visitor->visit_SyntaxNodeCameraUp(this); }
 
-    protected:
-
 };
 
 class RDSyntaxNodeCameraFOV : public RDSyntaxNodeAbstract
@@ -177,8 +174,6 @@ class RDSyntaxNodeCameraFOV : public RDSyntaxNodeAbstract
         inline virtual void accept(RDSyntaxVisitor *visitor) override
             { visitor->visit_SyntaxNodeCameraFOV(this); }
 
-    protected:
-
 };
 
 class RDSyntaxNodePoint : public RDSyntaxNodeAbstract
@@ -189,8 +184,6 @@ class RDSyntaxNodePoint : public RDSyntaxNodeAbstract
 
         inline virtual void accept(RDSyntaxVisitor *visitor) override
             { visitor->visit_SyntaxNodePoint(this); }
-
-    protected:
 
 };
 
@@ -260,6 +253,7 @@ class RDSyntaxParser
 
     protected:
         void        synchronize_to(RDViewTokenType type);
+        void        display_error(RDViewToken what, RDViewTokenType expected);
 
         shared_ptr<RDSyntaxNodeAbstract> match_root();
         shared_ptr<RDSyntaxNodeAbstract> match_display();
@@ -285,6 +279,7 @@ generate_node(Args... args)
     shared_ptr<RDSyntaxNodeAbstract> pushable = 
         dynamic_pointer_cast<RDSyntaxNodeAbstract>(new_node);
     this->nodes.push_back(pushable);
+    return new_node;
 }
 
 #endif
