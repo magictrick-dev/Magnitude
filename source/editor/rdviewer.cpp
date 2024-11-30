@@ -3,13 +3,35 @@
 #include <platform/input.hpp>
 #include <platform/filesystem.hpp>
 
+static ccptr new_default = R"(# Basic, 24fps, 1280x720 display.
+Display "Untitled Project" 24 1280 720
+
+FrameBegin 1
+
+    # Camera settings for the frame.
+    CameraEye 320 240 -240
+    CameraAt  320 240 0
+    CameraUp  0.0 -1.0 0.0
+    CameraFOV 90
+
+    # Begin the world.
+    WorldBegin
+        
+        # Display a single point at (300,300,0) with radius 1.
+        Point 300 300 0 1
+
+    WorldEnd
+FrameEnd 1
+)";
+
 RDViewerComponent::
 RDViewerComponent(i32 id, std::string name) : EditorComponent(id, name)
 {
 
     this->visible = true;
     this->file_path = "";
-    this->file_changes = false;
+    this->file_changes = true;
+    this->file_editor.SetText(new_default);
 
 }
 
@@ -48,7 +70,7 @@ save_file()
     if (!save_location.is_valid_file())
     {
 
-        std::string new_save_location = file_save_as_system_dialogue(".rd", "Render View File .rd\0");
+        std::string new_save_location = file_save_as_system_dialogue("rd", "Render View File .rd\0");
         save_location = new_save_location.c_str();
         if (save_location.is_valid_file())
         {
@@ -83,6 +105,7 @@ save_as_file()
 
     // Otherwise, we can save.
     std::string new_save_location = file_save_as_system_dialogue(".rd", "Render View File .rd\0");
+    if (new_save_location.empty()) return false;
     Filepath save_location = new_save_location.c_str();
 
     if (save_location.is_valid_file())
@@ -126,8 +149,9 @@ close_file()
 
     if (actually_close)
     {
-        this->file_editor.SetText("");
+        this->file_editor.SetText(new_default);
         this->file_path = "";
+        this->file_changes = true;
         Logger::log_info(LogFlag_None, "The project source has successfully closed.");
         return true;
     }
@@ -175,8 +199,8 @@ new_file()
     }
 
     this->file_path = "";
-    this->file_editor.SetText("");
-    this->file_changes = false;
+    this->file_editor.SetText(new_default);
+    this->file_changes = true;
     Logger::log_info(LogFlag_None, "A new project has been created.");
     return true;
 
@@ -213,35 +237,39 @@ update()
 {
 
 
-    if (input_key_is_released(MagKeyS) && 
+    if (input_key_is_pressed(MagKeyS) && 
         input_key_is_down(MagKeyControl) && 
         this->file_changes)
     {
         this->save_file();
     }
 
-    if (input_key_is_released(MagKeyS) && 
+    if (input_key_is_pressed(MagKeyS) && 
         input_key_is_down(MagKeyControl) && 
         input_key_is_down(MagKeyShift))
     {
         this->save_as_file();
     }
 
-    if (input_key_is_released(MagKeyN) && 
+    if (input_key_is_pressed(MagKeyN) && 
         input_key_is_down(MagKeyControl))
     {
         this->new_file();
     }
 
-    if (input_key_is_released(MagKeyO) && 
+    if (input_key_is_pressed(MagKeyO) && 
         input_key_is_down(MagKeyControl))
     {
         // Request the file.
         std::string result = file_open_system_dialogue();
-        Filepath path = result.c_str();
+        if (!result.empty())
+        {
+            Filepath path = result.c_str();
 
-        // Attempt to set the file.
-        this->set_file(path);
+            // Attempt to set the file.
+            this->set_file(path);
+        }
+
     }
 
 }

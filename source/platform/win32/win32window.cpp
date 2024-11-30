@@ -4,6 +4,7 @@
 #include <wingdi.h>
 
 #include <utilities/path.hpp>
+#include <utilities/logging.hpp>
 #include <platform/system.hpp>
 #include <platform/win32/win32window.hpp>
 #include <platform/win32/inputhandler.hpp>
@@ -533,8 +534,7 @@ window_procedure(HWND window, UINT message, WPARAM w_param, LPARAM l_param)
             b32 is_active = (w_param == TRUE);
             self->focused = is_active;
             self->was_focused = true;
-
-            if (!is_active) input_release_all();
+            if (is_active) input_release_all();
 
         } break;
 

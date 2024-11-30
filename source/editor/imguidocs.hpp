@@ -23,7 +23,7 @@ ImguiDocsComponent(i32 id, std::string name) : EditorComponent(id, name)
 {
 
     this->visible = false;
-    this->shortcut = "F11";
+    this->shortcut = "F9";
 
 }
 
@@ -46,7 +46,7 @@ inline void ImguiDocsComponent::
 update()
 {
 
-    if (input_key_is_released(MagKeyF11))
+    if (input_key_is_pressed(MagKeyF9))
         this->visible = !this->visible;
 
 }

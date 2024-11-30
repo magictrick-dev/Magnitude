@@ -39,24 +39,10 @@ enum class RDViewTokenType
     TypeKeyWorldBegin,
     TypeKeyWorldEnd,
     TypeKeyPoint,
-    TypeKeyBackground,
-    TypeKeyColor,
-    TypeKeyLine,
-    TypeKeyFormat,
-    TypeKeyCircle,
-    TypeKeyFill,
-    TypeKeyCube,
-    TypeKeyScale,
-    TypeKeyTranslate,
-    TypeKeyRotate,
-    TypeKeySphere,
-    TypeKeyPolySet,
-    TypeKeyXformPush,
-    TypeKeyXformPop,
-    TypeKeyObjectBegin,
-    TypeKeyObjectEnd,
 
 };
+
+std::string to_string(RDViewTokenType type);
 
 struct RDViewToken
 {
@@ -72,14 +58,21 @@ class RDViewTokenizer
 {
 
     public:
+                            RDViewTokenizer();
                             RDViewTokenizer(Filepath path);
                             RDViewTokenizer(std::string memory_resource);
         virtual            ~RDViewTokenizer();
 
         void                shift();
-        RDViewToken         get_previous() const;
-        RDViewToken         get_current() const;
-        RDViewToken         get_next() const;
+        RDViewToken         get_previous_token() const;
+        RDViewToken         get_current_token() const;
+        RDViewToken         get_next_token() const;
+        RDViewTokenType     get_previous_token_type() const;
+        RDViewTokenType     get_current_token_type() const;
+        RDViewTokenType     get_next_token_type() const;
+
+        void                reset(Filepath path);
+        void                reset(std::string memory_resource);
 
     protected:
         bool                consume_whitespace();

@@ -4,6 +4,7 @@
 #include <imgui/backends/imgui_impl_opengl3.h>
 #include <imgui/backends/imgui_impl_win32.h>
 #include <utilities/path.hpp>
+#include <imgui/fontawesome.h>
 
 void    imgui_initialize_platform(void *platform_handle, void *render_context, i32, i32);
 void    imgui_begin_frame();
@@ -344,11 +345,35 @@ imgui_initialize_platform(void *platform_handle, void *render_context, i32 width
     config.OversampleV = 1;
     io.Fonts->AddFontFromFileTTF(font_path.c_str(), 14, &config);
 
+    {
+        Filepath icon_path = Filepath::cwd();
+        icon_path += "./assets/fonts/fa-regular-400.ttf";
+        icon_path.canonicalize();
+        MAG_ASSERT(icon_path.is_valid_file() && "Unable to locate necessary font.");
+        ImFontConfig configi;
+        configi.MergeMode = true;
+        configi.GlyphMinAdvanceX = 13.0f; // Use if you want to make the icon monospaced
+        static const ImWchar icon_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
+        io.Fonts->AddFontFromFileTTF(icon_path.c_str(), 13.0f, &configi, icon_ranges);
+    }
+
+    {
+        Filepath icon_path = Filepath::cwd();
+        icon_path += "./assets/fonts/fa-solid-900.ttf";
+        icon_path.canonicalize();
+        MAG_ASSERT(icon_path.is_valid_file() && "Unable to locate necessary font.");
+        ImFontConfig configi;
+        configi.MergeMode = true;
+        configi.GlyphMinAdvanceX = 13.0f; // Use if you want to make the icon monospaced
+        static const ImWchar icon_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
+        io.Fonts->AddFontFromFileTTF(icon_path.c_str(), 13.0f, &configi, icon_ranges);
+    }
+
     // Set the theme.
     ImVec4* colors = ImGui::GetStyle().Colors;
     colors[ImGuiCol_Text]                   = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
     colors[ImGuiCol_TextDisabled]           = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
-    colors[ImGuiCol_WindowBg]               = ImVec4(0.098f, 0.098f, 0.098f, 1.000f);
+    colors[ImGuiCol_WindowBg]               = ImVec4(0.098f, 0.098f, 0.098f, 0.8f);
     colors[ImGuiCol_ChildBg]                = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
     colors[ImGuiCol_ChildBg]                = ImVec4(0.098f, 0.098f, 0.098f, 1.000f);
     colors[ImGuiCol_PopupBg]                = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);

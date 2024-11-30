@@ -23,22 +23,6 @@ string_to_type(std::string ref)
         map["WorldBegin"]       = RDViewTokenType::TypeKeyWorldBegin;
         map["WorldEnd"]         = RDViewTokenType::TypeKeyWorldEnd;
         map["Point"]            = RDViewTokenType::TypeKeyPoint;
-        map["Background"]       = RDViewTokenType::TypeKeyBackground;
-        map["Color"]            = RDViewTokenType::TypeKeyColor;
-        map["Line"]             = RDViewTokenType::TypeKeyLine;
-        map["Format"]           = RDViewTokenType::TypeKeyFormat;
-        map["Circle"]           = RDViewTokenType::TypeKeyCircle;
-        map["Fill"]             = RDViewTokenType::TypeKeyFill;
-        map["Cube"]             = RDViewTokenType::TypeKeyCube;
-        map["Scale"]            = RDViewTokenType::TypeKeyScale;
-        map["Translate"]        = RDViewTokenType::TypeKeyTranslate;
-        map["Rotate"]           = RDViewTokenType::TypeKeyRotate;
-        map["Sphere"]           = RDViewTokenType::TypeKeySphere;
-        map["PolySet"]          = RDViewTokenType::TypeKeyPolySet;
-        map["XformPush"]        = RDViewTokenType::TypeKeyXformPush;
-        map["XformPop"]         = RDViewTokenType::TypeKeyXformPop;
-        map["ObjectBegin"]      = RDViewTokenType::TypeKeyObjectBegin;
-        map["ObjectEnd"]        = RDViewTokenType::TypeKeyObjectEnd;
 
         map["true"]             = RDViewTokenType::TypeBooleanTrue;
         map["on"]               = RDViewTokenType::TypeBooleanTrue;
@@ -61,10 +45,84 @@ string_to_type(std::string ref)
 
 }
 
+std::string
+to_string(RDViewTokenType ref)
+{
+
+    // Thank you, C++, very cool!
+    static std::unordered_map<RDViewTokenType, std::string> map;
+    static bool map_initialized = false;
+    if (map_initialized == false)
+    {
+
+        map[RDViewTokenType::TypeKeyDisplay]            = "Display";
+        map[RDViewTokenType::TypeKeyCameraAt]           = "CameraAt";
+        map[RDViewTokenType::TypeKeyCameraEye]          = "CameraEye";
+        map[RDViewTokenType::TypeKeyCameraUp]           = "CameraUp";
+        map[RDViewTokenType::TypeKeyFrameBegin]         = "FrameBegin";
+        map[RDViewTokenType::TypeKeyFrameEnd]           = "FrameEnd";
+        map[RDViewTokenType::TypeKeyWorldBegin]         = "WorldBegin";
+        map[RDViewTokenType::TypeKeyWorldEnd]           = "WorldEnd";
+        map[RDViewTokenType::TypeKeyPoint]              = "Point";
+        map[RDViewTokenType::TypeError]                 = "Error";
+        map[RDViewTokenType::TypeEOF]                   = "EOF";
+        map[RDViewTokenType::TypeReal]                  = "Real";
+        map[RDViewTokenType::TypeInteger]               = "Integer";
+        map[RDViewTokenType::TypeString]                = "String";
+        map[RDViewTokenType::TypeIdentifier]            = "Identifier";
+        map[RDViewTokenType::TypeBooleanTrue]           = "True";
+        map[RDViewTokenType::TypeBooleanFalse]          = "False";
+
+        map_initialized = true;
+
+    }
+
+    auto result = map.find(ref);
+    if (result != map.end())
+    {
+        return result->second;
+    }
+
+    MAG_ASSERT(!"Unimplemented to string.");
+    return "Unknown Type";
+
+
+}
+
 // --- RDView Tokenizer --------------------------------------------------------
 //
 // I've written so many tokenizers at this point, it's actually kinda gratuitous.
 //
+
+RDViewTokenizer::
+RDViewTokenizer()
+{
+
+    this->source    = "";
+    this->offset    = 0;
+    this->step      = 0;
+    this->column    = 1;
+    this->row       = 1;
+
+    for (i32 i = 0; i < 3; ++i)
+    {
+
+        this->tokens[i].type        = RDViewTokenType::TypeEOF;
+        this->tokens[i].reference   = "";
+        this->tokens[i].row         = 0;
+        this->tokens[i].column      = 0;
+
+    }
+
+    this->previous_token    = &this->tokens[0];
+    this->current_token     = &this->tokens[1];
+    this->next_token        = &this->tokens[2];
+
+    // Prime that shit.
+    this->shift();
+    this->shift();
+
+}
 
 RDViewTokenizer::
 RDViewTokenizer(Filepath path)
@@ -76,11 +134,11 @@ RDViewTokenizer(Filepath path)
     if (!ResourceManager::resource_is_loaded(res))
         ResourceManager::load_resource(res);
 
-    this->source = ResourceManager::get_resource_as_string(res);
-    this->offset = 0;
-    this->step = 0;
-    this->column = 1;
-    this->row = 1;
+    this->source    = ResourceManager::get_resource_as_string(res);
+    this->offset    = 0;
+    this->step      = 0;
+    this->column    = 1;
+    this->row       = 1;
 
     for (i32 i = 0; i < 3; ++i)
     {
@@ -106,11 +164,11 @@ RDViewTokenizer::
 RDViewTokenizer(std::string memory_resource)
 {
 
-    this->source = memory_resource;
-    this->offset = 0;
-    this->step = 0;
-    this->column = 1;
-    this->row = 1;
+    this->source    = memory_resource;
+    this->offset    = 0;
+    this->step      = 0;
+    this->column    = 1;
+    this->row       = 1;
 
     for (i32 i = 0; i < 3; ++i)
     {
@@ -133,6 +191,68 @@ RDViewTokenizer::
 {
 
 
+
+}
+
+void RDViewTokenizer::
+reset(Filepath path)
+{
+
+    rhandle res = ResourceManager::create_file_resource(path);
+    MAG_ASSERT(ResourceManager::resource_handle_is_valid(res) &&
+            "You should check if the file path is valid before trying to tokenizer.");
+    if (!ResourceManager::resource_is_loaded(res))
+        ResourceManager::load_resource(res);
+
+    this->source    = ResourceManager::get_resource_as_string(res);
+    this->offset    = 0;
+    this->step      = 0;
+    this->column    = 1;
+    this->row       = 1;
+
+    for (i32 i = 0; i < 3; ++i)
+    {
+
+        this->tokens[i].type        = RDViewTokenType::TypeEOF;
+        this->tokens[i].reference   = "";
+        this->tokens[i].row         = 0;
+        this->tokens[i].column      = 0;
+
+    }
+
+    this->previous_token    = &this->tokens[0];
+    this->current_token     = &this->tokens[1];
+    this->next_token        = &this->tokens[2];
+
+    // Prime that shit.
+    this->shift();
+    this->shift();
+
+}
+
+void RDViewTokenizer::
+reset(std::string memory_resource)
+{
+
+    this->source    = memory_resource;
+    this->offset    = 0;
+    this->step      = 0;
+    this->column    = 1;
+    this->row       = 1;
+
+    for (i32 i = 0; i < 3; ++i)
+    {
+
+        this->tokens[i].type        = RDViewTokenType::TypeEOF;
+        this->tokens[i].reference   = "";
+        this->tokens[i].row         = 0;
+        this->tokens[i].column      = 0;
+
+    }
+
+    // Prime that shit.
+    this->shift();
+    this->shift();
 
 }
 
@@ -417,7 +537,7 @@ shift()
 }
 
 RDViewToken RDViewTokenizer::
-get_previous() const
+get_previous_token() const
 {
 
     return *this->previous_token;
@@ -425,7 +545,7 @@ get_previous() const
 }
 
 RDViewToken RDViewTokenizer::
-get_current() const
+get_current_token() const
 {
 
     return *this->current_token;
@@ -433,9 +553,27 @@ get_current() const
 }
 
 RDViewToken RDViewTokenizer::
-get_next() const
+get_next_token() const
 {
 
     return *this->next_token;
 
+}
+
+RDViewTokenType RDViewTokenizer::
+get_previous_token_type() const
+{
+    return this->previous_token->type;
+}
+
+RDViewTokenType RDViewTokenizer::
+get_current_token_type() const
+{
+    return this->current_token->type;
+}
+
+RDViewTokenType RDViewTokenizer::
+get_next_token_type() const
+{
+    return this->next_token->type;
 }
