@@ -21,18 +21,20 @@ class RDSyntaxNodeCameraEye;
 class RDSyntaxNodeCameraAt;
 class RDSyntaxNodeCameraUp;
 class RDSyntaxNodeCameraFOV;
+class RDSyntaxNodePoint;
 
 class RDSyntaxVisitor
 {
     public:
-        virtual void visit_root_syntax_node(RDSyntaxNodeRoot *node)                 = 0;
-        virtual void visit_display_syntax_node(RDSyntaxNodeDisplay *node)           = 0;
-        virtual void visit_world_syntax_node(RDSyntaxNodeWorld *node)               = 0;
-        virtual void visit_frame_syntax_node(RDSyntaxNodeFrame *node)               = 0;
-        virtual void visit_camera_eye_syntax_node(RDSyntaxNodeCameraEye *node)      = 0;
-        virtual void visit_camera_at_syntax_node(RDSyntaxNodeCameraAt *node)        = 0;
-        virtual void visit_camera_up_syntax_node(RDSyntaxNodeCameraUp *node)        = 0;
-        virtual void visit_camera_fov_syntax_node(RDSyntaxNodeCameraFOV *node)      = 0;
+        virtual void visit_SyntaxNodeRoot(RDSyntaxNodeRoot *node) = 0;
+        virtual void visit_SyntaxNodeDisplay(RDSyntaxNodeDisplay *node) = 0;
+        virtual void visit_SyntaxNodeWorld(RDSyntaxNodeWorld *node) = 0;
+        virtual void visit_SyntaxNodeFrame(RDSyntaxNodeFrame *node) = 0;
+        virtual void visit_SyntaxNodeCameraEye(RDSyntaxNodeCameraEye *node) = 0;
+        virtual void visit_SyntaxNodeCameraAt(RDSyntaxNodeCameraAt *node) = 0;
+        virtual void visit_SyntaxNodeCameraUp(RDSyntaxNodeCameraUp *node) = 0;
+        virtual void visit_SyntaxNodeCameraFOV(RDSyntaxNodeCameraFOV *node) = 0;
+        virtual void visit_SyntaxNodePoint(RDSyntaxNodePoint *node) = 0;
 };
 
 enum class RDSyntaxNodeType
@@ -46,6 +48,7 @@ enum class RDSyntaxNodeType
     NodeTypeCameraAt,
     NodeTypeCameraUp,
     NodeTypeCameraFOV,
+    NodeTypePoint,
 };
 
 class RDSyntaxNodeAbstract
@@ -71,6 +74,126 @@ class RDSyntaxNodeAbstract
 // get kinda long as the language gets larger.
 //
 
+class RDSyntaxNodeRoot : public RDSyntaxNodeAbstract
+{
+    public:
+                        RDSyntaxNodeRoot();
+        virtual        ~RDSyntaxNodeRoot();
+
+        inline virtual void accept(RDSyntaxVisitor *visitor) override
+            { visitor->visit_SyntaxNodeRoot(this); }
+
+    protected:
+
+};
+
+class RDSyntaxNodeDisplay : public RDSyntaxNodeAbstract
+{
+    public:
+                        RDSyntaxNodeDisplay();
+        virtual        ~RDSyntaxNodeDisplay();
+
+        inline virtual void accept(RDSyntaxVisitor *visitor) override
+            { visitor->visit_SyntaxNodeDisplay(this); }
+
+    protected:
+
+};
+
+class RDSyntaxNodeFrame : public RDSyntaxNodeAbstract
+{
+    public:
+                        RDSyntaxNodeFrame();
+        virtual        ~RDSyntaxNodeFrame();
+
+        inline virtual void accept(RDSyntaxVisitor *visitor) override
+            { visitor->visit_SyntaxNodeFrame(this); }
+
+        inline bool is_frame_valid() const { return this->valid_frame; }
+
+    protected:
+        bool valid_frame = true;
+
+};
+
+class RDSyntaxNodeWorld : public RDSyntaxNodeAbstract
+{
+    public:
+                        RDSyntaxNodeWorld();
+        virtual        ~RDSyntaxNodeWorld();
+
+        inline virtual void accept(RDSyntaxVisitor *visitor) override
+            { visitor->visit_SyntaxNodeWorld(this); }
+
+    protected:
+
+};
+
+class RDSyntaxNodeCameraEye : public RDSyntaxNodeAbstract
+{
+    public:
+                        RDSyntaxNodeCameraEye();
+        virtual        ~RDSyntaxNodeCameraEye();
+
+        inline virtual void accept(RDSyntaxVisitor *visitor) override
+            { visitor->visit_SyntaxNodeCameraEye(this); }
+
+    protected:
+
+};
+
+class RDSyntaxNodeCameraAt : public RDSyntaxNodeAbstract
+{
+    public:
+                        RDSyntaxNodeCameraAt();
+        virtual        ~RDSyntaxNodeCameraAt();
+
+        inline virtual void accept(RDSyntaxVisitor *visitor) override
+            { visitor->visit_SyntaxNodeCameraAt(this); }
+
+    protected:
+
+};
+
+class RDSyntaxNodeCameraUp : public RDSyntaxNodeAbstract
+{
+    public:
+                        RDSyntaxNodeCameraUp();
+        virtual        ~RDSyntaxNodeCameraUp();
+
+        inline virtual void accept(RDSyntaxVisitor *visitor) override
+            { visitor->visit_SyntaxNodeCameraUp(this); }
+
+    protected:
+
+};
+
+class RDSyntaxNodeCameraFOV : public RDSyntaxNodeAbstract
+{
+    public:
+                        RDSyntaxNodeCameraFOV();
+        virtual        ~RDSyntaxNodeCameraFOV();
+
+        inline virtual void accept(RDSyntaxVisitor *visitor) override
+            { visitor->visit_SyntaxNodeCameraFOV(this); }
+
+    protected:
+
+};
+
+class RDSyntaxNodePoint : public RDSyntaxNodeAbstract
+{
+    public:
+                        RDSyntaxNodePoint();
+        virtual        ~RDSyntaxNodePoint();
+
+        inline virtual void accept(RDSyntaxVisitor *visitor) override
+            { visitor->visit_SyntaxNodePoint(this); }
+
+    protected:
+
+};
+
 // --- Parser ------------------------------------------------------------------
 //
 // Finally, the big-bad parser that you've been waiting for. Parsing is a semi-expensive
@@ -95,6 +218,30 @@ class RDSyntaxNodeAbstract
 // it. There are lots of ways to do that, but the easiest way to do is to write a
 // visitor routine to act on the tree.
 //
+// The following context free grammar is the reference implementation of the language.
+// If you're not familiar with CFGs, the basics are pretty simple. Match terms down,
+// and recursively match terms based on the input. Things captured in strings are
+// identifiers/keywords. Pure upper-case are token types that correspond to their
+// names. For example, NUMBER is a pure integer, REAL is either pure integer or decimal.
+// Since the language itself is simple to construct, there isn't much going on except
+// ensure things conform to the grammar.
+//
+// Context Free Grammar:
+//
+//      root                : display frame* EOF
+//
+//      display             : "Display" STRING NUMBER NUMBER NUMBER
+//
+//      frame               : "FrameBegin" NUMBER? frame_parameters world "FrameEnd"
+//
+//      frame_parameters    : ("CameraAt" REAL REAL REAL)* | ("CameraEye" REAL REAL REAL)* |
+//                          : ("CameraUp" REAL REAL REAL)* | ("CameraFOV" REAL)* |
+//                          : ("Clipping" REAL REAL)*
+//
+//      world               : "WorldBegin" world_parameters "WorldEnd"
+//
+//      world_parameters    : ("Point" REAL REAL REAL REAL)*
+//
 
 class RDSyntaxParser
 {
@@ -113,6 +260,13 @@ class RDSyntaxParser
 
     protected:
         void        synchronize_to(RDViewTokenType type);
+
+        shared_ptr<RDSyntaxNodeAbstract> match_root();
+        shared_ptr<RDSyntaxNodeAbstract> match_display();
+        shared_ptr<RDSyntaxNodeAbstract> match_frame();
+        shared_ptr<RDSyntaxNodeAbstract> match_frame_parameters();
+        shared_ptr<RDSyntaxNodeAbstract> match_world();
+        shared_ptr<RDSyntaxNodeAbstract> match_world_parameters();
 
         template <class T, class... Args> inline shared_ptr<T> generate_node(Args... args);
 
