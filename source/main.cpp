@@ -34,6 +34,7 @@
 
 #include <graphics/color.hpp>
 #include <graphics/bitmap.hpp>
+#include <renderer/pipeline.hpp>
 
 #include <editor/editor.hpp>
 #include <editor/metrics.hpp>

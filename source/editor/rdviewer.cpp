@@ -3,13 +3,35 @@
 #include <platform/input.hpp>
 #include <platform/filesystem.hpp>
 
+static ccptr new_default = R"(# Basic, 24fps, 1280x720 display.
+Display "Untitled Project" 24 1280 720
+
+FrameBegin 1
+
+    # Camera settings for the frame.
+    CameraEye 320 240 -240
+    CameraAt  320 240 0
+    CameraUp  0.0 -1.0 0.0
+    CameraFOV 90
+
+    # Begin the world.
+    WorldBegin
+        
+        # Display a single point at (300,300,0) with radius 1.
+        Point 300 300 0 1
+
+    WorldEnd
+FrameEnd 1
+)";
+
 RDViewerComponent::
 RDViewerComponent(i32 id, std::string name) : EditorComponent(id, name)
 {
 
     this->visible = true;
     this->file_path = "";
-    this->file_changes = false;
+    this->file_changes = true;
+    this->file_editor.SetText(new_default);
 
 }
 
@@ -127,8 +149,9 @@ close_file()
 
     if (actually_close)
     {
-        this->file_editor.SetText("");
+        this->file_editor.SetText(new_default);
         this->file_path = "";
+        this->file_changes = true;
         Logger::log_info(LogFlag_None, "The project source has successfully closed.");
         return true;
     }
@@ -176,8 +199,8 @@ new_file()
     }
 
     this->file_path = "";
-    this->file_editor.SetText("");
-    this->file_changes = false;
+    this->file_editor.SetText(new_default);
+    this->file_changes = true;
     Logger::log_info(LogFlag_None, "A new project has been created.");
     return true;
 
