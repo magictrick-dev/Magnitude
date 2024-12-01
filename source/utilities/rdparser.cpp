@@ -1,5 +1,6 @@
 #include <utilities/rdparser.hpp>
 #include <utilities/logging.hpp>
+#include <exception>
 
 // --- Parser Implementation ---------------------------------------------------
 //
@@ -141,12 +142,30 @@ match_display()
     }
     this->tokenizer.shift();
 
+
+    i32 f,w,h;
+    if (!this->convert_to_i32(&f, frame_token.reference))
+    {
+        this->display_conversion_error(frame_token);
+        return nullptr;
+    }
+    if (!this->convert_to_i32(&w, width_token.reference))
+    {
+        this->display_conversion_error(width_token);
+        return nullptr;
+    }
+    if (!this->convert_to_i32(&h, height_token.reference))
+    {
+        this->display_conversion_error(height_token);
+        return nullptr;
+    }
+
     // Generate the display node.
     auto display_node = this->generate_node<RDSyntaxNodeDisplay>();
     display_node->title = name_token.reference;
-    display_node->frames_per_second = std::stoi(frame_token.reference);
-    display_node->width = std::stoi(width_token.reference);
-    display_node->height = std::stoi(height_token.reference);
+    display_node->frames_per_second = f;
+    display_node->width = w;
+    display_node->height = h;
     return display_node;
 
 }
@@ -200,9 +219,17 @@ match_frame()
     }
     this->tokenizer.shift();
 
+    i32 f;
+    if (!this->convert_to_i32(&f, frame_number.reference))
+    {
+        this->display_conversion_error(frame_number);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
+
     // Construct the frame node.
     auto frame_node = this->generate_node<RDSyntaxNodeFrame>();
-    frame_node->index = std::stoi(frame_number.reference);
+    frame_node->index = f;
     frame_node->world = world;
     frame_node->parameters = frame_parameters;
     return frame_node;
@@ -274,10 +301,30 @@ match_camera_at()
     }
     this->tokenizer.shift();
 
+    vec3 coords;
+    if (!this->convert_to_r32(&coords.x, coord_x.reference))
+    {
+        this->display_conversion_error(coord_x);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
+
+    if (!this->convert_to_r32(&coords.y, coord_y.reference))
+    {
+        this->display_conversion_error(coord_y);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
+
+    if (!this->convert_to_r32(&coords.z, coord_z.reference))
+    {
+        this->display_conversion_error(coord_z);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
+
     auto camera_at_node = this->generate_node<RDSyntaxNodeCameraAt>();
-    camera_at_node->coordinates.x = std::stof(coord_x.reference);
-    camera_at_node->coordinates.y = std::stof(coord_y.reference);
-    camera_at_node->coordinates.z = std::stof(coord_z.reference);
+    camera_at_node->coordinates = coords;
 
     return camera_at_node;
 
@@ -329,11 +376,30 @@ match_camera_eye()
     }
     this->tokenizer.shift();
 
-    auto camera_eye_node = this->generate_node<RDSyntaxNodeCameraEye>();
-    camera_eye_node->coordinates.x = std::stof(coord_x.reference);
-    camera_eye_node->coordinates.y = std::stof(coord_y.reference);
-    camera_eye_node->coordinates.z = std::stof(coord_z.reference);
+    vec3 coords;
+    if (!this->convert_to_r32(&coords.x, coord_x.reference))
+    {
+        this->display_conversion_error(coord_x);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
 
+    if (!this->convert_to_r32(&coords.y, coord_y.reference))
+    {
+        this->display_conversion_error(coord_y);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
+
+    if (!this->convert_to_r32(&coords.z, coord_z.reference))
+    {
+        this->display_conversion_error(coord_z);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
+
+    auto camera_eye_node = this->generate_node<RDSyntaxNodeCameraEye>();
+    camera_eye_node->coordinates = coords;
     return camera_eye_node;
 
 }
@@ -384,11 +450,30 @@ match_camera_up()
     }
     this->tokenizer.shift();
 
-    auto camera_up_node = this->generate_node<RDSyntaxNodeCameraUp>();
-    camera_up_node->coordinates.x = std::stof(coord_x.reference);
-    camera_up_node->coordinates.y = std::stof(coord_y.reference);
-    camera_up_node->coordinates.z = std::stof(coord_z.reference);
+    vec3 coords;
+    if (!this->convert_to_r32(&coords.x, coord_x.reference))
+    {
+        this->display_conversion_error(coord_x);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
 
+    if (!this->convert_to_r32(&coords.y, coord_y.reference))
+    {
+        this->display_conversion_error(coord_y);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
+
+    if (!this->convert_to_r32(&coords.z, coord_z.reference))
+    {
+        this->display_conversion_error(coord_z);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
+
+    auto camera_up_node = this->generate_node<RDSyntaxNodeCameraUp>();
+    camera_up_node->coordinates = coords;
     return camera_up_node;
 
 }
@@ -417,8 +502,16 @@ match_camera_fov()
     }
     this->tokenizer.shift();
 
+    r32 n;
+    if (!this->convert_to_r32(&n, fov.reference))
+    {
+        this->display_conversion_error(fov);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
+
     auto camera_fov_node = this->generate_node<RDSyntaxNodeCameraFOV>();
-    camera_fov_node->field_of_view = std::stof(fov.reference);
+    camera_fov_node->field_of_view = n;
 
     return camera_fov_node;
 
@@ -459,9 +552,25 @@ match_clipping()
     }
     this->tokenizer.shift();
 
+    r32 n, f;
+
+    if (!this->convert_to_r32(&n, near.reference))
+    {
+        this->display_conversion_error(near);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
+
+    if (!this->convert_to_r32(&f, far.reference))
+    {
+        this->display_conversion_error(far);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
+
     auto clipping_node = this->generate_node<RDSyntaxNodeClipping>();
-    clipping_node->near = std::stof(near.reference);
-    clipping_node->far = std::stof(far.reference);
+    clipping_node->near = n;
+    clipping_node->far = f;
 
     return clipping_node;
 
@@ -587,11 +696,46 @@ match_point()
     }
     this->tokenizer.shift();
 
+    // Attempt to convert, we need to use exception handling to ensure it doesn't
+    // implode when we do this.
+    //
+    // TODO(Chris): Actually, this is slow as hell and we want to ensure this doesn't
+    //              occur via except handling. The solution, of course, is to do check
+    //              if it is within integer bounds.
+    vec3 coords;
+    r32 r;
+
+    if (!this->convert_to_r32(&coords.x, coord_x.reference))
+    {
+        this->display_conversion_error(coord_x);
+        this->synchronize_to(RDViewTokenType::TypeKeyWorldEnd);
+        return nullptr;
+    }
+
+    if (!this->convert_to_r32(&coords.y, coord_y.reference))
+    {
+        this->display_conversion_error(coord_y);
+        this->synchronize_to(RDViewTokenType::TypeKeyWorldEnd);
+        return nullptr;
+    }
+
+    if (!this->convert_to_r32(&coords.z, coord_z.reference))
+    {
+        this->display_conversion_error(coord_z);
+        this->synchronize_to(RDViewTokenType::TypeKeyWorldEnd);
+        return nullptr;
+    }
+
+    if (!this->convert_to_r32(&r, radius.reference))
+    {
+        this->display_conversion_error(radius);
+        this->synchronize_to(RDViewTokenType::TypeKeyWorldEnd);
+        return nullptr;
+    }
+
     auto point_node = this->generate_node<RDSyntaxNodePoint>();
-    point_node->coordinates.x = std::stof(coord_x.reference);
-    point_node->coordinates.y = std::stof(coord_y.reference);
-    point_node->coordinates.z = std::stof(coord_z.reference);
-    point_node->radius = std::stof(radius.reference);
+    point_node->coordinates = coords;
+    point_node->radius = r; 
 
     return point_node;
 
@@ -648,6 +792,48 @@ display_error(RDViewToken what, RDViewTokenType expected)
     Logger::log_error(LogFlag_Parser, "Expected %s, encountered %s at (%i, %i).",
             to_string(expected).c_str(), to_string(what.type).c_str(), 
             what.row, what.column);
+
+}
+
+void RDSyntaxParser::
+display_conversion_error(RDViewToken what)
+{
+
+    Logger::log_error(LogFlag_Parser, "Unable to convert %s at (%i, %i), value too large to parse.",
+            to_string(what.type).c_str(), what.row, what.column);
+
+}
+
+
+bool RDSyntaxParser::      
+convert_to_i32(i32 *in, std::string reference)
+{
+
+    try
+    {
+        *in = std::stoi(reference);
+        return true;
+    }
+    catch (...)
+    {
+        return false;
+    }
+
+}
+
+bool RDSyntaxParser::
+convert_to_r32(r32 *in, std::string reference)
+{
+
+    try
+    {
+        *in = std::stof(reference);
+        return true;
+    }
+    catch (...)
+    {
+        return false;
+    }
 
 }
 

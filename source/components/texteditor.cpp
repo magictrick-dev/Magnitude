@@ -256,6 +256,8 @@ render()
     if (this->file_editor.IsTextChanged())
     {
         this->file_changes = true;
+        RDSyntaxParser parser(this->file_editor.GetText());
+        parser.construct_ast();
     }
 
 }

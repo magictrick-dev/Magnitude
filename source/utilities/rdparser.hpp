@@ -286,6 +286,9 @@ class RDSyntaxParser
     protected:
         void        synchronize_to(RDViewTokenType type);
         void        display_error(RDViewToken what, RDViewTokenType expected);
+        void        display_conversion_error(RDViewToken what);
+        bool        convert_to_i32(i32 *in, std::string reference);
+        bool        convert_to_r32(r32 *in, std::string reference);
 
         shared_ptr<RDSyntaxNodeAbstract> match_root();
         shared_ptr<RDSyntaxNodeAbstract> match_display();
