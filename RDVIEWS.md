@@ -92,7 +92,7 @@ So yes, if you intend to go crazy with this, text files will be quite expensive 
 >   property that can only be set between `FrameBegin` and `WorldBegin`. The default
 >   value of this is (0, 1, 0), making the +y axis the up coordinate.
 
-### `CameraFOV [angle:degrees]
+### `CameraFOV [angle:degrees]`
 
 >   The camera field of view defines the field of view of the camera. This is a frame-local
 >   property that can only be set between `FrameBegin` and `WorldBegin`. The default

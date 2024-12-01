@@ -1,47 +1,32 @@
-# Magnitude Graphics Visualization Utility
+<p align="center">
+  <img src="assets/icons/app.png" width="300px" />
+</p>
 
-Magnitude is a computer graphics visualization utility with a built-in scripting
-engine for designing and creating real-time scenes, model loading system, and a
-custom software renderer for developing and testing computer graphics concepts.
-The main idea of the utility is to provide a complete tool chain for creating and
-rendering scenes using a well-defined scripting language.
+# Magnitude Graphics Suite
+
+**Magnitude is a computer graphics video rendering suite with a built-in scripting
+engine for designing and creating real-time scenes, model loading system, drawing, and 2D
+animation support.**
+
+> **We choose to choose to reinvent the wheel in this decade and do the other things, not because they
+> are easy, but because they are hard, because that goal will serve to organize and measure the best of our energies 
+> and skills, because that challenge is one that we are willing to accept, one we are unwilling to postpone, and one 
+> which we intend to win, and the others, too.**<br/>
+> \- <cite>[Someone with too much time on their hands.](https://github.com/magictrick-dev)</cite>
 
 The goal of this project is to create frame-by-frame, high resolution renders of
 scenes. These scenes are highly scriptable, using an intermediate programmable
-scripting language called "rdview" to generate, place, and transform models and
-lights in a scene. (The language itself is a scripting language used at Northern
-Illinois University, by Professor Duffin.) As you edit the scene file, the scene
-will dynamically update on screen. If you edit the scene in the editor, the script
-also dynamically updates for you.
+scripting language called "render view" to generate, place, and transform models and
+lights in a scene.
 
-### Using Magnitude
+# Getting Started with Magnitude
 
-**NOTE:** The following documentation is the theory of *how* Magnitude will work,
-not how it works *currently*. Magnitude is in alpha stages of development and many
-features may not exist or work properly.
+Before you begin, checkout the **[complete render view documentation](./RDVIEWS.md)** page
+for a full break-down of the language syntax and commands available to use. The language
+is designed to be imperative and simple to use. Once you're familiarize yourself with the
+language syntax, open the executable (or build from source) and begin editing.
 
-**[Complete Render View Documentation](./RDVIEWS.md)**
-
-Magnitude is both a CLI and GUI tool. If you invoke `magnitude ./rdviews/sample.rd`, it will
-open the project to that scene. Otherwise, opening it will bring up the editor (just like
-any editor you've ever used before) and you can manually open a scene file there.
-
-A scene file is your save file. The scene file must be parsed, constructed, and
-dynamically rendered to the screen. For this reason, large scene files will take
-longer to parse and load your scenes. It is for this reason that the editor only
-loads one frame at a time. Each frame is composed of transforms, objects, lights,
-and a camera. Each entity is shown in the inspector with its appropriate transform.
-You can freely adjust the transform of the frame to adjust how it looks in the frame.
-Afterwards, you can commit this back to the script.
-
-Audio can be added to a scene. Audio files, like entities, have transforms. The
-transform is relative to the camera, where (0, 0, 0) is "background music", and
-any spatial adjustments from the camera adjust where it can be heard. Properties
-such as volume and pitch can be editted. The amount of audio that is sampled is
-dependent on the frames-per-second attribute of the scene. Magnitude will automatically
-account for how much to sample for you based on this.
-
-### Building Magnitude
+### Building Magnitude from Source
 
 Since Magnitude is still a work in progress, you will need to build this project
 from source. This project currently only supports Windows and modern OpenGL (4.3+).
@@ -68,7 +53,7 @@ from source. This project currently only supports Windows and modern OpenGL (4.3
     For more advanced users, you can just supply the `.rdview` file as a parameter
     and it will render the scene for you.
 
-### Project Features
+# Project Feature List
 
 The following list of features outline what Magnitude supports/will support:
 
@@ -133,33 +118,8 @@ The following list of features outline what Magnitude supports/will support:
 - [ ] Audio Engine: Basic mixing
 - [ ] Audio Engine: Spatial sound system
 
-Magnitude should eventually support all major hardware accelerations APIs which
-can be triggered and modified in the rdview language specification. Due to the design
-of the system, hardware acceleration must be used regardless if software rendering
-is enabled to make Dear ImGUI work. Obviously, the software rendered images will be
-rendered and displayed as a texture (very cool!). Since all major graphics APIs support
-render-to-texture, it's possible export frame output as images *and* video, if multiple
-frames are created. This is a backburner feature that will require something FFMPEG to
-work. Alternatively, I can just have it export the series of images as bitmaps or .png
-files for the interim.
+# Legal Information
 
-# License
+**Copyright 2024 Christopher DeJong / magictrick-dev**
 
-Copyright 2024 Christopher DeJong / magictrick-dev
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of 
-this software and associated documentation files (the “Software”), to deal in 
-the Software without restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
-Software, and to permit persons to whom the Software is furnished to do so, 
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included 
-in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
-INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
-PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER 
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Magnitude is a closed-source project.
