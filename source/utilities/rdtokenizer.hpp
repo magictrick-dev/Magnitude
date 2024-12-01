@@ -30,10 +30,13 @@ enum class RDViewTokenType
     TypeBooleanTrue,        // Booleans: true, yes, on (integer 1 too)
     TypeBooleanFalse,       // Booleans: false, no, off (integer 0 too)
 
+    // NOTE(Chris): If you add keywords, don't forget to update the maps!
     TypeKeyDisplay,
     TypeKeyCameraAt,
     TypeKeyCameraEye,
     TypeKeyCameraUp,
+    TypeKeyCameraFOV,
+    TypeKeyClipping,
     TypeKeyFrameBegin,
     TypeKeyFrameEnd,
     TypeKeyWorldBegin,

@@ -1,5 +1,6 @@
 #include <editor/rdviewer.hpp>
 #include <utilities/logging.hpp>
+#include <utilities/rdparser.hpp>
 #include <platform/input.hpp>
 #include <platform/filesystem.hpp>
 
@@ -215,7 +216,32 @@ render()
     ImGuiWindowFlags window_flags = 0;
     if (this->file_changes == true) window_flags |= ImGuiWindowFlags_UnsavedDocument;
 
-    ImGui::Begin("Text Editor", &this->visible, window_flags);
+    ImGui::Begin("Text Editor", &this->visible, window_flags | ImGuiWindowFlags_MenuBar);
+
+    if (ImGui::BeginMenuBar())
+    {
+
+        if (ImGui::MenuItem("Parse"))
+        {
+
+            RDSyntaxParser parser(this->file_editor.GetText());
+            if (parser.construct_ast())
+            {
+
+                RDSyntaxOutputVisitor debug_out;
+                parser.visit_root(&debug_out);
+
+            }
+            else
+            {
+
+            }
+
+        }
+
+        ImGui::EndMenuBar();
+    }
+
 
     ImGui::PushStyleColor(ImGuiCol_NavHighlight, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
     this->file_editor.Render("Text Editor");

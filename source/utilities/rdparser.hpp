@@ -2,6 +2,7 @@
 #define MAGNITUDE_UTILITIES_RDPARSER_HPP
 #include <common.hpp>
 #include <vector>
+#include <sstream>
 #include <utilities/rdtokenizer.hpp>
 
 // --- RDViewer Abstract Syntax Node -------------------------------------------
@@ -21,20 +22,22 @@ class RDSyntaxNodeCameraEye;
 class RDSyntaxNodeCameraAt;
 class RDSyntaxNodeCameraUp;
 class RDSyntaxNodeCameraFOV;
+class RDSyntaxNodeClipping;
 class RDSyntaxNodePoint;
 
 class RDSyntaxVisitor
 {
     public:
-        virtual void visit_SyntaxNodeRoot(RDSyntaxNodeRoot *node) = 0;
-        virtual void visit_SyntaxNodeDisplay(RDSyntaxNodeDisplay *node) = 0;
-        virtual void visit_SyntaxNodeWorld(RDSyntaxNodeWorld *node) = 0;
-        virtual void visit_SyntaxNodeFrame(RDSyntaxNodeFrame *node) = 0;
-        virtual void visit_SyntaxNodeCameraEye(RDSyntaxNodeCameraEye *node) = 0;
-        virtual void visit_SyntaxNodeCameraAt(RDSyntaxNodeCameraAt *node) = 0;
-        virtual void visit_SyntaxNodeCameraUp(RDSyntaxNodeCameraUp *node) = 0;
-        virtual void visit_SyntaxNodeCameraFOV(RDSyntaxNodeCameraFOV *node) = 0;
-        virtual void visit_SyntaxNodePoint(RDSyntaxNodePoint *node) = 0;
+        virtual void visit_SyntaxNodeRoot(RDSyntaxNodeRoot *node)               = 0;
+        virtual void visit_SyntaxNodeDisplay(RDSyntaxNodeDisplay *node)         = 0;
+        virtual void visit_SyntaxNodeWorld(RDSyntaxNodeWorld *node)             = 0;
+        virtual void visit_SyntaxNodeFrame(RDSyntaxNodeFrame *node)             = 0;
+        virtual void visit_SyntaxNodeCameraEye(RDSyntaxNodeCameraEye *node)     = 0;
+        virtual void visit_SyntaxNodeCameraAt(RDSyntaxNodeCameraAt *node)       = 0;
+        virtual void visit_SyntaxNodeCameraUp(RDSyntaxNodeCameraUp *node)       = 0;
+        virtual void visit_SyntaxNodeCameraFOV(RDSyntaxNodeCameraFOV *node)     = 0;
+        virtual void visit_SyntaxNodeClipping(RDSyntaxNodeClipping *node)       = 0;
+        virtual void visit_SyntaxNodePoint(RDSyntaxNodePoint *node)             = 0;
 };
 
 enum class RDSyntaxNodeType
@@ -48,6 +51,7 @@ enum class RDSyntaxNodeType
     NodeTypeCameraAt,
     NodeTypeCameraUp,
     NodeTypeCameraFOV,
+    NodeTypeClipping,
     NodeTypePoint,
 };
 
@@ -113,6 +117,7 @@ class RDSyntaxNodeFrame : public RDSyntaxNodeAbstract
         inline virtual void accept(RDSyntaxVisitor *visitor) override
             { visitor->visit_SyntaxNodeFrame(this); }
 
+        i32 index;
         shared_ptr<RDSyntaxNodeAbstract> world;
         std::vector<shared_ptr<RDSyntaxNodeAbstract>> parameters;
 
@@ -127,6 +132,7 @@ class RDSyntaxNodeWorld : public RDSyntaxNodeAbstract
         inline virtual void accept(RDSyntaxVisitor *visitor) override
             { visitor->visit_SyntaxNodeWorld(this); }
 
+        std::vector<shared_ptr<RDSyntaxNodeAbstract>> parameters;
 
 };
 
@@ -139,6 +145,7 @@ class RDSyntaxNodeCameraEye : public RDSyntaxNodeAbstract
         inline virtual void accept(RDSyntaxVisitor *visitor) override
             { visitor->visit_SyntaxNodeCameraEye(this); }
 
+        vec3 coordinates;
 
 };
 
@@ -151,6 +158,7 @@ class RDSyntaxNodeCameraAt : public RDSyntaxNodeAbstract
         inline virtual void accept(RDSyntaxVisitor *visitor) override
             { visitor->visit_SyntaxNodeCameraAt(this); }
 
+        vec3 coordinates;
 
 };
 
@@ -163,6 +171,8 @@ class RDSyntaxNodeCameraUp : public RDSyntaxNodeAbstract
         inline virtual void accept(RDSyntaxVisitor *visitor) override
             { visitor->visit_SyntaxNodeCameraUp(this); }
 
+        vec3 coordinates;
+
 };
 
 class RDSyntaxNodeCameraFOV : public RDSyntaxNodeAbstract
@@ -174,6 +184,23 @@ class RDSyntaxNodeCameraFOV : public RDSyntaxNodeAbstract
         inline virtual void accept(RDSyntaxVisitor *visitor) override
             { visitor->visit_SyntaxNodeCameraFOV(this); }
 
+        r32 field_of_view;
+
+};
+
+class RDSyntaxNodeClipping : public RDSyntaxNodeAbstract
+{
+
+    public:
+                        RDSyntaxNodeClipping();
+        virtual        ~RDSyntaxNodeClipping();
+
+        inline virtual void accept(RDSyntaxVisitor *visitor) override
+            { visitor->visit_SyntaxNodeClipping(this); }
+
+        r32 near;
+        r32 far;
+
 };
 
 class RDSyntaxNodePoint : public RDSyntaxNodeAbstract
@@ -184,6 +211,9 @@ class RDSyntaxNodePoint : public RDSyntaxNodeAbstract
 
         inline virtual void accept(RDSyntaxVisitor *visitor) override
             { visitor->visit_SyntaxNodePoint(this); }
+
+        vec3 coordinates;
+        r32 radius;
 
 };
 
@@ -251,6 +281,8 @@ class RDSyntaxParser
         bool        construct_ast();
         bool        is_valid() const;
 
+        void        visit_root(RDSyntaxVisitor *visitor);
+
     protected:
         void        synchronize_to(RDViewTokenType type);
         void        display_error(RDViewToken what, RDViewTokenType expected);
@@ -259,8 +291,14 @@ class RDSyntaxParser
         shared_ptr<RDSyntaxNodeAbstract> match_display();
         shared_ptr<RDSyntaxNodeAbstract> match_frame();
         shared_ptr<RDSyntaxNodeAbstract> match_frame_parameters();
+        shared_ptr<RDSyntaxNodeAbstract> match_camera_at();
+        shared_ptr<RDSyntaxNodeAbstract> match_camera_eye();
+        shared_ptr<RDSyntaxNodeAbstract> match_camera_up();
+        shared_ptr<RDSyntaxNodeAbstract> match_camera_fov();
+        shared_ptr<RDSyntaxNodeAbstract> match_clipping();
         shared_ptr<RDSyntaxNodeAbstract> match_world();
         shared_ptr<RDSyntaxNodeAbstract> match_world_parameters();
+        shared_ptr<RDSyntaxNodeAbstract> match_point();
 
         template <class T, class... Args> inline shared_ptr<T> generate_node(Args... args);
 
@@ -281,5 +319,37 @@ generate_node(Args... args)
     this->nodes.push_back(pushable);
     return new_node;
 }
+
+// --- Debug Traversal ---------------------------------------------------------
+//
+// The following traversal basically just dumps the AST out to console. This uses
+// string stream since it will make it easier to output the final results.
+//
+
+class RDSyntaxOutputVisitor : public RDSyntaxVisitor
+{
+
+    public:
+                    RDSyntaxOutputVisitor();
+        virtual    ~RDSyntaxOutputVisitor();
+
+        virtual void visit_SyntaxNodeRoot(RDSyntaxNodeRoot *node) override;
+        virtual void visit_SyntaxNodeDisplay(RDSyntaxNodeDisplay *node) override;
+        virtual void visit_SyntaxNodeWorld(RDSyntaxNodeWorld *node) override;
+        virtual void visit_SyntaxNodeFrame(RDSyntaxNodeFrame *node) override;
+        virtual void visit_SyntaxNodeCameraEye(RDSyntaxNodeCameraEye *node) override;
+        virtual void visit_SyntaxNodeCameraAt(RDSyntaxNodeCameraAt *node) override;
+        virtual void visit_SyntaxNodeCameraUp(RDSyntaxNodeCameraUp *node) override;
+        virtual void visit_SyntaxNodeCameraFOV(RDSyntaxNodeCameraFOV *node) override;
+        virtual void visit_SyntaxNodeClipping(RDSyntaxNodeClipping *node) override;
+        virtual void visit_SyntaxNodePoint(RDSyntaxNodePoint *node) override;
+
+    protected:
+        u32 tab_offset;
+        i32 tab_size;
+
+        std::stringstream output_stream;
+
+};
 
 #endif
