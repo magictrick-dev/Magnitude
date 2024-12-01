@@ -1,7 +1,7 @@
 #include <platform/filesystem.hpp>
-#include <editor/mainmenu.hpp>
-#include <editor/editor.hpp>
-#include <editor/rdviewer.hpp>
+#include <editor.hpp>
+#include <components/mainmenu.hpp>
+#include <components/texteditor.hpp>
 
 
 MainMenuComponent::
@@ -56,7 +56,7 @@ render()
 
     if (this->visible != true) return;
 
-    auto rdviewer = Editor::get_component_by_name<RDViewerComponent>("Editor");
+    auto rdviewer = Editor::get_component_by_name<TextEditorComponent>("Editor");
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     ImGui::BeginMainMenuBar();
     ImGui::PopStyleVar();

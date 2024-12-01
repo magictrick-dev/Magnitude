@@ -1,34 +1,6 @@
-#ifndef MAGNITUDE_EDITOR_MATRICS_HPP
-#define MAGNITUDE_EDITOR_MATRICS_HPP
-#include <definitions.hpp>
-#include <editor/component.hpp>
-#include <imgui/imgui.h>
+#include <components/metrics.hpp>
 
-#define METRICS_FRAME_TIME_BUFFER_SIZE 512
-
-class MetricsComponent : public EditorComponent
-{
-
-    public:
-        inline                  MetricsComponent(i32 index, std::string name);
-        inline virtual         ~MetricsComponent();
-
-        inline virtual void     render()    override;
-        inline virtual void     update()    override;
-
-        inline void             set_frame_time(r32 delta);
-
-    protected:
-        bool pause          = false;
-
-        r32 frame_time      = 0.0f;
-        r32 frame_average   = 0.0f;
-        i32 frame_index     = 0;
-        r32 frame_time_set[METRICS_FRAME_TIME_BUFFER_SIZE];
-
-};
-
-inline MetricsComponent::
+MetricsComponent::
 MetricsComponent(i32 index, std::string name) : EditorComponent(index, name)
 {
 
@@ -40,13 +12,13 @@ MetricsComponent(i32 index, std::string name) : EditorComponent(index, name)
 
 }
 
-inline MetricsComponent::
+MetricsComponent::
 ~MetricsComponent()
 {
 
 }
 
-inline void MetricsComponent::
+void MetricsComponent::
 render()
 {
 
@@ -74,7 +46,7 @@ render()
 
 }
 
-inline void MetricsComponent::
+void MetricsComponent::
 update()
 {
 
@@ -82,7 +54,7 @@ update()
 
 }
 
-inline void MetricsComponent::
+void MetricsComponent::
 set_frame_time(r32 delta)
 {
 
@@ -108,5 +80,3 @@ set_frame_time(r32 delta)
 
 }
 
-
-#endif

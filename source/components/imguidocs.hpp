@@ -1,8 +1,8 @@
-#ifndef MAGNITUDE_EDITOR_IMGUIDOCS_HPP
-#define MAGNITUDE_EDITOR_IMGUIDOCS_HPP
+#ifndef MAGNITUDE_COMPONENTS_IMGUIDOCS_HPP
+#define MAGNITUDE_COMPONENTS_IMGUIDOCS_HPP
 #include <definitions.hpp>
 #include <platform/input.hpp>
-#include <editor/component.hpp>
+#include <components/component.hpp>
 #include <utilities/logging.hpp>
 #include <imgui/imgui.h>
 

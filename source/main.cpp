@@ -36,14 +36,14 @@
 #include <graphics/bitmap.hpp>
 #include <renderer/pipeline.hpp>
 
-#include <editor/editor.hpp>
-#include <editor/metrics.hpp>
-#include <editor/rdviewer.hpp>
-#include <editor/mainmenu.hpp>
-#include <editor/sceneviewer.hpp>
-#include <editor/console.hpp>
-#include <editor/inspector.hpp>
-#include <editor/imguidocs.hpp>
+#include <editor.hpp>
+#include <components/metrics.hpp>
+#include <components/texteditor.hpp>
+#include <components/mainmenu.hpp>
+#include <components/sceneviewer.hpp>
+#include <components/console.hpp>
+#include <components/inspector.hpp>
+#include <components/imguidocs.hpp>
 
 #include <imgui/imgui.h>
 #include <glad/glad.h>
@@ -125,12 +125,12 @@ main(i32 argc, cptr *argv)
     Editor::add_component<SceneViewerComponent>("Scene Viewer");
     Editor::add_component<InspectorComponent>("Inspector");
     Editor::add_component<MetricsComponent>("Metrics");
-    Editor::add_component<RDViewerComponent>("Editor");
+    Editor::add_component<TextEditorComponent>("Editor");
     Editor::add_component<ConsoleComponent>("Console");
     Editor::add_component<ImguiDocsComponent>("Imgui Documentation");
 
     // Set the file, if possible.
-    auto rdviewer = Editor::get_component_by_name<RDViewerComponent>("Editor");
+    auto rdviewer = Editor::get_component_by_name<TextEditorComponent>("Editor");
     auto metrics = Editor::get_component_by_name<MetricsComponent>("Metrics");
     rdviewer->set_file(runtime_path);
 
@@ -141,23 +141,6 @@ main(i32 argc, cptr *argv)
     u64 frame_begin = 0;
     u64 frame_end   = 0;
     r32 delta_time  = 1.0f / 60.0f;
-
-    vec2 a = { 1.0f, 1.0f };
-    vec3 b = { 1.0f, 2.0f, 2.0f };
-    vec4 c = { 1.0f, 2.0f, 3.0f, 1.0f };
-    vec4 d = { 3.0f, 2.0f, 1.0f, 1.0f };
-    vec4 e = c + d;
-
-    Logger::log_debug(LogFlag_None, "Vector2: %s", to_string(a).c_str());
-    Logger::log_debug(LogFlag_None, "Vector3: %s", to_string(b).c_str());
-    Logger::log_debug(LogFlag_None, "Vector4: %s", to_string(c).c_str());
-    Logger::log_debug(LogFlag_None, "Vector4: %s", to_string(d).c_str());
-    Logger::log_debug(LogFlag_None, "Vector4: %s", to_string(e).c_str());
-
-    mat4 identity = matrix4_identity();
-    mat4 diagonal = matrix4_diagonal(3.0f);
-    Logger::log_debug(LogFlag_None, "Identity:\n%s", to_string(identity).c_str());
-    Logger::log_debug(LogFlag_None, "Diagonal:\n%s", to_string(diagonal).c_str());
 
     while (!main_window->should_close())
     {

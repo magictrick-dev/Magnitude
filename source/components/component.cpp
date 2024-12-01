@@ -1,4 +1,4 @@
-#include <editor/component.hpp>
+#include <components/component.hpp>
 
 EditorComponent::
 EditorComponent()

@@ -1,7 +1,7 @@
-#ifndef MAGNITUDE_EDITOR_INSPECTOR_HPP
-#define MAGNITUDE_EDITOR_INSPECTOR_HPP
+#ifndef MAGNITUDE_COMPONENTS_INSPECTOR_HPP
+#define MAGNITUDE_COMPONENTS_INSPECTOR_HPP
 #include <definitions.hpp>
-#include <editor/component.hpp>
+#include <components/component.hpp>
 #include <imgui/imgui.h>
 #include <renderer/pipeline.hpp>
 

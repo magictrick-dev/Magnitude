@@ -2,12 +2,65 @@
 #define MAGNITUDE_UTILITIES_MEMORY_HPP
 #include <definitions.hpp>
 #include <platform/system.hpp>
+#include <thread>
 
 typedef struct memory_buffer
 {
     vptr ptr;
     u64 size;
 } memory_buffer;
+
+// --- Memory Context ----------------------------------------------------------
+//
+// Provides a simple interface to set and use different kinds of memory allocation
+// schemes through a singular entry point. The basic idea is that memory allocators
+// can be pushed and popped from the current context. This allows certain functions
+// to choose how memory is allocated. In general terms, it allows the user to swap
+// from the dynamic allocator to a custom allocator without having to maintain it
+// through each call and use the primary alloc/free calls to interact with them.
+//
+// 1.   The base memory context is just the malloc()/free() interface wrapper.
+//      This wrapper is designed only to track the total amount allocated and free'd
+//      by the system.
+//
+// 2.   Each allocator must inherit the IAllocator interface. This provides the
+//      base set of functionality required by the memory context to serve allocations
+//      to the front-end.
+//
+// 3.   Each memory context is thread local, so if another thread is created it
+//      uses a different memory context. This is to ensure no contents are made
+//      between other threads for memory.
+//
+// When an allocator gets brought in and out of context, the on_push/on_pop callbacks
+// are issued to the interface. This allows you to create allocators that perform
+// cleanup or startup routines.
+//
+
+class MemoryContext
+{
+
+    public:
+
+    protected:
+
+};
+
+class IAllocator
+{
+
+    public:
+        virtual vptr        allocate(u64 size)                  = 0;
+        virtual void        release(vptr ptr)                   = 0;
+
+        virtual void        on_push_context()                   = 0;
+        virtual void        on_pop_context()                    = 0;
+
+        virtual u64         get_allocation_calls_count()        = 0;
+        virtual u64         get_release_calls_count()           = 0;
+        virtual u64         get_allocation_amount()             = 0;
+        virtual u64         get_release_amount()                = 0;
+
+};
 
 // --- Memory Arena ------------------------------------------------------------
 //
