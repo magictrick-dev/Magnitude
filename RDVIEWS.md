@@ -36,7 +36,7 @@ FrameBegin 1
         Cube
 
     WorldEnd
-FrameEnd 1
+FrameEnd
 ```
 
 As you can see, setup is fairly straightforward and doesn't require a lot of work to
@@ -62,12 +62,11 @@ So yes, if you intend to go crazy with this, text files will be quite expensive 
 >   Finally, the `width` and `height` parameters correspond to the frame size of the output.
 >   Once again, this doesn't correspond to the live viewport which can be any size.
 
-### `FrameBegin [number]`, `FrameEnd [number:optional]`
+### `FrameBegin [number]`, `FrameEnd`
 
 >   Each frame must be enclosed with a frame begin and end tags. Each frame must be given
 >   a number. The number of the frame is used to determine which frame it is in the sequence.
->   The frame end keyword does not require the number, though you can provide one if you so
->   choose. With that in mind, frames do not need to be in numerical order.
+>   Frames don't necessarily need to come in order.
 
 ### `WorldBegin`, `WorldEnd`
 
@@ -119,9 +118,4 @@ and may provide useful in certain contexts while designing your scenes.
 >   and are a holdover from the original language specification. They're cool if you want to
 >   play around, though.
 
-### `Line [x1] [y1] [z1] [x2] [y2] [z3] [width]`
-
->   Draws a line from x1, y1, z1 to the location x2, y2, z3. Another holdover from the original
->   language specification. Useful for visual debugging and whatnot.
-
-**Documentation Last Updated:** 11/29/2024
+**Documentation Last Updated:** 12/01/2024

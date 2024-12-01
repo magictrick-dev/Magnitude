@@ -20,7 +20,9 @@ also dynamically updates for you.
 not how it works *currently*. Magnitude is in alpha stages of development and many
 features may not exist or work properly.
 
-Magnitude is both a CLI and GUI tool. If you invoke `magnitude ./views/scene.rd`, it will
+**[Complete Render View Documentation](./RDVIEWS.md)**
+
+Magnitude is both a CLI and GUI tool. If you invoke `magnitude ./rdviews/sample.rd`, it will
 open the project to that scene. Otherwise, opening it will bring up the editor (just like
 any editor you've ever used before) and you can manually open a scene file there.
 
@@ -84,41 +86,52 @@ The following list of features outline what Magnitude supports/will support:
 - [X] Input System: Mouse
 - [ ] Input System: Controller
 - [X] RDView Parser: Tokenizer
-- [ ] RDView Parser: Parser
+- [X] RDView Parser: Parser
 - [ ] RDView Parser: Dynamic Parsing
-- [ ] RDView Parser: Language Documentation
+- [X] RDView Parser: Language Documentation
 - [ ] RDView Parser: Editor Highlighting
-- [X] Text Editor: Editor GUI System (Github: BalazsJako)
-- [ ] Text Editor: Editor Highlighting
-- [ ] Text Editor: Performant Refactor of BalazsJako's code.
 - [X] User Interface: Text Editor Layout
 - [ ] User Interface: Frame Explorer
 - [ ] User Interface: Object List
-- [ ] User Interface: Object Inspector
+- [X] User Interface: Object Inspector
 - [X] User Interface: Runtime Information
 - [ ] User Interface: Asset Explorer
 - [X] User Interface: Console
-- [ ] Modeling: 2D Primitives
-- [ ] Modeling: 3D Primitives
-- [ ] Modeling: Object File Loading
-- [ ] Software Renderer: Line Drawing
-- [ ] Software Renderer: Attributed Points
-- [ ] Software Renderer: 3D Rendering
-- [ ] Software Renderer: Lighting
-- [ ] Software Renderer: Texturing
-- [ ] Software Renderer: Shader Loader System (Vert. & Frag.)
-- [ ] Hardware Renderer: 3D Rendering
-- [ ] Hardware Renderer: Lighting & Texturing
-- [ ] Behavioral: Renderer Swap from Software to Hardware, vice-versa.
+- [X] User Interface: Metrics (Frame Time)
+- [ ] User Interface: Metrics (Memory Useage)
+- [ ] User Interface: Metrics (Runtime Statistics)
+- [X] Memory Management: Stack Allocator
+- [ ] Memory Management: Dynamic Allocator
+- [ ] Memory Management: Context Settings
+- [ ] Memory Management: Tracking
+- [ ] Modeling: 2D Primitives (Points and lines)
+- [ ] Modeling: 3D Primitives (Cubes, spheres, cylinders, and cones)
+- [ ] Modeling: Object File Loading (.obj in particular)
+- [ ] Renderer: Point Drawing
+- [ ] Renderer: Line Drawing
+- [ ] Renderer: Common Attributed Points
+- [ ] Renderer: 3D Rendering
+- [ ] Renderer: Lighting
+- [ ] Renderer: Texturing
+- [X] Renderer: Shader Loader System (Vert. & Frag.)
+- [ ] Renderer: 3D Rendering
+- [ ] Renderer: Lighting & Texturing
+- [ ] Renderer: Pipelining
 - [X] Behavioral: Application Icon
 - [X] Behavioral: Custom Dear ImGUI Font
 - [X] Behavioral: Custom Dear ImGUI UI Color Scheme
-- [ ] Mathematics Library: Vectors (2D, 3D, 4D Homogenous)
-- [ ] Mathematics Library: Matrix (4D)
-- [ ] Mathematics Library: Vector Operations
-- [ ] Mathematics Library: Matrix Operations
+- [X] Mathematics Library: Vectors (2D, 3D, 4D Homogenous)
+- [X] Mathematics Library: Matrix (4D)
+- [X] Mathematics Library: Vector Operations
+- [X] Mathematics Library: Matrix Operations
 - [ ] Mathematics Library: Common Matrix Transforms (Projections, Rotations, etc.)
-- [ ] OPTIONAL: Video Rendering, FFMPEG Support?
+- [ ] Video Rendering: FFMPEG Support
+- [ ] Video Rendering: Scrubable Timeline Interface
+- [ ] Audio Engine: Audio playback
+- [ ] Audio Engine: Interface controls
+- [ ] Audio Engine: Volume Controls
+- [ ] Audio Engine: Basic mixing
+- [ ] Audio Engine: Spatial sound system
 
 Magnitude should eventually support all major hardware accelerations APIs which
 can be triggered and modified in the rdview language specification. Due to the design
