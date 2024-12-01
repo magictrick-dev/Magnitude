@@ -17,4 +17,4 @@ FrameBegin 1
         Point 300 300 0 1
 
     WorldEnd
-FrameEnd 1
+FrameEnd

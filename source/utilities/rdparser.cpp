@@ -73,7 +73,7 @@ match_root()
     // Match all frames.
     std::vector<shared_ptr<RDSyntaxNodeAbstract>> frame_list;
     shared_ptr<RDSyntaxNodeAbstract> current_frame = nullptr;
-    while (true)
+    while (this->tokenizer.get_current_token_type() == RDViewTokenType::TypeKeyFrameBegin)
     {
 
         // Match the frame. Break if the frame is returned null.
@@ -116,27 +116,27 @@ match_display()
 
     // Frames per second.
     RDViewToken frame_token = this->tokenizer.get_current_token();
-    if (name_token.type != RDViewTokenType::TypeInteger)
+    if (frame_token.type != RDViewTokenType::TypeInteger)
     {
-        this->display_error(name_token, RDViewTokenType::TypeInteger);
+        this->display_error(frame_token, RDViewTokenType::TypeInteger);
         return nullptr;
     }
     this->tokenizer.shift();
 
     // Frame width.
     RDViewToken width_token = this->tokenizer.get_current_token();
-    if (name_token.type != RDViewTokenType::TypeInteger)
+    if (width_token.type != RDViewTokenType::TypeInteger)
     {
-        this->display_error(name_token, RDViewTokenType::TypeInteger);
+        this->display_error(width_token, RDViewTokenType::TypeInteger);
         return nullptr;
     }
     this->tokenizer.shift();
 
     // Frame height.
     RDViewToken height_token = this->tokenizer.get_current_token();
-    if (name_token.type != RDViewTokenType::TypeInteger)
+    if (height_token.type != RDViewTokenType::TypeInteger)
     {
-        this->display_error(name_token, RDViewTokenType::TypeInteger);
+        this->display_error(height_token, RDViewTokenType::TypeInteger);
         return nullptr;
     }
     this->tokenizer.shift();
@@ -202,6 +202,7 @@ match_frame()
 
     // Construct the frame node.
     auto frame_node = this->generate_node<RDSyntaxNodeFrame>();
+    frame_node->index = std::stoi(frame_number.reference);
     frame_node->world = world;
     frame_node->parameters = frame_parameters;
     return frame_node;
@@ -212,30 +213,407 @@ shared_ptr<RDSyntaxNodeAbstract> RDSyntaxParser::
 match_frame_parameters()
 {
 
+    switch (this->tokenizer.get_current_token_type())
+    {
+
+        case RDViewTokenType::TypeKeyCameraEye:     return this->match_camera_eye();
+        case RDViewTokenType::TypeKeyCameraAt:      return this->match_camera_at();
+        case RDViewTokenType::TypeKeyCameraUp:      return this->match_camera_up();
+        case RDViewTokenType::TypeKeyCameraFOV:     return this->match_camera_fov();
+        case RDViewTokenType::TypeKeyClipping:      return this->match_clipping();
+
+    }
 
     return nullptr;
+
+}
+
+shared_ptr<RDSyntaxNodeAbstract> RDSyntaxParser::
+match_camera_at()
+{
+
+    RDViewTokenType current_type = this->tokenizer.get_current_token_type();
+    if (current_type != RDViewTokenType::TypeKeyCameraAt)
+    {
+        RDViewToken current_token = this->tokenizer.get_current_token();
+        this->display_error(current_token, RDViewTokenType::TypeKeyCameraAt);
+        return nullptr;
+    }
+    this->tokenizer.shift();
+
+    // Match x.
+    RDViewToken coord_x = this->tokenizer.get_current_token();
+    if (coord_x.type != RDViewTokenType::TypeInteger &&
+        coord_x.type != RDViewTokenType::TypeReal)
+    {
+        this->display_error(coord_x, RDViewTokenType::TypeReal);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
+    this->tokenizer.shift();
+
+    // Match y.
+    RDViewToken coord_y = this->tokenizer.get_current_token();
+    if (coord_y.type != RDViewTokenType::TypeInteger &&
+        coord_y.type != RDViewTokenType::TypeReal)
+    {
+        this->display_error(coord_y, RDViewTokenType::TypeReal);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
+    this->tokenizer.shift();
+
+    // Match z.
+    RDViewToken coord_z = this->tokenizer.get_current_token();
+    if (coord_z.type != RDViewTokenType::TypeInteger &&
+        coord_z.type != RDViewTokenType::TypeReal)
+    {
+        this->display_error(coord_z, RDViewTokenType::TypeReal);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
+    this->tokenizer.shift();
+
+    auto camera_at_node = this->generate_node<RDSyntaxNodeCameraAt>();
+    camera_at_node->coordinates.x = std::stof(coord_x.reference);
+    camera_at_node->coordinates.y = std::stof(coord_y.reference);
+    camera_at_node->coordinates.z = std::stof(coord_z.reference);
+
+    return camera_at_node;
+
+}
+
+shared_ptr<RDSyntaxNodeAbstract> RDSyntaxParser::
+match_camera_eye()
+{
+
+    RDViewTokenType current_type = this->tokenizer.get_current_token_type();
+    if (current_type != RDViewTokenType::TypeKeyCameraEye)
+    {
+        RDViewToken current_token = this->tokenizer.get_current_token();
+        this->display_error(current_token, RDViewTokenType::TypeKeyCameraEye);
+        return nullptr;
+    }
+    this->tokenizer.shift();
+
+    // Match x.
+    RDViewToken coord_x = this->tokenizer.get_current_token();
+    if (coord_x.type != RDViewTokenType::TypeInteger &&
+        coord_x.type != RDViewTokenType::TypeReal)
+    {
+        this->display_error(coord_x, RDViewTokenType::TypeReal);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
+    this->tokenizer.shift();
+
+    // Match y.
+    RDViewToken coord_y = this->tokenizer.get_current_token();
+    if (coord_y.type != RDViewTokenType::TypeInteger &&
+        coord_y.type != RDViewTokenType::TypeReal)
+    {
+        this->display_error(coord_y, RDViewTokenType::TypeReal);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
+    this->tokenizer.shift();
+
+    // Match z.
+    RDViewToken coord_z = this->tokenizer.get_current_token();
+    if (coord_z.type != RDViewTokenType::TypeInteger &&
+        coord_z.type != RDViewTokenType::TypeReal)
+    {
+        this->display_error(coord_z, RDViewTokenType::TypeReal);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
+    this->tokenizer.shift();
+
+    auto camera_eye_node = this->generate_node<RDSyntaxNodeCameraEye>();
+    camera_eye_node->coordinates.x = std::stof(coord_x.reference);
+    camera_eye_node->coordinates.y = std::stof(coord_y.reference);
+    camera_eye_node->coordinates.z = std::stof(coord_z.reference);
+
+    return camera_eye_node;
+
+}
+
+shared_ptr<RDSyntaxNodeAbstract> RDSyntaxParser::
+match_camera_up()
+{
+
+    RDViewTokenType current_type = this->tokenizer.get_current_token_type();
+    if (current_type != RDViewTokenType::TypeKeyCameraUp)
+    {
+        RDViewToken current_token = this->tokenizer.get_current_token();
+        this->display_error(current_token, RDViewTokenType::TypeKeyCameraUp);
+        return nullptr;
+    }
+    this->tokenizer.shift();
+
+    // Match x.
+    RDViewToken coord_x = this->tokenizer.get_current_token();
+    if (coord_x.type != RDViewTokenType::TypeInteger &&
+        coord_x.type != RDViewTokenType::TypeReal)
+    {
+        this->display_error(coord_x, RDViewTokenType::TypeReal);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
+    this->tokenizer.shift();
+
+    // Match y.
+    RDViewToken coord_y = this->tokenizer.get_current_token();
+    if (coord_y.type != RDViewTokenType::TypeInteger &&
+        coord_y.type != RDViewTokenType::TypeReal)
+    {
+        this->display_error(coord_y, RDViewTokenType::TypeReal);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
+    this->tokenizer.shift();
+
+    // Match z.
+    RDViewToken coord_z = this->tokenizer.get_current_token();
+    if (coord_z.type != RDViewTokenType::TypeInteger &&
+        coord_z.type != RDViewTokenType::TypeReal)
+    {
+        this->display_error(coord_z, RDViewTokenType::TypeReal);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
+    this->tokenizer.shift();
+
+    auto camera_up_node = this->generate_node<RDSyntaxNodeCameraUp>();
+    camera_up_node->coordinates.x = std::stof(coord_x.reference);
+    camera_up_node->coordinates.y = std::stof(coord_y.reference);
+    camera_up_node->coordinates.z = std::stof(coord_z.reference);
+
+    return camera_up_node;
+
+}
+
+shared_ptr<RDSyntaxNodeAbstract> RDSyntaxParser::
+match_camera_fov()
+{
+
+    RDViewTokenType current_type = this->tokenizer.get_current_token_type();
+    if (current_type != RDViewTokenType::TypeKeyCameraFOV)
+    {
+        RDViewToken current_token = this->tokenizer.get_current_token();
+        this->display_error(current_token, RDViewTokenType::TypeKeyCameraFOV);
+        return nullptr;
+    }
+    this->tokenizer.shift();
+
+    // Match FOV entry.
+    RDViewToken fov = this->tokenizer.get_current_token();
+    if (fov.type != RDViewTokenType::TypeInteger &&
+        fov.type != RDViewTokenType::TypeReal)
+    {
+        this->display_error(fov, RDViewTokenType::TypeReal);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
+    this->tokenizer.shift();
+
+    auto camera_fov_node = this->generate_node<RDSyntaxNodeCameraFOV>();
+    camera_fov_node->field_of_view = std::stof(fov.reference);
+
+    return camera_fov_node;
+
+}
+
+shared_ptr<RDSyntaxNodeAbstract> RDSyntaxParser::
+match_clipping()
+{
+
+    RDViewTokenType current_type = this->tokenizer.get_current_token_type();
+    if (current_type != RDViewTokenType::TypeKeyClipping)
+    {
+        RDViewToken current_token = this->tokenizer.get_current_token();
+        this->display_error(current_token, RDViewTokenType::TypeKeyClipping);
+        return nullptr;
+    }
+    this->tokenizer.shift();
+
+    // Match near.
+    RDViewToken near = this->tokenizer.get_current_token();
+    if (near.type != RDViewTokenType::TypeInteger &&
+        near.type != RDViewTokenType::TypeReal)
+    {
+        this->display_error(near, RDViewTokenType::TypeReal);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
+    this->tokenizer.shift();
+
+    // Match far.
+    RDViewToken far = this->tokenizer.get_current_token();
+    if (far.type != RDViewTokenType::TypeInteger &&
+        far.type != RDViewTokenType::TypeReal)
+    {
+        this->display_error(near, RDViewTokenType::TypeReal);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
+    this->tokenizer.shift();
+
+    auto clipping_node = this->generate_node<RDSyntaxNodeClipping>();
+    clipping_node->near = std::stof(near.reference);
+    clipping_node->far = std::stof(far.reference);
+
+    return clipping_node;
+
 }
 
 shared_ptr<RDSyntaxNodeAbstract> RDSyntaxParser::
 match_world()
 {
 
-    return nullptr;
+    // Match WorldBegin
+    RDViewTokenType current_type = this->tokenizer.get_current_token_type();
+    if (current_type != RDViewTokenType::TypeKeyWorldBegin)
+    {
+        RDViewToken current_token = this->tokenizer.get_current_token();
+        this->display_error(current_token, RDViewTokenType::TypeKeyWorldBegin);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
+    this->tokenizer.shift();
+
+    // Match world parameters.
+    std::vector<shared_ptr<RDSyntaxNodeAbstract>> world_parameters;
+    shared_ptr<RDSyntaxNodeAbstract> current_parameter = nullptr;
+    while (true)
+    {
+
+        // Match the world. Break if the world is returned null.
+        current_parameter = this->match_world_parameters();
+        if (current_parameter == nullptr) break;
+        world_parameters.push_back(current_parameter);
+
+    }
+
+    // Match WorldEnd
+    current_type = this->tokenizer.get_current_token_type();
+    if (current_type != RDViewTokenType::TypeKeyWorldEnd)
+    {
+        RDViewToken current_token = this->tokenizer.get_current_token();
+        this->display_error(current_token, RDViewTokenType::TypeKeyWorldEnd);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
+        return nullptr;
+    }
+    this->tokenizer.shift();
+
+    auto world_node = this->generate_node<RDSyntaxNodeWorld>();
+    world_node->parameters = world_parameters;
+    return world_node;
+
+
 }
 
 shared_ptr<RDSyntaxNodeAbstract> RDSyntaxParser::
 match_world_parameters()
 {
 
+    switch (this->tokenizer.get_current_token_type())
+    {
+
+        case RDViewTokenType::TypeKeyPoint:     return this->match_point();
+
+    }
+
     return nullptr;
+
 }
 
+shared_ptr<RDSyntaxNodeAbstract> RDSyntaxParser::
+match_point()
+{
+
+    // Match point. 
+    RDViewTokenType current_type = this->tokenizer.get_current_token_type();
+    if (current_type != RDViewTokenType::TypeKeyPoint)
+    {
+        RDViewToken current_token = this->tokenizer.get_current_token();
+        this->display_error(current_token, RDViewTokenType::TypeKeyPoint);
+        this->synchronize_to(RDViewTokenType::TypeKeyWorldEnd);
+        return nullptr;
+    }
+    this->tokenizer.shift();
+
+    // Match x.
+    RDViewToken coord_x = this->tokenizer.get_current_token();
+    if (coord_x.type != RDViewTokenType::TypeInteger &&
+        coord_x.type != RDViewTokenType::TypeReal)
+    {
+        this->display_error(coord_x, RDViewTokenType::TypeReal);
+        this->synchronize_to(RDViewTokenType::TypeKeyWorldEnd);
+        return nullptr;
+    }
+    this->tokenizer.shift();
+
+    // Match y.
+    RDViewToken coord_y = this->tokenizer.get_current_token();
+    if (coord_y.type != RDViewTokenType::TypeInteger &&
+        coord_y.type != RDViewTokenType::TypeReal)
+    {
+        this->display_error(coord_y, RDViewTokenType::TypeReal);
+        this->synchronize_to(RDViewTokenType::TypeKeyWorldEnd);
+        return nullptr;
+    }
+    this->tokenizer.shift();
+
+    // Match z.
+    RDViewToken coord_z = this->tokenizer.get_current_token();
+    if (coord_z.type != RDViewTokenType::TypeInteger &&
+        coord_z.type != RDViewTokenType::TypeReal)
+    {
+        this->display_error(coord_z, RDViewTokenType::TypeReal);
+        this->synchronize_to(RDViewTokenType::TypeKeyWorldEnd);
+        return nullptr;
+    }
+    this->tokenizer.shift();
+    
+    // Match radius.
+    RDViewToken radius = this->tokenizer.get_current_token();
+    if (radius.type != RDViewTokenType::TypeInteger &&
+        radius.type != RDViewTokenType::TypeReal)
+    {
+        this->display_error(radius, RDViewTokenType::TypeReal);
+        this->synchronize_to(RDViewTokenType::TypeKeyWorldEnd);
+        return nullptr;
+    }
+    this->tokenizer.shift();
+
+    auto point_node = this->generate_node<RDSyntaxNodePoint>();
+    point_node->coordinates.x = std::stof(coord_x.reference);
+    point_node->coordinates.y = std::stof(coord_y.reference);
+    point_node->coordinates.z = std::stof(coord_z.reference);
+    point_node->radius = std::stof(radius.reference);
+
+    return point_node;
+
+}
 
 bool RDSyntaxParser::
 construct_ast()
 {
 
-    return false;
+    auto root_node = this->match_root();
+    if (root_node == nullptr) return false;
+    this->root = root_node;
+    return true;
+
+}
+
+void RDSyntaxParser::
+visit_root(RDSyntaxVisitor *visitor)
+{
+
+    if (this->root != nullptr) this->root->accept(visitor);
+
 }
 
 bool RDSyntaxParser::
@@ -252,7 +630,7 @@ synchronize_to(RDViewTokenType type)
 {
 
     RDViewTokenType current_type = this->tokenizer.get_current_token_type();
-    while (current_type != type || 
+    while (current_type != type &&
            current_type != RDViewTokenType::TypeEOF)
     {
         this->tokenizer.shift();
@@ -343,3 +721,262 @@ RDSyntaxNodeFrame::
 {
 
 }
+
+// --- Syntax Node World -------------------------------------------------------
+//
+//
+//
+
+RDSyntaxNodeWorld::
+RDSyntaxNodeWorld()
+{
+    this->type = RDSyntaxNodeType::NodeTypeWorld;
+}
+
+RDSyntaxNodeWorld::
+~RDSyntaxNodeWorld()
+{
+
+}
+
+// --- Syntax Node CameraEye ---------------------------------------------------
+//
+//
+//
+
+RDSyntaxNodeCameraEye::
+RDSyntaxNodeCameraEye()
+{
+    this->type = RDSyntaxNodeType::NodeTypeCameraEye;
+}
+
+RDSyntaxNodeCameraEye::
+~RDSyntaxNodeCameraEye()
+{
+
+}
+
+// --- Syntax Node CameraAt ----------------------------------------------------
+//
+//
+//
+
+RDSyntaxNodeCameraAt::
+RDSyntaxNodeCameraAt()
+{
+    this->type = RDSyntaxNodeType::NodeTypeCameraAt;
+}
+
+RDSyntaxNodeCameraAt::
+~RDSyntaxNodeCameraAt()
+{
+
+}
+
+// --- Syntax Node CameraUp ----------------------------------------------------
+//
+//
+//
+
+RDSyntaxNodeCameraUp::
+RDSyntaxNodeCameraUp()
+{
+    this->type = RDSyntaxNodeType::NodeTypeCameraUp;
+}
+
+RDSyntaxNodeCameraUp::
+~RDSyntaxNodeCameraUp()
+{
+
+}
+
+// --- Syntax Node CameraFOV ----------------------------------------------------
+//
+//
+//
+
+RDSyntaxNodeCameraFOV::
+RDSyntaxNodeCameraFOV()
+{
+    this->type = RDSyntaxNodeType::NodeTypeCameraFOV;
+}
+
+RDSyntaxNodeCameraFOV::
+~RDSyntaxNodeCameraFOV()
+{
+
+}
+
+// --- Syntax Node Clipping ----------------------------------------------------
+//
+//
+//
+
+RDSyntaxNodeClipping::
+RDSyntaxNodeClipping()
+{
+    this->type = RDSyntaxNodeType::NodeTypeClipping;
+}
+
+RDSyntaxNodeClipping::
+~RDSyntaxNodeClipping()
+{
+
+}
+
+// --- Syntax Node Point ----------------------------------------------------
+//
+//
+//
+
+RDSyntaxNodePoint::
+RDSyntaxNodePoint()
+{
+    this->type = RDSyntaxNodeType::NodeTypePoint;
+}
+
+RDSyntaxNodePoint::
+~RDSyntaxNodePoint()
+{
+
+}
+
+// --- Debug Traversal ---------------------------------------------------------
+//
+// The implementation for outputting the contents of the AST.
+//
+
+RDSyntaxOutputVisitor::
+RDSyntaxOutputVisitor()
+{
+
+    this->tab_offset = 0;
+    this->tab_size = 4;
+
+}
+
+RDSyntaxOutputVisitor::
+~RDSyntaxOutputVisitor()
+{
+
+}
+
+void RDSyntaxOutputVisitor::
+visit_SyntaxNodeRoot(RDSyntaxNodeRoot *node)
+{
+
+    node->display_node->accept(this);
+    for (auto frame : node->frames)
+    {
+        frame->accept(this);
+    }
+
+    std::string out = this->output_stream.str();
+    Logger::log_debug(LogFlag_Parser, "Parser output:\n%s", out.c_str());
+
+}
+
+void RDSyntaxOutputVisitor::
+visit_SyntaxNodeDisplay(RDSyntaxNodeDisplay *node)
+{
+
+    std::stringstream& ss = this->output_stream;
+    ss  << "Display \"" << node->title << "\" "
+        << node->frames_per_second << " "
+        << node->width << " "
+        << node->height << std::endl;
+
+}
+
+void RDSyntaxOutputVisitor::
+visit_SyntaxNodeWorld(RDSyntaxNodeWorld *node)
+{
+
+    std::stringstream& ss = this->output_stream;
+    ss  << "WorldBegin" << std::endl;
+
+    for (auto parameter : node->parameters) parameter->accept(this);
+
+    ss  << "WorldEnd" << std::endl;
+
+}
+
+void RDSyntaxOutputVisitor::
+visit_SyntaxNodeFrame(RDSyntaxNodeFrame *node)
+{
+
+    std::stringstream& ss = this->output_stream;
+    ss  << "FrameBegin " << node->index << std::endl;
+
+    for (auto parameter : node->parameters) parameter->accept(this);
+    node->world->accept(this);
+    
+    ss  << "FrameEnd" << std::endl;
+
+}
+
+void RDSyntaxOutputVisitor::
+visit_SyntaxNodeCameraEye(RDSyntaxNodeCameraEye *node)
+{
+
+    std::stringstream& ss = this->output_stream;
+    ss  << "CameraEye "
+        << node->coordinates.x << " "
+        << node->coordinates.y << " "
+        << node->coordinates.z << std::endl;
+
+}
+
+void RDSyntaxOutputVisitor::
+visit_SyntaxNodeCameraAt(RDSyntaxNodeCameraAt *node)
+{
+
+    std::stringstream& ss = this->output_stream;
+    ss  << "CameraAt "
+        << node->coordinates.x << " "
+        << node->coordinates.y << " "
+        << node->coordinates.z << std::endl;
+
+}
+
+void RDSyntaxOutputVisitor::
+visit_SyntaxNodeCameraUp(RDSyntaxNodeCameraUp *node)
+{
+
+    std::stringstream& ss = this->output_stream;
+    ss  << "CameraUp "
+        << node->coordinates.x << " "
+        << node->coordinates.y << " "
+        << node->coordinates.z << std::endl;
+
+}
+
+void RDSyntaxOutputVisitor::
+visit_SyntaxNodeCameraFOV(RDSyntaxNodeCameraFOV *node)
+{
+
+    std::stringstream& ss = this->output_stream;
+    ss  << "CameraFOV " << node->field_of_view << std::endl;
+
+}
+
+void RDSyntaxOutputVisitor::
+visit_SyntaxNodeClipping(RDSyntaxNodeClipping *node)
+{
+    std::stringstream& ss = this->output_stream;
+    ss  << "Clipping " << node->near << " " << node->far << std::endl;
+}
+
+void RDSyntaxOutputVisitor::
+visit_SyntaxNodePoint(RDSyntaxNodePoint *node)
+{
+
+    std::stringstream& ss = this->output_stream;
+    ss  << "Point "
+        << node->coordinates.x << " "
+        << node->coordinates.y << " "
+        << node->coordinates.z << " "
+        << node->radius << std::endl;
+
+}
+

@@ -18,6 +18,8 @@ string_to_type(std::string ref)
         map["CameraAt"]         = RDViewTokenType::TypeKeyCameraAt;
         map["CameraEye"]        = RDViewTokenType::TypeKeyCameraEye;
         map["CameraUp"]         = RDViewTokenType::TypeKeyCameraUp;
+        map["CameraFOV"]        = RDViewTokenType::TypeKeyCameraFOV;
+        map["Clipping"]         = RDViewTokenType::TypeKeyClipping;
         map["FrameBegin"]       = RDViewTokenType::TypeKeyFrameBegin;
         map["FrameEnd"]         = RDViewTokenType::TypeKeyFrameEnd;
         map["WorldBegin"]       = RDViewTokenType::TypeKeyWorldBegin;
@@ -59,6 +61,8 @@ to_string(RDViewTokenType ref)
         map[RDViewTokenType::TypeKeyCameraAt]           = "CameraAt";
         map[RDViewTokenType::TypeKeyCameraEye]          = "CameraEye";
         map[RDViewTokenType::TypeKeyCameraUp]           = "CameraUp";
+        map[RDViewTokenType::TypeKeyCameraFOV]          = "CameraFOV";
+        map[RDViewTokenType::TypeKeyClipping]           = "Clipping";
         map[RDViewTokenType::TypeKeyFrameBegin]         = "FrameBegin";
         map[RDViewTokenType::TypeKeyFrameEnd]           = "FrameEnd";
         map[RDViewTokenType::TypeKeyWorldBegin]         = "WorldBegin";

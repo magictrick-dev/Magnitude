@@ -77,6 +77,8 @@ add_executable(Magnitude
     "source/utilities/rdparser.cpp"
     "source/utilities/logging.hpp"
     "source/utilities/logging.cpp"
+    "source/utilities/memory.hpp"
+    "source/utilities/memory.cpp"
 
     "source/platform/window.hpp"
     "source/platform/opengl.hpp"
