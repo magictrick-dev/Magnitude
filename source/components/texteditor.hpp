@@ -1,7 +1,7 @@
-#ifndef MAGNITUDE_EDITOR_RDVIEWER_HPP
-#define MAGNITUDE_EDITOR_RDVIEWER_HPP
+#ifndef MAGNITUDE_COMPONENTS_TEXTEDITOR_HPP
+#define MAGNITUDE_COMPONENTS_TEXTEDITOR_HPP
 #include <definitions.hpp>
-#include <editor/component.hpp>
+#include <components/component.hpp>
 
 #include <utilities/resourceman.hpp>
 #include <utilities/path.hpp>
@@ -9,12 +9,12 @@
 #include <imgui/imgui.h>
 #include <balazedit/texteditor.h>
 
-class RDViewerComponent : public EditorComponent
+class TextEditorComponent : public EditorComponent
 {
 
     public:
-                            RDViewerComponent(i32 id, std::string name);
-        virtual            ~RDViewerComponent();
+                            TextEditorComponent(i32 id, std::string name);
+        virtual            ~TextEditorComponent();
 
         virtual void        render()    override;
         virtual void        update()    override;

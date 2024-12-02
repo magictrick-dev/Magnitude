@@ -1,11 +1,9 @@
-#ifndef MAGNITUDE_EDITOR_SCENEVIEWER_HPP
-#define MAGNITUDE_EDITOR_SCENEVIEWER_HPP
-#include <definitions.hpp>
-#include <editor/component.hpp>
-#include <renderer/framebuffer.hpp>
+#include <components/sceneviewer.hpp>
+#include <platform/opengl.hpp>
+#include <utilities/logging.hpp>
 #include <imgui/imgui.h>
 
-ccptr vertex_shader = R"(#version 430 core
+static ccptr vertex_shader = R"(#version 430 core
 layout(location = 0) in vec3 a_position;
 
 void main()
@@ -14,7 +12,7 @@ void main()
 }
 )";
 
-ccptr fragment_shader = R"(#version 430 core
+static ccptr fragment_shader = R"(#version 430 core
 out vec4 color;
 
 void main()
@@ -23,31 +21,7 @@ void main()
 }
 )";
 
-class SceneViewerComponent : public EditorComponent
-{
-
-    public:
-        inline                  SceneViewerComponent(i32 id, std::string name);
-        inline virtual         ~SceneViewerComponent();
-
-        inline virtual void     render()    override;
-        inline virtual void     update()    override;
-
-    protected:
-        Framebuffer framebuffer;
-        i32 viewer_width = 100;
-        i32 viewer_height = 100;
-
-        bool static_only        = false;
-        bool fixed_aspect_ratio = true;
-
-    protected:
-        u32 vtx_buffer;
-        u32 prog;
-
-};
-
-inline SceneViewerComponent::
+SceneViewerComponent::
 SceneViewerComponent(i32 id, std::string name) 
     : EditorComponent(id, name), framebuffer(800, 600)
 {
@@ -81,13 +55,13 @@ SceneViewerComponent(i32 id, std::string name)
 
 }
 
-inline SceneViewerComponent::
+SceneViewerComponent::
 ~SceneViewerComponent()
 {
 
 }
 
-inline void SceneViewerComponent::
+void SceneViewerComponent::
 render()
 {
 
@@ -138,7 +112,7 @@ render()
 
 }
 
-inline void SceneViewerComponent::
+void SceneViewerComponent::
 update()
 {
 
@@ -172,5 +146,3 @@ update()
     this->framebuffer.unbind();
 
 }
-
-#endif

@@ -1,6 +1,8 @@
-#include <editor/rdviewer.hpp>
+#include <components/texteditor.hpp>
+
 #include <utilities/logging.hpp>
 #include <utilities/rdparser.hpp>
+
 #include <platform/input.hpp>
 #include <platform/filesystem.hpp>
 
@@ -22,11 +24,11 @@ FrameBegin 1
         Point 300 300 0 1
 
     WorldEnd
-FrameEnd 1
+FrameEnd
 )";
 
-RDViewerComponent::
-RDViewerComponent(i32 id, std::string name) : EditorComponent(id, name)
+TextEditorComponent::
+TextEditorComponent(i32 id, std::string name) : EditorComponent(id, name)
 {
 
     this->visible = true;
@@ -36,13 +38,13 @@ RDViewerComponent(i32 id, std::string name) : EditorComponent(id, name)
 
 }
 
-RDViewerComponent::
-~RDViewerComponent()
+TextEditorComponent::
+~TextEditorComponent()
 {
 
 }
 
-Filepath RDViewerComponent::
+Filepath TextEditorComponent::
 get_file_path() const
 {
 
@@ -51,7 +53,7 @@ get_file_path() const
 }
 
 
-bool RDViewerComponent::
+bool TextEditorComponent::
 file_unsaved() const
 {
 
@@ -59,7 +61,7 @@ file_unsaved() const
 
 }
 
-bool RDViewerComponent::
+bool TextEditorComponent::
 save_file()
 {
 
@@ -100,7 +102,7 @@ save_file()
 
 }
 
-bool RDViewerComponent::
+bool TextEditorComponent::
 save_as_file()
 {
 
@@ -134,7 +136,7 @@ save_as_file()
 
 }
 
-bool RDViewerComponent::
+bool TextEditorComponent::
 close_file()
 {
 
@@ -161,7 +163,7 @@ close_file()
 
 }
 
-bool RDViewerComponent::
+bool TextEditorComponent::
 set_file(Filepath path)
 {
 
@@ -186,7 +188,7 @@ set_file(Filepath path)
 
 }
 
-bool RDViewerComponent::
+bool TextEditorComponent::
 new_file()
 {
 
@@ -207,7 +209,7 @@ new_file()
 
 }
 
-void RDViewerComponent::
+void TextEditorComponent::
 render()
 {
 
@@ -254,11 +256,13 @@ render()
     if (this->file_editor.IsTextChanged())
     {
         this->file_changes = true;
+        RDSyntaxParser parser(this->file_editor.GetText());
+        parser.construct_ast();
     }
 
 }
 
-void RDViewerComponent::
+void TextEditorComponent::
 update()
 {
 

@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <definitions.hpp>
 #include <utilities/logging.hpp>
-#include <editor/component.hpp>
+#include <components/component.hpp>
 
 class Editor
 {

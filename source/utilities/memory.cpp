@@ -1,5 +1,10 @@
 #include <utilities/memory.hpp>
 
+// --- Memory Arena ------------------------------------------------------------
+//
+// Definitions here-in. A lot of assertions here to catch unscrupulous behavior.
+//
+
 void    
 memory_arena_initialize(memory_arena *arena, memory_buffer *buffer)
 {

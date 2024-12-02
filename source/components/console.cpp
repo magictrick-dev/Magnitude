@@ -1,28 +1,6 @@
-#ifndef MAGNITUDE_EDITOR_CONSOLE_HPP
-#define MAGNITUDE_EDITOR_CONSOLE_HPP
-#include <definitions.hpp>
-#include <iostream>
-#include <utilities/logging.hpp>
-#include <editor/component.hpp>
-#include <imgui/imgui.h>
+#include <components/console.hpp>
 
-class ConsoleComponent : public EditorComponent
-{
-
-    public:
-        inline                  ConsoleComponent(i32 id, std::string name);
-        inline virtual         ~ConsoleComponent();
-
-        inline virtual void     render() override;
-        inline virtual void     update() override;
-
-    protected:
-        bool        auto_scroll;
-        bool        scroll_to_bottom;
-
-};
-
-inline ConsoleComponent::
+ConsoleComponent::
 ConsoleComponent(i32 id, std::string name) : EditorComponent(id, name)
 {
 
@@ -30,13 +8,13 @@ ConsoleComponent(i32 id, std::string name) : EditorComponent(id, name)
 
 }
 
-inline ConsoleComponent::
+ConsoleComponent::
 ~ConsoleComponent()
 {
 
 }
 
-inline void ConsoleComponent::
+void ConsoleComponent::
 render()
 {
 
@@ -142,4 +120,3 @@ update()
 
 }
 
-#endif
