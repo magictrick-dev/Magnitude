@@ -3,7 +3,7 @@
 #include <common.hpp>
 #include <vector>
 #include <sstream>
-#include <utilities/rdtokenizer.hpp>
+#include <rdparser/rdtokenizer.hpp>
 
 // --- RDViewer Abstract Syntax Node -------------------------------------------
 //
@@ -28,16 +28,16 @@ class RDSyntaxNodePoint;
 class RDSyntaxVisitor
 {
     public:
-        virtual void visit_SyntaxNodeRoot(RDSyntaxNodeRoot *node)               = 0;
-        virtual void visit_SyntaxNodeDisplay(RDSyntaxNodeDisplay *node)         = 0;
-        virtual void visit_SyntaxNodeWorld(RDSyntaxNodeWorld *node)             = 0;
-        virtual void visit_SyntaxNodeFrame(RDSyntaxNodeFrame *node)             = 0;
-        virtual void visit_SyntaxNodeCameraEye(RDSyntaxNodeCameraEye *node)     = 0;
-        virtual void visit_SyntaxNodeCameraAt(RDSyntaxNodeCameraAt *node)       = 0;
-        virtual void visit_SyntaxNodeCameraUp(RDSyntaxNodeCameraUp *node)       = 0;
-        virtual void visit_SyntaxNodeCameraFOV(RDSyntaxNodeCameraFOV *node)     = 0;
-        virtual void visit_SyntaxNodeClipping(RDSyntaxNodeClipping *node)       = 0;
-        virtual void visit_SyntaxNodePoint(RDSyntaxNodePoint *node)             = 0;
+        virtual void visit_SyntaxNodeRoot(RDSyntaxNodeRoot *node)               { return; };
+        virtual void visit_SyntaxNodeDisplay(RDSyntaxNodeDisplay *node)         { return; };
+        virtual void visit_SyntaxNodeWorld(RDSyntaxNodeWorld *node)             { return; };
+        virtual void visit_SyntaxNodeFrame(RDSyntaxNodeFrame *node)             { return; };
+        virtual void visit_SyntaxNodeCameraEye(RDSyntaxNodeCameraEye *node)     { return; };
+        virtual void visit_SyntaxNodeCameraAt(RDSyntaxNodeCameraAt *node)       { return; };
+        virtual void visit_SyntaxNodeCameraUp(RDSyntaxNodeCameraUp *node)       { return; };
+        virtual void visit_SyntaxNodeCameraFOV(RDSyntaxNodeCameraFOV *node)     { return; };
+        virtual void visit_SyntaxNodeClipping(RDSyntaxNodeClipping *node)       { return; };
+        virtual void visit_SyntaxNodePoint(RDSyntaxNodePoint *node)             { return; };
 };
 
 enum class RDSyntaxNodeType
@@ -62,8 +62,7 @@ class RDSyntaxNodeAbstract
                     RDSyntaxNodeAbstract();
         virtual    ~RDSyntaxNodeAbstract();
 
-        inline RDSyntaxNodeType     get_type() const { return this->type; }
-        template <class T> inline T cast_to() { return dynamic_pointer_cast<T>(this); }
+        inline RDSyntaxNodeType get_type() const { return this->type; }
 
         virtual void    accept(RDSyntaxVisitor *visitor) = 0;
 

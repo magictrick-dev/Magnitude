@@ -56,6 +56,8 @@ class Logger
         static std::vector<LogDescriptor> get_messages_and_filter(u32 filter);
         static std::vector<LogDescriptor> get_messages_and_filter(u32 filter, i32 amount);
 
+        static void clear_all();
+
         template <class... Args> static inline void log(u32 flags, std::string format, Args... args);
         template <class... Args> static inline void log_debug(u32 flags, std::string format, Args... args);
         template <class... Args> static inline void log_info(u32 flags, std::string format, Args... args);

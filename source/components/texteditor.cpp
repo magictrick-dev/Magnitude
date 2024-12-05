@@ -1,7 +1,7 @@
 #include <components/texteditor.hpp>
 
 #include <utilities/logging.hpp>
-#include <utilities/rdparser.hpp>
+#include <rdparser/rdparser.hpp>
 
 #include <platform/input.hpp>
 #include <platform/filesystem.hpp>
@@ -155,6 +155,8 @@ close_file()
         this->file_editor.SetText(new_default);
         this->file_path = "";
         this->file_changes = true;
+        this->parser.reset(this->file_editor.GetText());
+        this->parser.construct_ast();
         Logger::log_info(LogFlag_None, "The project source has successfully closed.");
         return true;
     }
@@ -182,6 +184,8 @@ set_file(Filepath path)
     Logger::log_info(LogFlag_None, "The project source has been set to %s.", path.c_str());
 
     ResourceManager::release_resource(resource);
+    this->parser.reset(this->file_editor.GetText());
+    this->parser.construct_ast();
     this->file_changes = false;
 
     return true;
@@ -204,6 +208,8 @@ new_file()
     this->file_path = "";
     this->file_editor.SetText(new_default);
     this->file_changes = true;
+    this->parser.reset(this->file_editor.GetText());
+    this->parser.construct_ast();
     Logger::log_info(LogFlag_None, "A new project has been created.");
     return true;
 
@@ -222,25 +228,6 @@ render()
 
     if (ImGui::BeginMenuBar())
     {
-
-        if (ImGui::MenuItem("Parse"))
-        {
-
-            RDSyntaxParser parser(this->file_editor.GetText());
-            if (parser.construct_ast())
-            {
-
-                RDSyntaxOutputVisitor debug_out;
-                parser.visit_root(&debug_out);
-
-            }
-            else
-            {
-
-            }
-
-        }
-
         ImGui::EndMenuBar();
     }
 
@@ -256,8 +243,8 @@ render()
     if (this->file_editor.IsTextChanged())
     {
         this->file_changes = true;
-        RDSyntaxParser parser(this->file_editor.GetText());
-        parser.construct_ast();
+        this->parser.reset(this->file_editor.GetText());
+        this->parser.construct_ast();
     }
 
 }
@@ -303,3 +290,16 @@ update()
     }
 
 }
+
+bool TextEditorComponent::
+is_parse_valid() const
+{
+    return this->parser.is_valid();
+}
+
+RDSyntaxParser* TextEditorComponent::
+get_parser()
+{
+    return &this->parser;
+}
+

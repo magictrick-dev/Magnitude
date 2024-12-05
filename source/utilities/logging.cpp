@@ -102,3 +102,12 @@ get_messages_and_filter(LogFlags filter, i32 amount)
 
 }
 
+void Logger::
+clear_all()
+{
+
+    Logger& self = Logger::get();
+    self.rolling_buffer.clear();
+
+}
+

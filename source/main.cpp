@@ -29,7 +29,6 @@
 #include <utilities/path.hpp>
 #include <utilities/cli.hpp>
 #include <utilities/resourceman.hpp>
-#include <utilities/rdtokenizer.hpp>
 #include <utilities/logging.hpp>
 
 #include <graphics/color.hpp>
@@ -121,12 +120,12 @@ main(i32 argc, cptr *argv)
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
     // Setup the editor and the necessary components we want to use.
-    Editor::add_component<MainMenuComponent>("main_menu");
+    Editor::add_component<MainMenuComponent>("Main Menu");
     Editor::add_component<SceneViewerComponent>("Scene Viewer");
     Editor::add_component<InspectorComponent>("Inspector");
     Editor::add_component<MetricsComponent>("Metrics");
-    Editor::add_component<TextEditorComponent>("Editor");
     Editor::add_component<ConsoleComponent>("Console");
+    Editor::add_component<TextEditorComponent>("Editor");
     Editor::add_component<ImguiDocsComponent>("Imgui Documentation");
 
     // Set the file, if possible.

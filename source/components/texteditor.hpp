@@ -4,6 +4,7 @@
 #include <components/component.hpp>
 
 #include <utilities/resourceman.hpp>
+#include <rdparser/rdparser.hpp>
 #include <utilities/path.hpp>
 
 #include <imgui/imgui.h>
@@ -27,7 +28,12 @@ class TextEditorComponent : public EditorComponent
         bool                file_unsaved() const;
         Filepath            get_file_path() const;
 
+        bool                is_parse_valid() const;
+        RDSyntaxParser*     get_parser();
+
     protected:
+        RDSyntaxParser  parser;
+
         Filepath        file_path;
         TextEditor      file_editor;
         bool            file_changes;

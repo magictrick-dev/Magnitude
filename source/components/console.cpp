@@ -40,6 +40,11 @@ render()
             ImGui::EndMenu();
         }
 
+        if (ImGui::MenuItem("Clear"))
+        {
+            Logger::clear_all();
+        }
+
         ImGui::EndMenuBar();
     }
 
