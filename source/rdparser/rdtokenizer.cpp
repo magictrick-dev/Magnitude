@@ -1,5 +1,5 @@
 #include <unordered_map>
-#include <utilities/rdtokenizer.hpp>
+#include <rdparser/rdtokenizer.hpp>
 
 inline static RDViewTokenType
 string_to_type(std::string ref)

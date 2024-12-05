@@ -70,6 +70,8 @@ add_executable(Magnitude
     "source/components/console.cpp"
     "source/components/sceneviewer.hpp"
     "source/components/sceneviewer.cpp"
+    "source/components/inspector.hpp"
+    "source/components/inspector.cpp"
 
     "source/utilities/path.hpp"
     "source/utilities/path.cpp"
@@ -77,14 +79,15 @@ add_executable(Magnitude
     "source/utilities/cli.cpp"
     "source/utilities/resourceman.hpp"
     "source/utilities/resourceman.cpp"
-    "source/utilities/rdtokenizer.hpp"
-    "source/utilities/rdtokenizer.cpp"
-    "source/utilities/rdparser.hpp"
-    "source/utilities/rdparser.cpp"
     "source/utilities/logging.hpp"
     "source/utilities/logging.cpp"
     "source/utilities/memory.hpp"
     "source/utilities/memory.cpp"
+
+    "source/rdparser/rdtokenizer.hpp"
+    "source/rdparser/rdtokenizer.cpp"
+    "source/rdparser/rdparser.hpp"
+    "source/rdparser/rdparser.cpp"
 
     "source/platform/window.hpp"
     "source/platform/opengl.hpp"
