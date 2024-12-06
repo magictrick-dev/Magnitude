@@ -77,9 +77,12 @@ match_root()
     while (this->tokenizer.get_current_token_type() == RDViewTokenType::TypeKeyFrameBegin)
     {
 
-        // Match the frame. Break if the frame is returned null.
+        // Match the frame.
         current_frame = this->match_frame();
-        if (current_frame == nullptr) break;
+        if (current_frame == nullptr)
+        {
+            continue;
+        }
         frame_list.push_back(current_frame);
 
     }
@@ -189,6 +192,7 @@ match_frame()
     if (frame_number.type != RDViewTokenType::TypeInteger)
     {
         this->display_error(frame_number, RDViewTokenType::TypeInteger);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameBegin);
         return nullptr;
     }
     this->tokenizer.shift();
@@ -215,6 +219,7 @@ match_frame()
     {
         RDViewToken current_token = this->tokenizer.get_current_token();
         this->display_error(current_token, RDViewTokenType::TypeKeyFrameEnd);
+        this->synchronize_to(RDViewTokenType::TypeKeyFrameBegin);
         return nullptr;
     }
     this->tokenizer.shift();
@@ -223,7 +228,6 @@ match_frame()
     if (!this->convert_to_i32(&f, frame_number.reference))
     {
         this->display_conversion_error(frame_number);
-        this->synchronize_to(RDViewTokenType::TypeKeyFrameEnd);
         return nullptr;
     }
 

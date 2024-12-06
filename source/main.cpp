@@ -20,6 +20,7 @@
 // -----------------------------------------------------------------------------
 #include <iostream>
 #include <common.hpp>
+#include <environment.hpp>
 
 #include <platform/window.hpp>
 #include <platform/opengl.hpp>
@@ -151,6 +152,14 @@ main(i32 argc, cptr *argv)
         // Start the frame.
         OpenGLRenderContext::bind(main_window);
         OpenGLRenderContext::begin_frame();
+
+        // Check the maps.
+        Environment& environment = Environment::get();
+        if (environment.active_bindings != nullptr)
+            environment.active_bindings->update_all();
+        else
+            environment.default_bindings.update_all();
+
         Editor::update();
         Editor::render();
 

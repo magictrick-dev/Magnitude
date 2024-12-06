@@ -45,6 +45,8 @@ endif (WIN32)
 add_executable(Magnitude
     "source/main.cpp"
     "source/definitions.hpp"
+    "source/environment.hpp"
+    "source/environment.cpp"
     "source/linear.hpp"
     "source/linear.cpp"
 

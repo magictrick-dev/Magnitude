@@ -138,15 +138,8 @@ render()
 
             ImGui::PushID(current_index);
 
-            bool pushed_style = false;
             if (node_open != current_index)
                 ImGui::SetNextItemOpen(false, ImGuiCond_Always);
-            else
-            {
-                ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.42f, 0.36f, 0.29f, 1.00f));
-                pushed_style = true;
-            }
-
             if (node_open == current_index) ImGui::SetNextItemOpen(true, ImGuiCond_Once);
             if (ImGui::TreeNodeEx((void*)(intptr_t)current_index,
                         ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth, 
@@ -155,9 +148,9 @@ render()
                 ImGui::Unindent();
                 node_open = current_index;
                 this->render_camera_properties(frame);
+                ImGui::Indent();
                 ImGui::TreePop();
             }
-            if (pushed_style) ImGui::PopStyleColor();
             ImGui::PopID();
             current_index++;
 
