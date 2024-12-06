@@ -156,7 +156,7 @@ close_file()
         this->file_path = "";
         this->file_changes = true;
         this->parser.reset(this->file_editor.GetText());
-        this->parser.construct_ast();
+        this->validate_and_parse();
         Logger::log_info(LogFlag_None, "The project source has successfully closed.");
         return true;
     }
@@ -185,7 +185,7 @@ set_file(Filepath path)
 
     ResourceManager::release_resource(resource);
     this->parser.reset(this->file_editor.GetText());
-    this->parser.construct_ast();
+    this->validate_and_parse();
     this->file_changes = false;
 
     return true;
@@ -209,7 +209,7 @@ new_file()
     this->file_editor.SetText(new_default);
     this->file_changes = true;
     this->parser.reset(this->file_editor.GetText());
-    this->parser.construct_ast();
+    this->validate_and_parse();
     Logger::log_info(LogFlag_None, "A new project has been created.");
     return true;
 
@@ -303,3 +303,16 @@ get_parser()
     return &this->parser;
 }
 
+bool TextEditorComponent::
+validate_and_parse()
+{
+
+    if (this->parser.construct_ast())
+    {
+        
+        return true;
+    }
+
+    return false;
+
+}

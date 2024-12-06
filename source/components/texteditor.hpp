@@ -32,6 +32,9 @@ class TextEditorComponent : public EditorComponent
         RDSyntaxParser*     get_parser();
 
     protected:
+        bool                validate_and_parse();
+
+    protected:
         RDSyntaxParser  parser;
 
         Filepath        file_path;
