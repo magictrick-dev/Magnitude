@@ -309,10 +309,10 @@ validate_and_parse()
 
     if (this->parser.construct_ast())
     {
-        
         return true;
     }
 
     return false;
 
 }
+

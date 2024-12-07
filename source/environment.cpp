@@ -1,5 +1,7 @@
 #include <environment.hpp>
 
+// --- Environment -------------------------------------------------------------
+
 Environment::
 Environment()
 {
@@ -14,4 +16,3 @@ get()
     return self;
 
 }
-

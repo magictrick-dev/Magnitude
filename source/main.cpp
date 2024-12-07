@@ -153,13 +153,6 @@ main(i32 argc, cptr *argv)
         OpenGLRenderContext::bind(main_window);
         OpenGLRenderContext::begin_frame();
 
-        // Check the maps.
-        Environment& environment = Environment::get();
-        if (environment.active_bindings != nullptr)
-            environment.active_bindings->update_all();
-        else
-            environment.default_bindings.update_all();
-
         Editor::update();
         Editor::render();
 

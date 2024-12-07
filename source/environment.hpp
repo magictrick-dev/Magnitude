@@ -14,8 +14,6 @@ class Environment
     public:
         RDSyntaxParser      parser;
         Worldsim            world;
-        ShortcutBindings    default_bindings;
-        shared_ptr<ShortcutBindings> active_bindings = nullptr;
 
     protected:
                         Environment();
