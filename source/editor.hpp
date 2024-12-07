@@ -141,7 +141,7 @@ render()
 
     // Snap-ins.
     for (auto component : editor.editor_components)
-        component->render();
+        component->render_component();
 
 }
 

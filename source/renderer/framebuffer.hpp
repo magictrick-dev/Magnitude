@@ -17,6 +17,7 @@ class Framebuffer
 {
 
     public:
+                            Framebuffer();
                             Framebuffer(i32 width, i32 height);
         virtual            ~Framebuffer();
 

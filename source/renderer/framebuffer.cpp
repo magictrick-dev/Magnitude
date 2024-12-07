@@ -28,6 +28,49 @@ void main()
 )";
 
 Framebuffer::
+Framebuffer()
+{
+
+    // Default size.
+    i32 width = 640;
+    i32 height = 480;
+
+    // Generate the vao.
+    glGenVertexArrays(1, &this->vao_identifier);
+    glBindVertexArray(this->vao_identifier);
+
+    // Generate the frame buffer.
+    glGenFramebuffers(1, &this->frame_identifier);
+    glBindFramebuffer(GL_FRAMEBUFFER, this->frame_identifier);
+
+    // Generate the texture and set the essential properties.
+    glGenTextures(1, &this->texture_identifier);
+    glBindTexture(GL_TEXTURE_2D, this->texture_identifier);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    // Generate the depth buffer.
+    glGenRenderbuffers(1, &this->depth_identifier);
+    glBindRenderbuffer(GL_RENDERBUFFER, this->depth_identifier);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+            GL_RENDERBUFFER, this->depth_identifier);
+
+    // Configure the frame buffer to our texture.
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, this->texture_identifier, 0);
+    GLenum draw_buffer[1] = { GL_COLOR_ATTACHMENT0 };
+    glDrawBuffers(1, draw_buffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, NULL);
+    glBindVertexArray(NULL);
+
+    this->width = width;
+    this->height = height;
+
+}
+
+
+Framebuffer::
 Framebuffer(i32 width, i32 height)
 {
 

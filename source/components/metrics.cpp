@@ -5,6 +5,7 @@ MetricsComponent(i32 index, std::string name) : EditorComponent(index, name)
 {
 
     this->visible = true;
+    this->menu = true;
 
     r32 default_value = 1.0f / 60.0f;
     for (i32 i = 0; i < METRICS_FRAME_TIME_BUFFER_SIZE; ++i)
@@ -22,10 +23,6 @@ void MetricsComponent::
 render()
 {
 
-    if (this->visible == false) return;
-    
-    ImGui::Begin("Metrics", &this->visible, ImGuiWindowFlags_MenuBar);
-
     if (ImGui::BeginMenuBar())
     {
 
@@ -41,8 +38,6 @@ render()
     ImGui::Text("Delta %.2f ms/f", this->frame_time * 1000.0f);
     ImGui::SameLine();
     ImGui::Text("Average %.2f ms/f", this->frame_average * 1000.0f);
-
-    ImGui::End();
 
 }
 

@@ -15,6 +15,8 @@ class ImguiDocsComponent : public EditorComponent
 
         inline virtual void     render()    override;
         inline virtual void     update()    override;
+        inline virtual bool     pre_render() override;
+        inline virtual void     post_render() override;
 
 };
 
@@ -29,6 +31,18 @@ ImguiDocsComponent(i32 id, std::string name) : EditorComponent(id, name)
 
 inline ImguiDocsComponent::
 ~ImguiDocsComponent()
+{
+
+}
+
+inline bool ImguiDocsComponent::
+pre_render()
+{
+    return true;
+}
+
+inline void ImguiDocsComponent::
+post_render()
 {
 
 }

@@ -1,3 +1,4 @@
+#include <environment.hpp>
 #include <components/sceneviewer.hpp>
 #include <platform/opengl.hpp>
 #include <utilities/logging.hpp>
@@ -27,31 +28,7 @@ SceneViewerComponent(i32 id, std::string name)
 {
 
     this->visible = true;
-
-    static const GLfloat g_vertex_buffer_data[] = {
-       -0.5f, -0.5f,  0.0f,
-        0.5f, -0.5f,  0.0f,
-        0.0f,  0.5f,  0.0f,
-    };
-
-    GLuint vertexbuffer;
-    glGenBuffers(1, &vertexbuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
-    this->vtx_buffer = vertexbuffer;
-
-    u32 vtx_shader = OpenGLRenderContext::shader_create(GL_VERTEX_SHADER);
-    u32 frg_shader = OpenGLRenderContext::shader_create(GL_FRAGMENT_SHADER);
-    OpenGLRenderContext::shader_compile(vtx_shader, vertex_shader);
-    OpenGLRenderContext::shader_compile(frg_shader, fragment_shader);
-    this->prog = OpenGLRenderContext::program_create();
-
-    OpenGLRenderContext::program_attach(this->prog, vtx_shader);
-    OpenGLRenderContext::program_attach(this->prog, frg_shader);
-    OpenGLRenderContext::program_link(this->prog);
-    OpenGLRenderContext::shader_release(vtx_shader);
-    OpenGLRenderContext::shader_release(frg_shader);
-
+    this->menu = true;
 
 }
 
@@ -61,15 +38,22 @@ SceneViewerComponent::
 
 }
 
+bool SceneViewerComponent::
+pre_render()
+{
+
+    if (this->visible == false) return false;
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+    ImGui::Begin(this->name.c_str(), &this->visible, ImGuiWindowFlags_MenuBar);
+    ImGui::PopStyleVar();
+    this->focused = ImGui::IsWindowFocused();
+    return true;
+
+}
+
 void SceneViewerComponent::
 render()
 {
-
-    if (this->visible == false) return;
-    
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-    ImGui::Begin("Scene", &this->visible, ImGuiWindowFlags_MenuBar);
-    ImGui::PopStyleVar();
 
     if (ImGui::BeginMenuBar())
     {
@@ -93,6 +77,26 @@ render()
 
         ImGui::Separator();
 
+        if (ImGui::MenuItem(ICON_FA_REPEAT, NULL, &this->cycle_frames))
+        {
+            Logger::log_debug(LogFlag_None, "Unimplemented as of yet.");
+        }
+
+        if (ImGui::MenuItem(ICON_FA_BACKWARD_STEP, NULL))
+        {
+            Logger::log_debug(LogFlag_None, "Unimplemented as of yet.");
+        }
+
+        ccptr free_play_icon = (this->free_camera) ? ICON_FA_PAUSE : ICON_FA_PLAY;
+        if (ImGui::MenuItem(free_play_icon, NULL, &this->free_camera))
+        {
+            Logger::log_debug(LogFlag_None, "Unimplemented as of yet.");
+        }
+
+        if (ImGui::MenuItem(ICON_FA_FORWARD_STEP, NULL))
+        {
+            Logger::log_debug(LogFlag_None, "Unimplemented as of yet.");
+        }
 
         ImGui::EndMenuBar();
     }
@@ -104,11 +108,10 @@ render()
     this->viewer_width = max_area.x - min_area.x;
     this->viewer_height = max_area.y - min_area.y;
 
+    Environment& environment = Environment::get();
     ImVec2 image_size = { (r32)this->viewer_width, (r32)this->viewer_height };
-    ImGui::Image((void*)(intptr_t)this->framebuffer.get_texture(),
+    ImGui::Image((void*)(intptr_t)environment.framebuffer.get_texture(),
             image_size, { 0, 1 }, { 1, 0 });
-
-    ImGui::End();
 
 }
 
@@ -116,33 +119,7 @@ void SceneViewerComponent::
 update()
 {
 
-    this->framebuffer.bind();
-    if (this->framebuffer.get_width() != this->viewer_width ||
-        this->framebuffer.get_height() != this->viewer_height)
-    {
-        this->framebuffer.resize(this->viewer_width, this->viewer_height);
-    }
-
-    glViewport(0, 0, this->framebuffer.get_width(), this->framebuffer.get_height());
-    glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glClear(GL_DEPTH_BUFFER_BIT);
-
-    glUseProgram(this->prog);
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, this->vtx_buffer);
-    glVertexAttribPointer(
-       0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-       3,                  // size
-       GL_FLOAT,           // type
-       GL_FALSE,           // normalized?
-       0,                  // stride
-       (void*)0            // array buffer offset
-    );
-    glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
-    glDisableVertexAttribArray(0);
-    glUseProgram(NULL);
-
-    this->framebuffer.unbind();
+    Environment& environment = Environment::get();
+    environment.framebuffer.resize(this->viewer_width, this->viewer_height);
 
 }

@@ -1,6 +1,7 @@
 #ifndef MAGNITUDE_COMPONENTS_TEXTEDITOR_HPP
 #define MAGNITUDE_COMPONENTS_TEXTEDITOR_HPP
 #include <definitions.hpp>
+#include <bindings.hpp>
 #include <components/component.hpp>
 
 #include <utilities/resourceman.hpp>
@@ -10,6 +11,14 @@
 #include <imgui/imgui.h>
 #include <balazedit/texteditor.h>
 
+// --- Text Editor Component ---------------------------------------------------
+//
+// Provides an in-app experience to modify view scene files easily, complete with
+// features such as syntax highlighting and error checking. The text editor itself
+// provides the global parser with a valid parsed file which other components can
+// inspect, rather than looking at the editor for a valid state.
+//
+
 class TextEditorComponent : public EditorComponent
 {
 
@@ -18,6 +27,8 @@ class TextEditorComponent : public EditorComponent
         virtual            ~TextEditorComponent();
 
         virtual void        render()    override;
+        virtual bool        pre_render() override;
+        virtual void        post_render() override;
         virtual void        update()    override;
 
         bool                new_file();
@@ -35,7 +46,7 @@ class TextEditorComponent : public EditorComponent
         bool                validate_and_parse();
 
     protected:
-        RDSyntaxParser  parser;
+        RDSyntaxParser      parser;
 
         Filepath        file_path;
         TextEditor      file_editor;
