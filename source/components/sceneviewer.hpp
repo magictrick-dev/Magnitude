@@ -8,11 +8,12 @@ class SceneViewerComponent : public EditorComponent
 {
 
     public:
-                         SceneViewerComponent(i32 id, std::string name);
-        virtual         ~SceneViewerComponent();
+                        SceneViewerComponent(i32 id, std::string name);
+        virtual        ~SceneViewerComponent();
 
-        virtual void     render()    override;
-        virtual void     update()    override;
+        virtual bool    pre_render() override;
+        virtual void    render()    override;
+        virtual void    update()    override;
 
     protected:
         Framebuffer framebuffer;
@@ -21,6 +22,10 @@ class SceneViewerComponent : public EditorComponent
 
         bool static_only        = false;
         bool fixed_aspect_ratio = true;
+
+    protected:
+        bool free_camera = false;
+        bool cycle_frames = false;
 
     protected:
         u32 vtx_buffer;

@@ -9,17 +9,19 @@ class MainMenuComponent : public EditorComponent
 {
 
     public:
-                         MainMenuComponent(i32 id, std::string name);
-        virtual         ~MainMenuComponent();
+                        MainMenuComponent(i32 id, std::string name);
+        virtual        ~MainMenuComponent();
 
-        virtual void     render() override;
-        virtual void     update() override;
+        virtual bool    pre_render() override;
+        virtual void    post_render() override;
+        virtual void    render() override;
+        virtual void    update() override;
 
-        virtual bool     open() override;
-        virtual bool     close() override;
-        virtual bool     toggle() override;
-        virtual bool     is_toggleable() override;
-        virtual bool     is_menuable() override;
+        virtual bool    open() override;
+        virtual bool    close() override;
+        virtual bool    toggle() override;
+        virtual bool    is_toggleable() override;
+        virtual bool    is_menuable() override;
 
 };
 

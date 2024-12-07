@@ -5,6 +5,7 @@ ConsoleComponent(i32 id, std::string name) : EditorComponent(id, name)
 {
 
     this->visible = true;
+    this->menu = true;
 
 }
 
@@ -17,10 +18,6 @@ ConsoleComponent::
 void ConsoleComponent::
 render()
 {
-
-    if (this->visible == false) return;
-    
-    ImGui::Begin("Console", &this->visible, ImGuiWindowFlags_MenuBar);
 
     if (ImGui::BeginMenuBar())
     {
@@ -112,8 +109,6 @@ render()
     {
         ImGui::SetKeyboardFocusHere(-1);
     }
-
-    ImGui::End();
 
 }
 

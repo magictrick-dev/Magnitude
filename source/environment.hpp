@@ -4,6 +4,7 @@
 #include <bindings.hpp>
 #include <rdparser/rdparser.hpp>
 #include <renderer/worldsim.hpp>
+#include <renderer/framebuffer.hpp>
 
 class Environment
 {
@@ -12,6 +13,7 @@ class Environment
         static Environment& get();
 
     public:
+        Framebuffer         framebuffer;
         RDSyntaxParser      parser;
         Worldsim            world;
 

@@ -50,6 +50,18 @@ close()
     return false;
 }
 
+bool MainMenuComponent::
+pre_render()
+{
+    return true; // Special component handles its own rendering.
+}
+
+void MainMenuComponent::
+post_render()
+{
+    return;
+}
+
 void MainMenuComponent::
 render()
 {

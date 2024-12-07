@@ -1,7 +1,7 @@
 #ifndef MAGNITUDE_EDITOR_COMPONENT_HPP
 #define MAGNITUDE_EDITOR_COMPONENT_HPP
 #include <string>
-#include <definitions.hpp>
+#include <common.hpp>
 
 // --- Editor Components -------------------------------------------------------
 //
@@ -27,12 +27,19 @@ class EditorComponent
                             EditorComponent(i32 id, std::string);
         virtual            ~EditorComponent();
 
-        inline bool                is_visible() const { return this->visible; }
-        inline i32                 get_id() const { return this->id; }
-        inline std::string         get_name() const { return this->name; }
-        inline std::string         get_menu_shortcut() const { return this->shortcut; }
+        inline bool                 is_visible()        const { return this->visible; }
+        inline bool                 is_focused()        const { return this->focused; }
+        inline i32                  get_id()            const { return this->id; }
+        inline std::string          get_name()          const { return this->name; }
+        inline std::string          get_menu_shortcut() const { return this->shortcut; }
 
-        inline virtual void render() = 0;
+        inline void render_component() 
+        { 
+            if (!this->pre_render()) return;
+            this->render(); 
+            this->post_render();
+        }
+
         inline virtual void update() = 0;
 
         inline virtual bool close()             { return this->visible = false; };
@@ -47,7 +54,12 @@ class EditorComponent
         std::string shortcut    = "";
         i32         id          = -1;
         bool        visible     = true;
+        bool        focused     = false;
+        bool        menu        = false;
 
+        inline virtual void render();
+        inline virtual bool pre_render();
+        inline virtual void post_render();
 };
 
 #endif

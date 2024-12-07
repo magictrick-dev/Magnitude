@@ -142,6 +142,8 @@ main(i32 argc, cptr *argv)
     u64 frame_end   = 0;
     r32 delta_time  = 1.0f / 60.0f;
 
+    Environment& environment = Environment::get();
+
     while (!main_window->should_close())
     {
 
@@ -153,8 +155,20 @@ main(i32 argc, cptr *argv)
         OpenGLRenderContext::bind(main_window);
         OpenGLRenderContext::begin_frame();
 
+        // Update the components in the editor.
         Editor::update();
         Editor::render();
+
+        // Now update the world simulation.
+        environment.framebuffer.bind();
+
+        glViewport(0, 0, environment.framebuffer.get_width(), 
+                environment.framebuffer.get_height());
+        glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_DEPTH_BUFFER_BIT);
+        
+        environment.framebuffer.unbind();
 
         // Begin the rendering outside the renderer.
         glViewport(0, 0, main_window->get_width(), main_window->get_height());

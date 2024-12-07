@@ -27,6 +27,8 @@ class TextEditorComponent : public EditorComponent
         virtual            ~TextEditorComponent();
 
         virtual void        render()    override;
+        virtual bool        pre_render() override;
+        virtual void        post_render() override;
         virtual void        update()    override;
 
         bool                new_file();

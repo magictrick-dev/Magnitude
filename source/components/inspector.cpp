@@ -1,5 +1,5 @@
 #include <editor.hpp>
-#include <components/texteditor.hpp>
+#include <environment.hpp>
 #include <components/inspector.hpp>
 #include <rdparser/traversals/framesearch.hpp>
 
@@ -119,27 +119,23 @@ void InspectorComponent::
 render()
 {
 
-    if (this->visible == false) return;
-    
-    ImGui::Begin("Inspector", &this->visible);
-
-    auto text_editor = Editor::get_component_by_name<TextEditorComponent>("Editor");
-
     static int node_open = 0;
     int current_index = 0;
-    if (text_editor->is_parse_valid())
-    {
-        RDSyntaxParser *parser = text_editor->get_parser();
-        RDSyntaxFrameSearch frame_visitor;
-        parser->visit_root(&frame_visitor);
 
+    Environment& environment = Environment::get();
+    if (environment.parser.is_valid())
+    {
+        RDSyntaxFrameSearch frame_visitor;
+        environment.parser.visit_root(&frame_visitor);
         for (auto frame : frame_visitor.frames)
         {
 
             ImGui::PushID(current_index);
 
+            bool pushed_style = false;
             if (node_open != current_index)
                 ImGui::SetNextItemOpen(false, ImGuiCond_Always);
+
             if (node_open == current_index) ImGui::SetNextItemOpen(true, ImGuiCond_Once);
             if (ImGui::TreeNodeEx((void*)(intptr_t)current_index,
                         ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth, 
@@ -148,6 +144,7 @@ render()
                 ImGui::Unindent();
                 node_open = current_index;
                 this->render_camera_properties(frame);
+                ImGui::Spacing();
                 ImGui::Indent();
                 ImGui::TreePop();
             }
@@ -157,15 +154,20 @@ render()
         }
 
     }
-    
-
-    ImGui::End();
-
+   
 }
 
 void InspectorComponent::
 update()
 {
+
+    if (this->focused)
+    {
+        if (input_key_is_down(MagKeyA))
+        {
+            Logger::log_debug(LogFlag_None, "A was down in inspector.");
+        }
+    }
 
 }
 

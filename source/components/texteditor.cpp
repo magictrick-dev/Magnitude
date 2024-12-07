@@ -1,3 +1,4 @@
+#include <environment.hpp>
 #include <components/texteditor.hpp>
 
 #include <utilities/logging.hpp>
@@ -215,16 +216,30 @@ new_file()
 
 }
 
+bool TextEditorComponent::
+pre_render()
+{
+
+    if (this->visible == false) return false;
+    ImGuiWindowFlags window_flags = 0;
+    if (this->file_changes == true) window_flags |= ImGuiWindowFlags_UnsavedDocument;
+    ImGui::Begin(this->name.c_str(), &this->visible, window_flags | ImGuiWindowFlags_MenuBar);
+    this->focused = ImGui::IsWindowFocused();
+    return true;
+
+}
+
+void TextEditorComponent::
+post_render()
+{
+
+    ImGui::End();
+
+}
+
 void TextEditorComponent::
 render()
 {
-
-    if (this->visible == false) return;
-    
-    ImGuiWindowFlags window_flags = 0;
-    if (this->file_changes == true) window_flags |= ImGuiWindowFlags_UnsavedDocument;
-
-    ImGui::Begin("Text Editor", &this->visible, window_flags | ImGuiWindowFlags_MenuBar);
 
     if (ImGui::BeginMenuBar())
     {
@@ -236,15 +251,13 @@ render()
     this->file_editor.Render("Text Editor");
     ImGui::PopStyleColor();
 
-    ImGui::End();
-
     // Requires after render since property is an ImGui component with internal
     // state outside of update.
     if (this->file_editor.IsTextChanged())
     {
         this->file_changes = true;
         this->parser.reset(this->file_editor.GetText());
-        this->parser.construct_ast();
+        this->validate_and_parse();
     }
 
 }
@@ -309,6 +322,8 @@ validate_and_parse()
 
     if (this->parser.construct_ast())
     {
+        Environment& environment = Environment::get();
+        environment.parser = this->parser;
         return true;
     }
 
