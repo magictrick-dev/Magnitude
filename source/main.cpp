@@ -162,6 +162,17 @@ main(i32 argc, cptr *argv)
         // Now update the world simulation.
         environment.framebuffer.bind();
 
+        RendererPipeline::projection = matrix4_perspective_rh(
+                RendererPipeline::camera_fov,
+                environment.framebuffer.get_width() / environment.framebuffer.get_height(),
+                RendererPipeline::clipping_near,
+                RendererPipeline::clipping_far);
+        RendererPipeline::view = matrix4_camera_lookat(
+                RendererPipeline::camera_eye,
+                RendererPipeline::camera_at,
+                RendererPipeline::camera_up);
+
+        RendererPipeline::flush_all_pipelines();
         glViewport(0, 0, environment.framebuffer.get_width(), 
                 environment.framebuffer.get_height());
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);

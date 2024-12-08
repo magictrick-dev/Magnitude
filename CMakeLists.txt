@@ -58,6 +58,8 @@ add_executable(Magnitude
     "source/renderer/framebuffer.hpp"
     "source/renderer/framebuffer.cpp"
     "source/renderer/renderinterface.hpp"
+    "source/renderer/pipeline.hpp"
+    "source/renderer/pipeline.cpp"
 
     "source/editor.hpp"
     "source/components/component.hpp"

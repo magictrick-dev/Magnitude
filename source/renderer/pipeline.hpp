@@ -3,9 +3,10 @@
 #include <definitions.hpp>
 #include <linear.hpp>
 #include <vector>
+#include <platform/opengl.hpp>
 
 #define PIPELINE_POINTS_FLUSH_LIMIT     128
-#define PIPELINE_POINTS_LINE_LIMIT      128
+#define PIPELINE_LINE_FLUSH_LIMIT       128
 
 struct point_object
 {
@@ -35,9 +36,9 @@ class RendererPipeline
 {
 
     public:
-        static inline vec4      camera_at       = { 0.0f,  0.0f, -1.0f,  1.0f };
-        static inline vec4      camera_eye      = { 0.0f,  0.0f,  0.0f,  1.0f };
-        static inline vec4      camera_up       = { 0.0f,  1.0f,  0.0f,  1.0f };
+        static inline vec3      camera_at       = { 0.0f,  0.0f, -1.0f };
+        static inline vec3      camera_eye      = { 0.0f,  0.0f,  0.0f };
+        static inline vec3      camera_up       = { 0.0f,  1.0f,  0.0f };
         static inline r32       camera_fov      = 90.0f;
         static inline r32       clipping_near   = 1.0f;
         static inline r32       clipping_far    = 1'000'000'000.0f;
