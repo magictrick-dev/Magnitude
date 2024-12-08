@@ -62,6 +62,7 @@ typedef struct vector2
 
 } vec2, v2;
 
+vector2 operator-(const vector2& lhs);
 vector2 operator+(const vector2& lhs, const vector2& rhs);
 vector2 operator-(const vector2& lhs, const vector2& rhs);
 vector2 operator*(const vector2& lhs, const r32& rhs);
@@ -110,7 +111,7 @@ typedef struct vector3
     vector3&    operator/=(const r32& rhs);
 
     r32         magnitude_squared() const;
-    r32         magntidue() const;
+    r32         magnitude() const;
     vector3     normalize() const;
 
     r32&        operator[](i32 idx);
@@ -118,6 +119,10 @@ typedef struct vector3
 
 } vec3, v3;
 
+vector3 cross_product(const vector3& lhs, const vector3& rhs);
+r32 dot_product(const vector3& lhs, const vector3& rhs);
+
+vector3 operator-(const vector3& lhs);
 vector3 operator+(const vector3& lhs, const vector3& rhs);
 vector3 operator-(const vector3& lhs, const vector3& rhs);
 vector3 operator*(const vector3& lhs, const r32& rhs);
@@ -178,6 +183,9 @@ typedef struct vector4
 
 } vec4, v4, homogenous_point, hp;
 
+r32 dot_product(const vector4& lhs, const vector4& rhs);
+
+vector4 operator-(const vector4& lhs);
 vector4 operator+(const vector4& lhs, const vector4& rhs);
 vector4 operator-(const vector4& lhs, const vector4& rhs);
 vector4 operator*(const vector4& lhs, const r32& rhs);
@@ -211,6 +219,8 @@ matrix4 matrix4_identity();
 matrix4 matrix4_diagonal(r32 d);
 matrix4 matrix4_translate(vector3 p);
 matrix4 matrix4_scale(vector3 s);
+matrix4 matrix4_perspective_rh(r32 fov, r32 aspect_ratio, r32 near, r32 far);
+matrix4 matrix4_camera_lookat(vec3 eye, vec3 at, vec3 up);
 
 matrix4 operator*(const matrix4& left, const r32& right);
 matrix4 operator/(const matrix4& left, const r32& right);

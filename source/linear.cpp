@@ -49,6 +49,17 @@ operator[](i32 idx) const
     return this->elements[idx];
 }
 
+vector2
+operator-(const vector2& rhs)
+{
+
+    vector2 result = rhs;
+    result.x *= -1.0f;
+    result.y *= -1.0f;
+    return result;
+
+}
+
 vector2& vector2::
 operator+=(const vector2& rhs)
 {
@@ -197,6 +208,51 @@ operator[](i32 idx) const
     return this->elements[idx];
 }
 
+r32 vector3::
+magnitude_squared() const
+{
+
+    r32 result = this->elements[0] * this->elements[0] +
+                 this->elements[1] * this->elements[1] +
+                 this->elements[2] * this->elements[2];
+    return result;
+
+}
+
+r32 vector3::
+magnitude() const
+{
+
+    r32 result = this->elements[0] * this->elements[0] +
+                 this->elements[1] * this->elements[1] +
+                 this->elements[2] * this->elements[2];
+    return sqrtf(result);
+
+}
+
+vector3 vector3::
+normalize() const
+{
+
+    r32 magnitude = this->magnitude();
+    vector3 result = *this;
+    result /= magnitude;
+    return result;
+
+}
+
+vector3
+operator-(const vector3& rhs)
+{
+
+    vector3 result = rhs;
+    result.x *= -1.0f;
+    result.y *= -1.0f;
+    result.z *= -1.0f;
+    return result;
+
+}
+
 vector3& vector3::
 operator+=(const vector3& rhs)
 {
@@ -312,6 +368,30 @@ operator==(const vector3& lhs, const vector3& rhs)
 
 }
 
+vector3 
+cross_product(const vector3& lhs, const vector3& rhs)
+{
+
+    vector3 result = {0};
+    result.x = (lhs.y * rhs.z) - (lhs.z * rhs.y);
+    result.y = (lhs.z * rhs.x) - (lhs.x * rhs.z);
+    result.z = (lhs.x * rhs.y) - (lhs.y * rhs.x);
+    return result;
+
+}
+
+r32
+dot_product(const vector3& lhs, const vector3& rhs)
+{
+    
+    vector3 result = {0};
+    result.x = lhs.x * rhs.x;
+    result.y = lhs.y * rhs.y;
+    result.z = lhs.z * rhs.z;
+    return result.x + result.y + result.z;
+
+}
+
 std::ostream& 
 operator<<(std::ostream& os, const vector3& rhs)
 {
@@ -350,6 +430,19 @@ r32 vector4::
 operator[](i32 idx) const
 {
     return this->elements[idx];
+}
+
+
+vector4
+operator-(const vector4& rhs)
+{
+
+    vector4 result = rhs;
+    result.x *= -1.0f;
+    result.y *= -1.0f;
+    result.z *= -1.0f;
+    return result;
+
 }
 
 vector4& vector4::
@@ -517,6 +610,20 @@ homogenize() const
     return result;
 
 }
+
+r32
+dot_product(const vector4& lhs, const vector4& rhs)
+{
+    
+    vector4 result = {0};
+    result.x = lhs.x * rhs.x;
+    result.y = lhs.y * rhs.y;
+    result.z = lhs.z * rhs.z;
+    result.w = lhs.w * rhs.w;
+    return result.x + result.y + result.z + result.w;
+
+}
+
 
 std::ostream& 
 operator<<(std::ostream& os, const vector4& rhs)
@@ -700,6 +807,57 @@ matrix4_scale(vector3 s)
     result.elements[0][0] = s.x;
     result.elements[1][1] = s.y;
     result.elements[2][2] = s.z;
+    return result;
+
+}
+
+matrix4 
+matrix4_perspective_rh(r32 fov, r32 aspect_ratio, r32 near, r32 far)
+{
+
+    matrix4 result = {0};
+
+    r32 cotangent_fov = 1.0f / tanf(fov/2.0f);
+    result.elements[0][0] = cotangent_fov / aspect_ratio;
+    result.elements[1][1] = cotangent_fov;
+    result.elements[2][3] = -1.0f;
+    result.elements[2][2] = (near + far) / (near - far);
+    result.elements[3][2] = (2.0f * near * far) / (near - far);
+
+    return result;
+
+}
+
+matrix4
+matrix4_camera_lookat(vec3 eye, vec3 at, vec3 up)
+{
+
+    matrix4 result = {0};
+
+    vec3 f = (at - eye).normalize();
+    vec3 s = cross_product(f, up).normalize();
+    vec3 u = cross_product(s, f);
+
+    result.elements[0][0] =  s.x;
+    result.elements[0][1] =  u.x;
+    result.elements[0][2] = -f.x;
+    result.elements[0][3] = 0.0f;
+
+    result.elements[1][0] =  s.y;
+    result.elements[1][1] =  u.y;
+    result.elements[1][2] = -f.y;
+    result.elements[1][3] = 0.0f;
+
+    result.elements[2][0] =  s.z;
+    result.elements[2][1] =  u.z;
+    result.elements[2][2] = -f.z;
+    result.elements[2][3] = 0.0f;
+
+    result.elements[3][0] = -(dot_product(s, eye));
+    result.elements[3][1] = -(dot_product(u, eye));
+    result.elements[3][2] =  dot_product(f, eye);
+    result.elements[3][3] = 1.0f;
+
     return result;
 
 }
